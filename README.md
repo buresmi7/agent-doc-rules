@@ -59,7 +59,7 @@ Keep those in the consuming project.
 Consume this repository as a committed snapshot. This keeps always-on agent
 rules available offline and avoids submodule or package-manager setup.
 
-1. Choose a release tag, for example `v0.1.1`.
+1. Choose a release tag, for example `v0.1.2`.
 2. Copy the released `rules/` and `templates/` directories into the consuming
    project:
 
@@ -73,7 +73,7 @@ rules available offline and avoids submodule or package-manager setup.
 3. Record the source version:
 
    ```text
-   agent-doc-rules v0.1.1
+   agent-doc-rules v0.1.2
    ```
 
 4. Create or update the project root `AGENTS.md`:
@@ -125,8 +125,6 @@ Public Codex skills that can help maintain this repository:
 
 | Skill | When it helps |
 | --- | --- |
-| `notion-research-documentation` | Research existing notes and synthesize documentation when source material lives in Notion. |
-| `notion-knowledge-capture` | Turn decisions, chats, and notes into structured knowledge-base entries. |
 | `gh-address-comments` | Work through GitHub PR or issue review comments with the `gh` CLI. |
 | `security-best-practices` | Review future scripts or automation for secure defaults. |
 | `cli-creator` | Useful later if this library grows a durable installer or snapshot-update CLI. |
