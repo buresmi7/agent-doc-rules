@@ -59,7 +59,7 @@ Keep those in the consuming project.
 Consume this repository as a committed snapshot. This keeps always-on agent
 rules available offline and avoids submodule or package-manager setup.
 
-1. Choose a release tag, for example `v0.1.4`.
+1. Choose a release tag, for example `v0.1.5`.
 2. Copy the released `rules/` and `templates/` directories into the consuming
    project:
 
@@ -73,7 +73,7 @@ rules available offline and avoids submodule or package-manager setup.
 3. Record the source version:
 
    ```text
-   agent-doc-rules v0.1.4
+   agent-doc-rules v0.1.5
    ```
 
 4. Create or update the project root `AGENTS.md`:
@@ -132,26 +132,43 @@ For a public release, keep these current:
 
 ## Validation
 
-Run the deterministic checks before publishing a release:
+Run the full test suite before publishing a release:
 
 ```bash
-npm test
+ollama pull llama3.1
+OLLAMA_MODEL=llama3.1 npm test
 ```
 
-This runs Markdown linting, offline local link checks, repository-specific
-content checks, and a small npm audit gate.
+The full suite runs static documentation checks and an end-to-end agent test.
+The agent test imports the library into temporary projects, asks a local model
+to create or repair `AGENTS.md`, then asks a local judge model to grade the
+result against scenario criteria.
 
-An optional local LLM review is available for maintainers who run Ollama:
+For static checks only:
 
 ```bash
-OLLAMA_MODEL=llama3.2 npm run test:llm
+npm run test:static
 ```
 
-The LLM review is advisory and skipped when no local model is configured.
+Static checks run Markdown linting, offline local link checks, and a small npm
+audit gate.
+
+Use separate generator and judge models when needed:
+
+```bash
+OLLAMA_GENERATOR_MODEL=llama3.1 OLLAMA_JUDGE_MODEL=qwen2.5 npm run test:agent
+```
+
+The agent test requires a local Ollama server. It fails fast when no model is
+configured.
 
 The audit gate accepts the current moderate dev-tooling advisories in
 `markdownlint-cli2` and its transitive dependencies because this repository does
 not ship runtime JavaScript. New or higher-severity findings fail the check.
+
+The old deterministic content check was intentionally replaced by this E2E
+test. The main value of the library is whether imported rules help an agent
+produce or repair a good project `AGENTS.md`.
 
 ## Maintainers
 

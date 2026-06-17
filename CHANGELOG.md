@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.5 - 2026-06-17
+
+- Replaced the static content check and advisory LLM review with an E2E agent
+  test under `test/`.
+- Added create and repair scenarios for importing the rules into temporary
+  projects and judging generated `AGENTS.md` output with a local model.
+- Updated README validation guidance around `npm test` and local Ollama models.
+
 ## v0.1.4 - 2026-06-17
 
 - Added deterministic Markdown, link, and content validation scripts.

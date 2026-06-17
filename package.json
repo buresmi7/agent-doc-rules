@@ -1,16 +1,16 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
   "scripts": {
-    "test": "npm run test:markdown && npm run test:links && npm run test:content && npm run test:audit",
+    "test": "npm run test:static && npm run test:agent",
+    "test:agent": "node test/agent-agents-md.test.mjs",
     "test:audit": "node scripts/check-audit.mjs",
-    "test:content": "node scripts/check-content.mjs",
     "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md rules/*.md templates/*.md",
-    "test:llm": "node scripts/llm-review.mjs",
-    "test:markdown": "markdownlint-cli2 \"*.md\" \"rules/*.md\" \"templates/*.md\""
+    "test:markdown": "markdownlint-cli2 \"*.md\" \"rules/*.md\" \"templates/*.md\" \"test/**/*.md\"",
+    "test:static": "npm run test:markdown && npm run test:links && npm run test:audit"
   },
   "devDependencies": {
     "markdownlint-cli2": "^0.22.1"
