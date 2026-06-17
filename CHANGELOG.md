@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.6 - 2026-06-17
+
+- Made static checks the default `npm test` release gate.
+- Switched the prepared agent E2E harness to use the available Codex CLI by
+  default.
+- Kept the Ollama-compatible local model path as an explicit optional runner
+  without adding container runtime complexity.
+
 ## v0.1.5 - 2026-06-17
 
 - Replaced the static content check and advisory LLM review with an E2E agent

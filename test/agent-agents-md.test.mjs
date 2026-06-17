@@ -2,8 +2,16 @@ import { mkdtemp, rm, cp, mkdir, writeFile, readFile, readdir, stat } from 'node
 import { readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { tmpdir } from 'node:os';
+import { spawn, spawnSync } from 'node:child_process';
 
 const root = process.cwd();
+const runner = process.env.AGENT_TEST_RUNNER ?? (
+  process.env.OLLAMA_MODEL || process.env.OLLAMA_GENERATOR_MODEL || process.env.OLLAMA_JUDGE_MODEL
+    ? 'ollama'
+    : 'codex'
+);
+const codexBin = process.env.CODEX_BIN ?? 'codex';
+const codexModel = process.env.CODEX_MODEL;
 const ollamaHost = process.env.OLLAMA_HOST ?? 'http://127.0.0.1:11434';
 const generatorModel = process.env.OLLAMA_GENERATOR_MODEL ?? process.env.OLLAMA_MODEL;
 const judgeModel = process.env.OLLAMA_JUDGE_MODEL ?? process.env.OLLAMA_MODEL;
@@ -15,6 +23,7 @@ const scenarios = [
 
 const generateSchema = {
   type: 'object',
+  additionalProperties: false,
   properties: {
     agentsMd: { type: 'string' },
     notes: { type: 'string' },
@@ -24,6 +33,7 @@ const generateSchema = {
 
 const judgeSchema = {
   type: 'object',
+  additionalProperties: false,
   properties: {
     pass: { type: 'boolean' },
     score: { type: 'number' },
@@ -31,6 +41,7 @@ const judgeSchema = {
       type: 'array',
       items: {
         type: 'object',
+        additionalProperties: false,
         properties: {
           id: { type: 'string' },
           reason: { type: 'string' },
@@ -47,13 +58,25 @@ const judgeSchema = {
   required: ['pass', 'score', 'failedCriteria', 'requiredFixes', 'notes'],
 };
 
-if (!generatorModel || !judgeModel) {
-  console.error('Agent E2E test requires OLLAMA_MODEL or both OLLAMA_GENERATOR_MODEL and OLLAMA_JUDGE_MODEL.');
-  console.error('Example: OLLAMA_MODEL=llama3.1 npm test');
+if (!['codex', 'ollama'].includes(runner)) {
+  console.error(`Unsupported AGENT_TEST_RUNNER: ${runner}`);
+  console.error('Supported runners: codex, ollama');
   process.exit(1);
 }
 
-await assertOllamaAvailable();
+if (runner === 'codex') {
+  assertCodexAvailable();
+}
+
+if (runner === 'ollama') {
+  if (!generatorModel || !judgeModel) {
+    console.error('Ollama agent E2E test requires OLLAMA_MODEL or both OLLAMA_GENERATOR_MODEL and OLLAMA_JUDGE_MODEL.');
+    console.error('Example: AGENT_TEST_RUNNER=ollama OLLAMA_MODEL=llama3.1 npm run test:agent');
+    process.exit(1);
+  }
+
+  await assertOllamaAvailable();
+}
 
 const sharedRules = await readSharedRules();
 const generatePromptTemplate = await readFile(join(root, 'test/prompts/generate-agents.md'), 'utf8');
@@ -116,7 +139,12 @@ async function runScenario(scenario) {
     projectFiles: projectFilesBefore,
   });
 
-  const generated = await ollamaGenerate(generatorModel, prompt, generateSchema);
+  const generated = await agentGenerate({
+    role: `${scenario.name}-generator`,
+    prompt,
+    schema: generateSchema,
+    cwd: projectDir,
+  });
   const agentsMd = normalizeAgentsMd(generated.agentsMd);
   await writeFile(join(projectDir, 'AGENTS.md'), agentsMd);
 
@@ -129,7 +157,12 @@ async function runScenario(scenario) {
     agentsMd,
   });
 
-  const judgment = await ollamaGenerate(judgeModel, judgePrompt, judgeSchema);
+  const judgment = await agentGenerate({
+    role: `${scenario.name}-judge`,
+    prompt: judgePrompt,
+    schema: judgeSchema,
+    cwd: projectDir,
+  });
   const pass = Boolean(judgment.pass) && Number(judgment.score) >= 0.8;
 
   if (pass && !process.env.KEEP_TEST_OUTPUT) {
@@ -194,6 +227,129 @@ async function vendorSharedRules(projectDir) {
 function currentVersion() {
   const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   return `v${packageJson.version}`;
+}
+
+function assertCodexAvailable() {
+  const result = spawnSync(codexBin, ['--version'], {
+    encoding: 'utf8',
+  });
+
+  if (result.error) {
+    throw new Error(`Could not run ${codexBin}: ${result.error.message}`);
+  }
+
+  if (result.status !== 0) {
+    throw new Error(`${codexBin} --version failed: ${result.stderr || result.stdout}`);
+  }
+}
+
+async function agentGenerate({ role, prompt, schema, cwd }) {
+  if (runner === 'codex') {
+    return codexGenerate({ role, prompt, schema, cwd });
+  }
+
+  const model = role.endsWith('-judge') ? judgeModel : generatorModel;
+  return ollamaGenerate(model, prompt, schema);
+}
+
+async function codexGenerate({ role, prompt, schema, cwd }) {
+  const tempDir = await mkdtemp(join(tmpdir(), `agent-doc-rules-codex-${role}-`));
+  const schemaFile = join(tempDir, 'schema.json');
+  const outputFile = join(tempDir, 'output.json');
+
+  await writeFile(schemaFile, JSON.stringify(schema, null, 2));
+
+  const args = [
+    'exec',
+    '--skip-git-repo-check',
+    '--ephemeral',
+    '--ignore-rules',
+    '--sandbox',
+    'read-only',
+    '--output-schema',
+    schemaFile,
+    '--output-last-message',
+    outputFile,
+    '--color',
+    'never',
+  ];
+
+  if (codexModel) {
+    args.push('--model', codexModel);
+  }
+
+  args.push('--cd', cwd, '-');
+
+  try {
+    const { stdout } = await runCommand(codexBin, args, prompt, { cwd });
+    const output = await readFile(outputFile, 'utf8').catch(() => stdout);
+    const parsed = parseJsonOutput(output, `${role} Codex response`);
+
+    if (!process.env.KEEP_TEST_OUTPUT) {
+      await rm(tempDir, { recursive: true, force: true });
+    }
+
+    return parsed;
+  } catch (error) {
+    error.message = `${error.message}\nCodex output directory: ${tempDir}`;
+    throw error;
+  }
+}
+
+function runCommand(command, args, input, options) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      ...options,
+      env: process.env,
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on('error', reject);
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve({ stdout, stderr });
+        return;
+      }
+
+      reject(new Error(`${command} ${args.join(' ')} failed with exit ${code}\n${stderr}\n${stdout}`));
+    });
+
+    child.stdin.end(input);
+  });
+}
+
+function parseJsonOutput(value, label) {
+  const trimmed = value.trim();
+
+  try {
+    return JSON.parse(trimmed);
+  } catch {
+    const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+
+    if (fenced) {
+      return JSON.parse(fenced[1]);
+    }
+
+    const start = trimmed.indexOf('{');
+    const end = trimmed.lastIndexOf('}');
+
+    if (start !== -1 && end > start) {
+      return JSON.parse(trimmed.slice(start, end + 1));
+    }
+  }
+
+  throw new Error(`${label} did not contain valid JSON: ${trimmed}`);
 }
 
 async function readSharedRules() {

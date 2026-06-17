@@ -18,6 +18,9 @@ Rules:
 - Create or repair only the root `AGENTS.md` content.
 - Keep `AGENTS.md` concise. It is an always-loaded navigation layer.
 - Link or point to shared rules instead of copying their full text.
+- The target project vendors shared rules under `agent-rules/shared/`; use these
+  exact shared rule paths: `agent-rules/shared/rules/agents-md.md` and
+  `agent-rules/shared/rules/documentation-architecture.md`.
 - Preserve project-specific facts from the project README and any existing `AGENTS.md`.
 - Do not invent build commands, services, tools, owners, cloud accounts, issue systems, or technologies.
 - Do not recommend optional skills, Notion, task-manager workflows, worktrees, or external tools.

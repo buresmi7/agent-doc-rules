@@ -1,11 +1,11 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
   "scripts": {
-    "test": "npm run test:static && npm run test:agent",
+    "test": "npm run test:static",
     "test:agent": "node test/agent-agents-md.test.mjs",
     "test:audit": "node scripts/check-audit.mjs",
     "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md rules/*.md templates/*.md",

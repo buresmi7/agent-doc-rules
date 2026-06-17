@@ -59,7 +59,7 @@ Keep those in the consuming project.
 Consume this repository as a committed snapshot. This keeps always-on agent
 rules available offline and avoids submodule or package-manager setup.
 
-1. Choose a release tag, for example `v0.1.5`.
+1. Choose a release tag, for example `v0.1.6`.
 2. Copy the released `rules/` and `templates/` directories into the consuming
    project:
 
@@ -73,7 +73,7 @@ rules available offline and avoids submodule or package-manager setup.
 3. Record the source version:
 
    ```text
-   agent-doc-rules v0.1.5
+   agent-doc-rules v0.1.6
    ```
 
 4. Create or update the project root `AGENTS.md`:
@@ -132,35 +132,41 @@ For a public release, keep these current:
 
 ## Validation
 
-Run the full test suite before publishing a release:
+Run the static checks before publishing a release:
 
 ```bash
-ollama pull llama3.1
-OLLAMA_MODEL=llama3.1 npm test
-```
-
-The full suite runs static documentation checks and an end-to-end agent test.
-The agent test imports the library into temporary projects, asks a local model
-to create or repair `AGENTS.md`, then asks a local judge model to grade the
-result against scenario criteria.
-
-For static checks only:
-
-```bash
-npm run test:static
+npm test
 ```
 
 Static checks run Markdown linting, offline local link checks, and a small npm
-audit gate.
+audit gate. `npm run test:static` is an equivalent explicit command.
 
-Use separate generator and judge models when needed:
+The repository also includes a prepared agent E2E harness:
 
 ```bash
-OLLAMA_GENERATOR_MODEL=llama3.1 OLLAMA_JUDGE_MODEL=qwen2.5 npm run test:agent
+npm run test:agent
 ```
 
-The agent test requires a local Ollama server. It fails fast when no model is
-configured.
+That harness imports the library into temporary projects, asks Codex to create
+or repair `AGENTS.md`, then asks Codex to judge the result against scenario
+criteria. It uses `codex exec` by default and expects the local Codex CLI to be
+installed and authenticated.
+
+Use `CODEX_MODEL` when you want to pin the model used by the harness:
+
+```bash
+CODEX_MODEL=gpt-5-codex npm run test:agent
+```
+
+If an Ollama-compatible local model is available, the same harness can be run
+through the explicit Ollama runner:
+
+```bash
+AGENT_TEST_RUNNER=ollama OLLAMA_MODEL=qwen2.5:3b npm run test:agent
+```
+
+The agent E2E test is intentionally separate from the default release checks
+because it depends on an authenticated agent or a configured local model.
 
 The audit gate accepts the current moderate dev-tooling advisories in
 `markdownlint-cli2` and its transitive dependencies because this repository does
