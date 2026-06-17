@@ -59,7 +59,7 @@ Keep those in the consuming project.
 Consume this repository as a committed snapshot. This keeps always-on agent
 rules available offline and avoids submodule or package-manager setup.
 
-1. Choose a release tag, for example `v0.1.3`.
+1. Choose a release tag, for example `v0.1.4`.
 2. Copy the released `rules/` and `templates/` directories into the consuming
    project:
 
@@ -73,7 +73,7 @@ rules available offline and avoids submodule or package-manager setup.
 3. Record the source version:
 
    ```text
-   agent-doc-rules v0.1.3
+   agent-doc-rules v0.1.4
    ```
 
 4. Create or update the project root `AGENTS.md`:
@@ -129,6 +129,29 @@ For a public release, keep these current:
 - release tag and GitHub Release,
 - changelog entry,
 - no project-specific or private environment details in shared rules.
+
+## Validation
+
+Run the deterministic checks before publishing a release:
+
+```bash
+npm test
+```
+
+This runs Markdown linting, offline local link checks, repository-specific
+content checks, and a small npm audit gate.
+
+An optional local LLM review is available for maintainers who run Ollama:
+
+```bash
+OLLAMA_MODEL=llama3.2 npm run test:llm
+```
+
+The LLM review is advisory and skipped when no local model is configured.
+
+The audit gate accepts the current moderate dev-tooling advisories in
+`markdownlint-cli2` and its transitive dependencies because this repository does
+not ship runtime JavaScript. New or higher-severity findings fail the check.
 
 ## Maintainers
 

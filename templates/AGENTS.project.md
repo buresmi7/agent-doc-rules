@@ -5,8 +5,8 @@ mind before making changes.
 
 ## Shared Rules
 
-- [AGENTS.md rules](agent-rules/shared/rules/agents-md.md)
-- [Documentation architecture](agent-rules/shared/rules/documentation-architecture.md)
+- AGENTS.md rules: `agent-rules/shared/rules/agents-md.md`
+- Documentation architecture: `agent-rules/shared/rules/documentation-architecture.md`
 
 ## Local Overrides
 

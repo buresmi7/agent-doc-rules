@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.4 - 2026-06-17
+
+- Added deterministic Markdown, link, and content validation scripts.
+- Added optional local Ollama-based LLM review.
+- Documented validation commands in the README.
+- Added a small npm audit gate with explicit accepted dev-tooling advisories.
+
 ## v0.1.3 - 2026-06-17
 
 - Removed all optional maintainer skill recommendations from the README.
