@@ -1,0 +1,11 @@
+{
+  "scenario": "create-basic",
+  "mode": "create",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Created concise root AGENTS.md content from README facts and shared rule links.",
+  "judgeNotes": "The generated AGENTS.md satisfies all critical criteria: it is concise, links shared rules, includes required local rules, source-of-truth guidance, and verification guidance without copying shared rules or inventing project details."
+}

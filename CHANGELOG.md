@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Moved agent E2E fixtures and example snapshots into colocated scenario
+  directories under `test/scenarios/`.
+
 ## v0.1.6 - 2026-06-17
 
 - Made static checks the default `npm test` release gate.

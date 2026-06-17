@@ -1,0 +1,11 @@
+{
+  "scenario": "repair-bloated",
+  "mode": "repair",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Repaired the root AGENTS.md as a short navigation layer, replacing duplicated shared rules and unsupported tool recommendations with links and supported project constraints.",
+  "judgeNotes": "The generated AGENTS.md is concise, links to the shared rules instead of copying them, preserves README-specific constraints and source-of-truth guidance, keeps Markdown verification guidance, and does not introduce unrelated tools or workflows."
+}

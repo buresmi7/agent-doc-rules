@@ -158,6 +158,14 @@ Use `CODEX_MODEL` when you want to pin the model used by the harness:
 CODEX_MODEL=gpt-5-codex npm run test:agent
 ```
 
+Each agent E2E scenario lives under `test/scenarios/<name>/` with its input
+fixture, criteria, and example passing snapshot together. Refresh snapshots
+after an intentional prompt or criteria change:
+
+```bash
+UPDATE_AGENT_SNAPSHOTS=1 npm run test:agent
+```
+
 If an Ollama-compatible local model is available, the same harness can be run
 through the explicit Ollama runner:
 

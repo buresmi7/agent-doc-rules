@@ -17,6 +17,7 @@ Rules:
 
 - Create or repair only the root `AGENTS.md` content.
 - Keep `AGENTS.md` concise. It is an always-loaded navigation layer.
+- Wrap Markdown prose and bullets so lines stay under 100 characters.
 - Link or point to shared rules instead of copying their full text.
 - The target project vendors shared rules under `agent-rules/shared/`; use these
   exact shared rule paths: `agent-rules/shared/rules/agents-md.md` and

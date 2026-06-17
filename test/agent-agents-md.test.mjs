@@ -15,6 +15,7 @@ const codexModel = process.env.CODEX_MODEL;
 const ollamaHost = process.env.OLLAMA_HOST ?? 'http://127.0.0.1:11434';
 const generatorModel = process.env.OLLAMA_GENERATOR_MODEL ?? process.env.OLLAMA_MODEL;
 const judgeModel = process.env.OLLAMA_JUDGE_MODEL ?? process.env.OLLAMA_MODEL;
+const updateAgentSnapshots = process.env.UPDATE_AGENT_SNAPSHOTS === '1';
 
 const scenarios = [
   { name: 'create-basic', mode: 'create' },
@@ -125,11 +126,11 @@ if (failures.length > 0) {
 console.log(`Agent E2E tests passed for ${scenarios.length} scenarios.`);
 
 async function runScenario(scenario) {
-  const fixtureDir = join(root, 'test/fixtures', scenario.name);
+  const scenarioDir = join(root, 'test/scenarios', scenario.name);
   const tempDir = await mkdtemp(join(tmpdir(), `agent-doc-rules-${scenario.name}-`));
   const projectDir = join(tempDir, 'project');
 
-  await cp(join(fixtureDir, 'project'), projectDir, { recursive: true });
+  await cp(join(scenarioDir, 'fixture'), projectDir, { recursive: true });
   await vendorSharedRules(projectDir);
 
   const projectFilesBefore = await readProjectFiles(projectDir);
@@ -148,7 +149,7 @@ async function runScenario(scenario) {
   const agentsMd = normalizeAgentsMd(generated.agentsMd);
   await writeFile(join(projectDir, 'AGENTS.md'), agentsMd);
 
-  const criteria = await readFile(join(fixtureDir, 'criteria.md'), 'utf8');
+  const criteria = await readFile(join(scenarioDir, 'criteria.md'), 'utf8');
   const projectFilesAfter = await readProjectFiles(projectDir);
   const judgePrompt = render(judgePromptTemplate, {
     criteria,
@@ -165,6 +166,10 @@ async function runScenario(scenario) {
   });
   const pass = Boolean(judgment.pass) && Number(judgment.score) >= 0.8;
 
+  if (pass && updateAgentSnapshots) {
+    await writeScenarioSnapshot({ scenario, agentsMd, generated, judgment });
+  }
+
   if (pass && !process.env.KEEP_TEST_OUTPUT) {
     await rm(tempDir, { recursive: true, force: true });
   }
@@ -175,6 +180,26 @@ async function runScenario(scenario) {
     pass,
     outputDir: pass ? undefined : tempDir,
   };
+}
+
+async function writeScenarioSnapshot({ scenario, agentsMd, generated, judgment }) {
+  const snapshotDir = join(root, 'test/scenarios', scenario.name, 'snapshot');
+  await mkdir(snapshotDir, { recursive: true });
+  await writeFile(join(snapshotDir, 'AGENTS.md'), agentsMd);
+  await writeFile(
+    join(snapshotDir, 'judgment.json'),
+    `${JSON.stringify({
+      scenario: scenario.name,
+      mode: scenario.mode,
+      runner,
+      pass: Boolean(judgment.pass),
+      score: Number(judgment.score),
+      failedCriteria: judgment.failedCriteria,
+      requiredFixes: judgment.requiredFixes,
+      generatorNotes: generated.notes,
+      judgeNotes: judgment.notes,
+    }, null, 2)}\n`,
+  );
 }
 
 async function assertOllamaAvailable() {
