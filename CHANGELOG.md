@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.3 - 2026-06-17
+
+- Removed all optional maintainer skill recommendations from the README.
+- Updated README examples to reference the current release tag.
+
 ## v0.1.2 - 2026-06-17
 
 - Removed Notion-specific skills from the maintainer skill recommendations.
