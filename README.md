@@ -1,61 +1,150 @@
 # Agent Doc Rules
 
-Shared documentation and `AGENTS.md` rules for AI-assisted repositories.
+Reusable documentation and `AGENTS.md` rules for AI-assisted repositories.
 
-This repository is the canonical source for reusable documentation conventions.
-Projects consume these rules as a committed snapshot, then add a short local
-overlay for project-specific constraints.
+`agent-doc-rules` gives teams a small, versioned baseline for repository
+instructions, documentation architecture, and local project overlays. It is for
+projects that want consistent AI-agent behavior without copying long rule blocks
+between repositories.
 
-## What Belongs Here
+## Why This Exists
 
-- Documentation architecture rules.
-- `AGENTS.md` structure and maintenance rules.
-- Templates for project root instructions and local overlays.
-- Small, stable guidance that can apply across multiple repositories.
+AI agents work better when repository instructions are short, stable, and easy
+to route from. The problem is that those instructions often grow into repeated
+walls of process text across `AGENTS.md`, skills, templates, and project docs.
 
-## What Does Not Belong Here
+This library keeps the reusable parts in one place:
 
-- Project-specific workflows.
-- Task manager or issue lifecycle commands.
-- Forge, cloud, deployment, or runtime commands for one project.
-- Secrets, credentials, host names, account IDs, or private environment notes.
-- Long tutorials copied from vendor documentation.
+- how to structure `AGENTS.md`,
+- where documentation rules should live,
+- how to avoid duplicated agent instructions,
+- how to separate shared rules from local project overrides.
 
-## Consume As A Snapshot
+Projects vendor a released snapshot, then add their own local rules on top.
 
-Copy the shared files into a project under a path such as:
-
-```text
-agent-rules/shared/
-  VERSION
-  rules/
-  templates/
-```
-
-The consuming repository should commit the snapshot. Do not rely on remote raw
-links, submodules, or package installation for always-on agent rules.
-
-Record the source version in `agent-rules/shared/VERSION`, for example:
+## What Is Included
 
 ```text
-agent-doc-rules v0.1.0
+rules/
+  agents-md.md
+  documentation-architecture.md
+
+templates/
+  AGENTS.project.md
+  AGENTS.overlay.md
 ```
 
-## Local Project Overlay
+| Path | Purpose |
+| --- | --- |
+| `rules/agents-md.md` | Rules for concise `AGENTS.md` files that link to deeper docs. |
+| `rules/documentation-architecture.md` | Canonical homes for rules, references, templates, and always-loaded docs. |
+| `templates/AGENTS.project.md` | Starter root `AGENTS.md` for a consuming repository. |
+| `templates/AGENTS.overlay.md` | Starter local override file for project-specific constraints. |
 
-Each project keeps its own root `AGENTS.md`. That file should:
+## What Is Not Included
 
-- link to the snapshot rules,
-- keep only local invariants and exceptions,
-- avoid copying rules from the shared core,
-- state when local rules override the shared core.
+This repository deliberately does not contain:
 
-Use `templates/AGENTS.project.md` and `templates/AGENTS.overlay.md` as starting
-points.
+- project-specific workflows,
+- issue lifecycle commands,
+- task manager or worktree conventions,
+- forge, cloud, deployment, or runtime commands,
+- secrets, account IDs, host names, or private environment notes,
+- copied vendor tutorials.
 
-## Versioning
+Keep those in the consuming project.
 
-Use Git tags for released snapshots. Start with `v0.1.0`.
+## Install In A Project
 
-When a project updates the snapshot, update its `VERSION` file and review local
-overlays for obsolete duplicated rules.
+Consume this repository as a committed snapshot. This keeps always-on agent
+rules available offline and avoids submodule or package-manager setup.
+
+1. Choose a release tag, for example `v0.1.1`.
+2. Copy the released `rules/` and `templates/` directories into the consuming
+   project:
+
+   ```text
+   agent-rules/shared/
+     VERSION
+     rules/
+     templates/
+   ```
+
+3. Record the source version:
+
+   ```text
+   agent-doc-rules v0.1.1
+   ```
+
+4. Create or update the project root `AGENTS.md`:
+
+   ```markdown
+   ## Shared Rules
+
+   - [AGENTS.md rules](agent-rules/shared/rules/agents-md.md)
+   - [Documentation architecture](agent-rules/shared/rules/documentation-architecture.md)
+
+   ## Local Overrides
+
+   - Persisted project artifacts are written in Czech.
+   - This local rule overrides the shared core.
+   ```
+
+5. Remove duplicated prose from the project `AGENTS.md`; keep only local
+   invariants, links, and explicit overrides.
+
+## Update A Project Snapshot
+
+When a new release is available:
+
+1. Compare the release diff.
+2. Replace the vendored `agent-rules/shared/rules/` and
+   `agent-rules/shared/templates/` directories.
+3. Update `agent-rules/shared/VERSION`.
+4. Review local overlays and remove rules that are now covered by the shared
+   core.
+5. Check local Markdown links.
+
+## Publishing Model
+
+This repository is published through GitHub tags and releases:
+
+- release tags use `vMAJOR.MINOR.PATCH`,
+- release notes summarize rule and template changes,
+- consumers update snapshots intentionally,
+- `master` can move ahead of the latest release, but projects should vendor
+  from tags.
+
+The repository itself is the source of truth. GitHub topics, releases, and the
+README make it discoverable; consuming projects should not depend on live remote
+links at runtime.
+
+## Optional Codex Skills For Maintainers
+
+Public Codex skills that can help maintain this repository:
+
+| Skill | When it helps |
+| --- | --- |
+| `notion-research-documentation` | Research existing notes and synthesize documentation when source material lives in Notion. |
+| `notion-knowledge-capture` | Turn decisions, chats, and notes into structured knowledge-base entries. |
+| `gh-address-comments` | Work through GitHub PR or issue review comments with the `gh` CLI. |
+| `security-best-practices` | Review future scripts or automation for secure defaults. |
+| `cli-creator` | Useful later if this library grows a durable installer or snapshot-update CLI. |
+
+The library does not require these skills. They are maintainer aids.
+
+## Repository Health Checklist
+
+For a public release, keep these current:
+
+- clear README,
+- MIT license,
+- GitHub description and topics,
+- release tag and GitHub Release,
+- changelog entry,
+- no project-specific or private environment details in shared rules.
+
+## Maintainers
+
+Maintained by the repository owner. Use GitHub issues for concrete bugs,
+improvements, and rule/template proposals.
