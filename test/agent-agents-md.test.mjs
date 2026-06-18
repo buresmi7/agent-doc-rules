@@ -18,8 +18,8 @@ const judgeModel = process.env.OLLAMA_JUDGE_MODEL ?? process.env.OLLAMA_MODEL;
 const updateAgentSnapshots = process.env.UPDATE_AGENT_SNAPSHOTS === '1';
 
 const scenarios = [
-  { name: 'create-basic', mode: 'create' },
-  { name: 'repair-bloated', mode: 'repair' },
+  { name: 'create-basic' },
+  { name: 'repair-bloated' },
 ];
 
 const generateSchema = {
@@ -80,7 +80,6 @@ if (runner === 'ollama') {
 }
 
 const sharedRules = await readSharedRules();
-const generatePromptTemplate = await readFile(join(root, 'test/prompts/generate-agents.md'), 'utf8');
 const judgePromptTemplate = await readFile(join(root, 'test/prompts/judge-agents.md'), 'utf8');
 
 const failures = [];
@@ -133,9 +132,10 @@ async function runScenario(scenario) {
   await cp(join(scenarioDir, 'fixture'), projectDir, { recursive: true });
   await vendorSharedRules(projectDir);
 
+  const scenarioPrompt = await readFile(join(scenarioDir, 'prompt.md'), 'utf8');
   const projectFilesBefore = await readProjectFiles(projectDir);
-  const prompt = render(generatePromptTemplate, {
-    mode: scenario.mode,
+  const prompt = buildGeneratePrompt({
+    scenarioPrompt,
     sharedRules,
     projectFiles: projectFilesBefore,
   });
@@ -182,6 +182,52 @@ async function runScenario(scenario) {
   };
 }
 
+function buildGeneratePrompt({ scenarioPrompt, sharedRules, projectFiles }) {
+  return `# Scenario Prompt
+
+${scenarioPrompt.trim()}
+
+# Harness Instructions
+
+Return JSON only with this shape:
+
+\`\`\`json
+{
+  "agentsMd": "complete root AGENTS.md content",
+  "notes": "short implementation note"
+}
+\`\`\`
+
+Rules:
+
+- Create or repair only the root \`AGENTS.md\` content.
+- Keep \`AGENTS.md\` concise. It is an always-loaded navigation layer.
+- Wrap Markdown prose and bullets so lines stay under 100 characters.
+- Link or point to shared rules instead of copying their full text.
+- The target project vendors shared rules under \`agent-rules/shared/\`; use these
+  exact shared rule paths: \`agent-rules/shared/rules/agents-md.md\`,
+  \`agent-rules/shared/rules/readme.md\`, and
+  \`agent-rules/shared/rules/documentation-architecture.md\`.
+- Preserve project-specific facts from the project README and any existing \`AGENTS.md\`.
+- Do not invent build commands, services, tools, owners, cloud accounts, issue systems, or technologies.
+- Do not recommend optional skills, Notion, task-manager workflows, worktrees, or external tools.
+- Include local overrides only when the project context supports them.
+- Include source-of-truth and verification guidance when the project context supports them.
+
+Shared rules:
+
+\`\`\`text
+${sharedRules}
+\`\`\`
+
+Project files:
+
+\`\`\`text
+${projectFiles}
+\`\`\`
+`;
+}
+
 async function writeScenarioSnapshot({ scenario, agentsMd, generated, judgment }) {
   const snapshotDir = join(root, 'test/scenarios', scenario.name, 'snapshot');
   await mkdir(snapshotDir, { recursive: true });
@@ -190,7 +236,6 @@ async function writeScenarioSnapshot({ scenario, agentsMd, generated, judgment }
     join(snapshotDir, 'judgment.json'),
     `${JSON.stringify({
       scenario: scenario.name,
-      mode: scenario.mode,
       runner,
       pass: Boolean(judgment.pass),
       score: Number(judgment.score),
@@ -380,7 +425,9 @@ function parseJsonOutput(value, label) {
 async function readSharedRules() {
   const files = [
     'rules/agents-md.md',
+    'rules/readme.md',
     'rules/documentation-architecture.md',
+    'references/readme-rubric.md',
     'templates/AGENTS.project.md',
     'templates/AGENTS.overlay.md',
   ];

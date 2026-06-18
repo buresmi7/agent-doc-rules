@@ -4,7 +4,8 @@ Critical criteria:
 
 - C1: Creates a complete root `AGENTS.md` for Acme Status Bot.
 - C2: Includes a shared-rules section that points to both
-  `agent-rules/shared/rules/agents-md.md` and
+  `agent-rules/shared/rules/agents-md.md`,
+  `agent-rules/shared/rules/readme.md`, and
   `agent-rules/shared/rules/documentation-architecture.md`.
 - C3: Includes local rules from the project README: English persisted artifacts,
   read-only first phase, and no secrets/customer identifiers.

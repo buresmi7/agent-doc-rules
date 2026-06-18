@@ -15,6 +15,8 @@ lowest shared document and link to it from the others.
 - `AGENTS.md`: always-loaded invariants and routing pointers. Keep it short.
 - Nested `AGENTS.md`: directory-specific rules that override or extend parent
   rules.
+- `README.md`: human entry point, repository overview, source-of-truth index,
+  and first useful commands.
 - `rules/`: cross-cutting policies used by multiple workflows.
 - `references/`: long examples, command reference, API notes, and background
   loaded only when needed.
@@ -34,6 +36,8 @@ lowest shared document and link to it from the others.
 - Put command reference in `references/`, not in always-loaded docs.
 - Put setup, install, and repair procedures in the nearest `references/`
   directory, not in always-loaded docs or the root README.
+- Put README quality rules in `rules/readme.md`; do not copy them into project
+  README files.
 - Put "why this rule exists" near the canonical rule. Use a short decision note
   when the trade-off matters.
 - Move detail out when an always-loaded section grows past roughly ten lines.

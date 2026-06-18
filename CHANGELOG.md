@@ -4,6 +4,9 @@
 
 - Moved agent E2E fixtures and example snapshots into colocated scenario
   directories under `test/scenarios/`.
+- Moved the generator prompt into each scenario as a short `prompt.md`.
+- Added README guidance and a README review rubric based on the repository
+  documentation patterns used by the source project.
 
 ## v0.1.6 - 2026-06-17
 

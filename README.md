@@ -27,7 +27,11 @@ Projects vendor a released snapshot, then add their own local rules on top.
 ```text
 rules/
   agents-md.md
+  readme.md
   documentation-architecture.md
+
+references/
+  readme-rubric.md
 
 templates/
   AGENTS.project.md
@@ -37,7 +41,9 @@ templates/
 | Path | Purpose |
 | --- | --- |
 | `rules/agents-md.md` | Rules for concise `AGENTS.md` files that link to deeper docs. |
+| `rules/readme.md` | Rules for README files as project-specific guides, not copy-paste templates. |
 | `rules/documentation-architecture.md` | Canonical homes for rules, references, templates, and always-loaded docs. |
+| `references/readme-rubric.md` | Review checklist for generated or edited README files. |
 | `templates/AGENTS.project.md` | Starter root `AGENTS.md` for a consuming repository. |
 | `templates/AGENTS.overlay.md` | Starter local override file for project-specific constraints. |
 
@@ -82,6 +88,7 @@ rules available offline and avoids submodule or package-manager setup.
    ## Shared Rules
 
    - [AGENTS.md rules](agent-rules/shared/rules/agents-md.md)
+   - [README rules](agent-rules/shared/rules/readme.md)
    - [Documentation architecture](agent-rules/shared/rules/documentation-architecture.md)
 
    ## Local Overrides
@@ -158,9 +165,9 @@ Use `CODEX_MODEL` when you want to pin the model used by the harness:
 CODEX_MODEL=gpt-5-codex npm run test:agent
 ```
 
-Each agent E2E scenario lives under `test/scenarios/<name>/` with its input
-fixture, criteria, and example passing snapshot together. Refresh snapshots
-after an intentional prompt or criteria change:
+Each agent E2E scenario lives under `test/scenarios/<name>/` with its prompt,
+input fixture, criteria, and example passing snapshot together. Refresh
+snapshots after an intentional prompt or criteria change:
 
 ```bash
 UPDATE_AGENT_SNAPSHOTS=1 npm run test:agent

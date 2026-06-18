@@ -13,6 +13,12 @@ agent-rules/shared/VERSION
 
 Shared rules apply unless this file states a narrower local override.
 
+## Shared Rules
+
+- AGENTS.md rules: `agent-rules/shared/rules/agents-md.md`
+- README rules: `agent-rules/shared/rules/readme.md`
+- Documentation architecture: `agent-rules/shared/rules/documentation-architecture.md`
+
 ## Local Overrides
 
 - Add language, security, workflow, or phase constraints specific to this

@@ -5,8 +5,9 @@ Critical criteria:
 - R1: Rewrites the existing root `AGENTS.md` into a concise navigation layer.
 - R2: Preserves project-specific facts from the README: English documentation
   and commit messages, documentation-only scope, and financial-data secrecy.
-- R3: Points to both shared rule files:
-  `agent-rules/shared/rules/agents-md.md` and
+- R3: Points to all shared rule files:
+  `agent-rules/shared/rules/agents-md.md`,
+  `agent-rules/shared/rules/readme.md`, and
   `agent-rules/shared/rules/documentation-architecture.md`.
 - R4: Preserves source-of-truth guidance for `README.md` and `docs/decisions/`.
 - R5: Preserves verification guidance for Markdown checks.

@@ -8,8 +8,8 @@
     "test": "npm run test:static",
     "test:agent": "node test/agent-agents-md.test.mjs",
     "test:audit": "node scripts/check-audit.mjs",
-    "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md rules/*.md templates/*.md",
-    "test:markdown": "markdownlint-cli2 \"*.md\" \"rules/*.md\" \"templates/*.md\" \"test/**/*.md\"",
+    "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md rules/*.md references/*.md templates/*.md",
+    "test:markdown": "markdownlint-cli2 \"*.md\" \"rules/*.md\" \"references/*.md\" \"templates/*.md\" \"test/**/*.md\"",
     "test:static": "npm run test:markdown && npm run test:links && npm run test:audit"
   },
   "devDependencies": {
