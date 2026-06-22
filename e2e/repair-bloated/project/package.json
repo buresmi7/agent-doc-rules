@@ -1,0 +1,11 @@
+{
+  "name": "ledger-notes",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+  },
+  "dependencies": {
+    "@agent-doc-rules/skill": "workspace:*"
+  }
+}

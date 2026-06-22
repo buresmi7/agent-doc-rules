@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-doc-rules": {
+      "source": "packages/agent-doc-rules-skill",
+      "sourceType": "local",
+      "computedHash": "35076ae1a82f945dd7febbcfc83337da5cd558cee230c19b1036cafae4e90651"
+    }
+  }
+}

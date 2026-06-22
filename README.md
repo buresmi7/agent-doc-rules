@@ -1,195 +1,135 @@
 # Agent Doc Rules
 
-Reusable documentation and `AGENTS.md` rules for AI-assisted repositories.
+Reusable Agent Skill for concise `AGENTS.md`, README, and repository
+documentation rules.
 
-`agent-doc-rules` gives teams a small, versioned baseline for repository
-instructions, documentation architecture, and local project overlays. It is for
-projects that want consistent AI-agent behavior without copying long rule blocks
-between repositories.
-
-## Why This Exists
-
-AI agents work better when repository instructions are short, stable, and easy
-to route from. The problem is that those instructions often grow into repeated
-walls of process text across `AGENTS.md`, skills, templates, and project docs.
-
-This library keeps the reusable parts in one place:
-
-- how to structure `AGENTS.md`,
-- where documentation rules should live,
-- how to avoid duplicated agent instructions,
-- how to separate shared rules from local project overrides.
-
-Projects vendor a released snapshot, then add their own local rules on top.
+`agent-doc-rules` packages reusable documentation guidance as a standard Agent
+Skill. The repository is a small monorepo: source projects live under
+`packages/`, monorepo tooling lives under `tools/`, and each E2E scenario is
+its own workspace project that depends on the skill workspace.
 
 ## What Is Included
 
-```text
-rules/
-  agents-md.md
-  readme.md
-  documentation-architecture.md
-
-references/
-  readme-rubric.md
-
-templates/
-  AGENTS.project.md
-  AGENTS.overlay.md
-```
-
 | Path | Purpose |
 | --- | --- |
-| `rules/agents-md.md` | Rules for concise `AGENTS.md` files that link to deeper docs. |
-| `rules/readme.md` | Rules for README files as project-specific guides, not copy-paste templates. |
-| `rules/documentation-architecture.md` | Canonical homes for rules, references, templates, and always-loaded docs. |
-| `references/readme-rubric.md` | Review checklist for generated or edited README files. |
-| `templates/AGENTS.project.md` | Starter root `AGENTS.md` for a consuming repository. |
-| `templates/AGENTS.overlay.md` | Starter local override file for project-specific constraints. |
+| `packages/agent-doc-rules-skill/SKILL.md` | Installable skill entry point. |
+| `packages/agent-doc-rules-skill/package.json` | Private workspace package for local consumers. |
+| `packages/agent-doc-rules-skill/references/` | Canonical reusable rules and rubrics. |
+| `packages/agent-doc-rules-skill/assets/templates/` | Starter `AGENTS.md` overlay templates. |
+| `e2e/create-basic/project/` | Workspace project for creating a new `AGENTS.md`. |
+| `e2e/repair-bloated/project/` | Workspace project for repairing a bloated `AGENTS.md`. |
+| `tools/` | Monorepo support scripts. |
+| `scripts/check-audit.mjs` | Small pnpm audit gate for release checks. |
 
-## What Is Not Included
+## Install
 
-This repository deliberately does not contain:
+Install the skill from a released repository:
 
-- project-specific workflows,
-- issue lifecycle commands,
-- task manager or worktree conventions,
-- forge, cloud, deployment, or runtime commands,
-- secrets, account IDs, host names, or private environment notes,
-- copied vendor tutorials.
+```bash
+npx skills add <owner>/<repo> --skill agent-doc-rules
+```
 
-Keep those in the consuming project.
+Install a specific tagged skill directory:
 
-## Install In A Project
+```bash
+npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill
+```
 
-Consume this repository as a committed snapshot. This keeps always-on agent
-rules available offline and avoids submodule or package-manager setup.
+For local development, install the working tree into a temporary or test
+project:
 
-1. Choose a release tag, for example `v0.1.6`.
-2. Copy the released `rules/` and `templates/` directories into the consuming
-   project:
+```bash
+npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
+```
 
-   ```text
-   agent-rules/shared/
-     VERSION
-     rules/
-     templates/
-   ```
+The `skills` CLI installs the skill into the target agent's native skill
+directory, such as `.agents/skills/agent-doc-rules/` for project-scoped Codex
+installations, and records the source in `skills-lock.json`.
 
-3. Record the source version:
+## Usage
 
-   ```text
-   agent-doc-rules v0.1.6
-   ```
+After installation, ask the agent to use the skill explicitly:
 
-4. Create or update the project root `AGENTS.md`:
+```text
+Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
+```
 
-   ```markdown
-   ## Shared Rules
-
-   - [AGENTS.md rules](agent-rules/shared/rules/agents-md.md)
-   - [README rules](agent-rules/shared/rules/readme.md)
-   - [Documentation architecture](agent-rules/shared/rules/documentation-architecture.md)
-
-   ## Local Overrides
-
-   - Persisted project artifacts are written in Czech.
-   - This local rule overrides the shared core.
-   ```
-
-5. Remove duplicated prose from the project `AGENTS.md`; keep only local
-   invariants, links, and explicit overrides.
-
-## Update A Project Snapshot
-
-When a new release is available:
-
-1. Compare the release diff.
-2. Replace the vendored `agent-rules/shared/rules/` and
-   `agent-rules/shared/templates/` directories.
-3. Update `agent-rules/shared/VERSION`.
-4. Review local overlays and remove rules that are now covered by the shared
-   core.
-5. Check local Markdown links.
-
-## Publishing Model
-
-This repository is published through GitHub tags and releases:
-
-- release tags use `vMAJOR.MINOR.PATCH`,
-- release notes summarize rule and template changes,
-- consumers update snapshots intentionally,
-- `master` can move ahead of the latest release, but projects should vendor
-  from tags.
-
-The repository itself is the source of truth. GitHub topics, releases, and the
-README make it discoverable; consuming projects should not depend on live remote
-links at runtime.
-
-## Repository Health Checklist
-
-For a public release, keep these current:
-
-- clear README,
-- MIT license,
-- GitHub description and topics,
-- release tag and GitHub Release,
-- changelog entry,
-- no project-specific or private environment details in shared rules.
+The skill keeps always-loaded agent instructions short, links to canonical
+references, and separates reusable guidance from local project overrides.
 
 ## Validation
 
-Run the static checks before publishing a release:
+Install dependencies with pnpm:
 
 ```bash
-npm test
+corepack pnpm install
 ```
 
-Static checks run Markdown linting, offline local link checks, and a small npm
-audit gate. `npm run test:static` is an equivalent explicit command.
-
-The repository also includes a prepared agent E2E harness:
+Sync the local workspace skill into this monorepo's project-scoped agent skills:
 
 ```bash
-npm run test:agent
+corepack pnpm run skills:sync
 ```
 
-That harness imports the library into temporary projects, asks Codex to create
-or repair `AGENTS.md`, then asks Codex to judge the result against scenario
-criteria. It uses `codex exec` by default and expects the local Codex CLI to be
-installed and authenticated.
-
-Use `CODEX_MODEL` when you want to pin the model used by the harness:
+Verify the local skill installation wiring without running agent E2E:
 
 ```bash
-CODEX_MODEL=gpt-5-codex npm run test:agent
+corepack pnpm run test:install
 ```
 
-Each agent E2E scenario lives under `test/scenarios/<name>/` with its prompt,
-input fixture, criteria, and example passing snapshot together. Refresh
-snapshots after an intentional prompt or criteria change:
+Run the static release checks:
 
 ```bash
-UPDATE_AGENT_SNAPSHOTS=1 npm run test:agent
+corepack pnpm test
 ```
 
-If an Ollama-compatible local model is available, the same harness can be run
-through the explicit Ollama runner:
+Static checks run Markdown linting, offline local link checks, and the pnpm audit
+gate. The agent E2E harness is separate because it depends on an authenticated
+agent or configured local model:
 
 ```bash
-AGENT_TEST_RUNNER=ollama OLLAMA_MODEL=qwen2.5:3b npm run test:agent
+corepack pnpm run test:agent
 ```
 
-The agent E2E test is intentionally separate from the default release checks
-because it depends on an authenticated agent or a configured local model.
+Each E2E workspace depends on the local `@agent-doc-rules/skill` workspace
+package with `workspace:*`. The runner resolves that dependency, copies the
+scenario project to a temporary directory, installs the skill with `npx skills
+add`, asks an agent to create or repair `AGENTS.md`, and judges the result
+against scenario criteria.
 
-The audit gate accepts the current moderate dev-tooling advisories in
-`markdownlint-cli2` and its transitive dependencies because this repository does
-not ship runtime JavaScript. New or higher-severity findings fail the check.
+Use `CODEX_MODEL` to pin the Codex model:
 
-The old deterministic content check was intentionally replaced by this E2E
-test. The main value of the library is whether imported rules help an agent
-produce or repair a good project `AGENTS.md`.
+```bash
+CODEX_MODEL=gpt-5-codex corepack pnpm run test:agent
+```
+
+Refresh passing scenario snapshots after an intentional prompt or criteria
+change:
+
+```bash
+UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
+```
+
+An Ollama-compatible local runner remains available:
+
+```bash
+AGENT_TEST_RUNNER=ollama OLLAMA_MODEL=qwen2.5:3b corepack pnpm run test:agent
+```
+
+## Publishing
+
+Release tags use `vMAJOR.MINOR.PATCH`. The installable artifact is the skill
+directory under `packages/agent-doc-rules-skill/`; root scripts, `tools/`, and
+E2E projects are maintenance infrastructure.
+
+Before publishing, verify:
+
+- `corepack pnpm test` passes,
+- `corepack pnpm run test:install` passes,
+- `npx skills add . --list` discovers `agent-doc-rules`,
+- the changelog describes released skill or template behavior changes,
+- no project-specific workflows, host names, account IDs, secrets, or private
+  environment notes were added to reusable skill content.
 
 ## Maintainers
 

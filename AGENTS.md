@@ -1,23 +1,40 @@
 # Agent Doc Rules - AI Agent Instructions
 
-This repository stores reusable documentation and `AGENTS.md` rules. Keep this
-repository generic; project-specific details belong in consuming repositories.
+This monorepo publishes the reusable `agent-doc-rules` Agent Skill. Keep the
+repository generic; project-specific rules belong in consuming repositories.
+
+## Repository Skill
+
+Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, skill
+references, templates, E2E documentation scenarios, and documentation
+architecture. The root package depends on the local skill workspace and
+`corepack pnpm run skills:sync` installs it into `.agents/skills/`.
+
+## Source Of Truth
+
+- Skill entry point: `packages/agent-doc-rules-skill/SKILL.md`
+- Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
+- Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
+- E2E workspace projects: `e2e/create-basic/project/` and
+  `e2e/repair-bloated/project/`
+- Monorepo support scripts: `tools/`
 
 ## Rules
 
 - Use English for all persisted content in this repository.
-- Keep always-on docs short. Move detail into `rules/` or `templates/`.
+- Keep always-loaded docs short; move reusable detail into the skill references.
+- Do not duplicate canonical rules across root docs and skill references.
 - Do not add project-specific commands, issue workflows, cloud accounts, host
-  names, or environment notes.
-- Keep each rule in one canonical file. Other files should link to it instead
-  of copying it.
-- Treat `README.md` as the user-facing entry point.
-- Treat `rules/` as the authoritative reusable rule set.
-- Treat `templates/` as starter content that projects copy and adapt.
+  names, secrets, or private environment notes.
+- The skill directory is a private pnpm workspace package so the root monorepo
+  and E2E scenarios can depend on it with `workspace:*`.
+- Keep each E2E scenario's `project/` directory as a standalone workspace
+  project that installs its skill dependency through `npx skills add`.
 
 ## Maintenance
 
-- Update `CHANGELOG.md` when changing released behavior or templates.
-- Prefer small, stable rules over broad process.
-- Before finishing, check links manually or with the consuming project's
-  Markdown link checker.
+- Update `CHANGELOG.md` when changing released skill behavior or templates.
+- Update `pnpm-lock.yaml` when workspace metadata changes.
+- Before finishing, run `corepack pnpm test`.
+- When the skill layout changes, also run `corepack pnpm run skills:sync` and
+  `corepack pnpm run test:install`.

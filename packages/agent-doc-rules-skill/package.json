@@ -1,0 +1,13 @@
+{
+  "name": "@agent-doc-rules/skill",
+  "version": "0.1.6",
+  "private": true,
+  "description": "Agent Skill for concise AGENTS.md, README, and repository documentation rules",
+  "type": "module",
+  "files": [
+    "SKILL.md",
+    "agents",
+    "assets",
+    "references"
+  ]
+}

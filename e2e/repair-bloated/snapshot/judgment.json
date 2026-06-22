@@ -1,0 +1,10 @@
+{
+  "scenario": "repair-bloated",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Condensed the root AGENTS.md into a navigation layer, preserved README-backed local rules, linked installed skill references, and removed unsupported workflow/tool recommendations.",
+  "judgeNotes": "The generated AGENTS.md is a concise navigation layer, preserves the README-derived project constraints and source-of-truth guidance, links to all installed skill references, keeps Markdown verification guidance, and does not copy shared prose or invent tools/workflows."
+}

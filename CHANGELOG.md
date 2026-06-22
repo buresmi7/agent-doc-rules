@@ -2,11 +2,25 @@
 
 ## Unreleased
 
-- Moved agent E2E fixtures and example snapshots into colocated scenario
-  directories under `test/scenarios/`.
-- Moved the generator prompt into each scenario as a short `prompt.md`.
-- Added README guidance and a README review rubric based on the repository
-  documentation patterns used by the source project.
+- Changed the release artifact from vendored `rules/` and `templates/`
+  snapshots to a standard Agent Skill under
+  `packages/agent-doc-rules-skill/`.
+- Moved reusable rules, README guidance, the README rubric, and starter
+  templates into the installable skill directory.
+- Made `packages/agent-doc-rules-skill` a private workspace package for local
+  E2E dependencies.
+- Moved each agent E2E scenario fixture project into its own pnpm workspace
+  package.
+- Switched workspace management from npm to pnpm so E2E projects can use
+  `workspace:*` dependencies on the skill package.
+- Moved the skill source into `packages/agent-doc-rules-skill` so repository
+  products are separated from monorepo support files.
+- Added a root `workspace:*` dependency on the skill and a local skill sync
+  script for monorepo maintenance.
+- Moved the shared agent E2E runner into `tools/` and added a fast local skill
+  install smoke test.
+- Updated E2E scenarios to install their workspace skill dependency with
+  `npx skills add` before generating or repairing `AGENTS.md`.
 
 ## v0.1.6 - 2026-06-17
 

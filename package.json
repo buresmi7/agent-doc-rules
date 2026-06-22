@@ -4,15 +4,19 @@
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
-    "test": "npm run test:static",
-    "test:agent": "node test/agent-agents-md.test.mjs",
+    "test": "corepack pnpm run test:static",
+    "test:agent": "corepack pnpm --filter acme-status-bot run test:agent && corepack pnpm --filter ledger-notes run test:agent",
     "test:audit": "node scripts/check-audit.mjs",
-    "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md rules/*.md references/*.md templates/*.md",
-    "test:markdown": "markdownlint-cli2 \"*.md\" \"rules/*.md\" \"references/*.md\" \"templates/*.md\" \"test/**/*.md\"",
-    "test:static": "npm run test:markdown && npm run test:links && npm run test:audit"
+    "test:install": "node tools/check-skill-install.mjs",
+    "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md packages/**/*.md e2e/**/*.md",
+    "test:markdown": "markdownlint-cli2 \"*.md\" \"packages/**/*.md\" \"e2e/**/*.md\"",
+    "skills:sync": "node tools/sync-local-skill.mjs",
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:audit"
   },
   "devDependencies": {
+    "@agent-doc-rules/skill": "workspace:*",
     "markdownlint-cli2": "^0.22.1"
   }
 }
