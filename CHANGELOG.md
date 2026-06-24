@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.2.0 - 2026-06-24
+
 - Changed the release artifact from vendored `rules/` and `templates/`
   snapshots to a standard Agent Skill under
   `packages/agent-doc-rules-skill/`.
