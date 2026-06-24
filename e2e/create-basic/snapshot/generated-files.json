@@ -1,0 +1,6 @@
+[
+  {
+    "path": "AGENTS.md",
+    "content": "# Acme Status Bot - AI Agent Instructions\n\nAcme Status Bot is a small internal service that reads public status feeds and\ncreates a daily Markdown summary for operators.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)\n\n## Source Of Truth\n\n- Product behavior lives in `README.md`.\n- Operational procedures live in `docs/runbooks/`.\n- Architecture decisions live in `docs/decisions/`.\n\n## Local Rules\n\n- Persisted project artifacts are written in English.\n- The first implementation phase is read-only.\n- Do not store API tokens, status feed credentials, or customer identifiers in\n  the repository.\n\n## Verification\n\n- Run `npm test` before publishing documentation or template changes.\n- If tests cannot run, document the reason and remaining risk.\n"
+  }
+]

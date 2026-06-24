@@ -1,7 +1,7 @@
 import { mkdtemp, rm, cp, mkdir, writeFile, readFile, readdir, stat } from 'node:fs/promises';
 import { spawn, spawnSync } from 'node:child_process';
 import { basename, dirname, join, relative, resolve } from 'node:path';
-import { tmpdir } from 'node:os';
+import { homedir, tmpdir } from 'node:os';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 
@@ -23,20 +23,53 @@ const runner = process.env.AGENT_TEST_RUNNER ?? (
     : 'codex'
 );
 const codexBin = process.env.CODEX_BIN ?? 'codex';
-const codexModel = process.env.CODEX_MODEL;
 const ollamaHost = process.env.OLLAMA_HOST ?? 'http://127.0.0.1:11434';
 const generatorModel = process.env.OLLAMA_GENERATOR_MODEL ?? process.env.OLLAMA_MODEL;
 const judgeModel = process.env.OLLAMA_JUDGE_MODEL ?? process.env.OLLAMA_MODEL;
 const updateAgentSnapshots = process.env.UPDATE_AGENT_SNAPSHOTS === '1';
+const codexConfig = runner === 'codex' ? await readCodexConfig() : {};
+const codexModel = process.env.CODEX_MODEL ?? codexConfig.model ?? null;
+const codexReasoningEffort = (
+  process.env.CODEX_REASONING_EFFORT
+  ?? process.env.CODEX_MODEL_REASONING_EFFORT
+  ?? codexConfig.modelReasoningEffort
+  ?? null
+);
+const codexModelSource = process.env.CODEX_MODEL
+  ? 'CODEX_MODEL'
+  : codexConfig.model
+    ? codexConfig.source
+    : null;
+const codexReasoningEffortSource = (
+  process.env.CODEX_REASONING_EFFORT
+    ? 'CODEX_REASONING_EFFORT'
+    : process.env.CODEX_MODEL_REASONING_EFFORT
+      ? 'CODEX_MODEL_REASONING_EFFORT'
+      : codexConfig.modelReasoningEffort
+        ? codexConfig.source
+        : null
+);
 
 const generateSchema = {
   type: 'object',
   additionalProperties: false,
   properties: {
-    agentsMd: { type: 'string' },
+    files: {
+      type: 'array',
+      minItems: 1,
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          path: { type: 'string' },
+          content: { type: 'string' },
+        },
+        required: ['path', 'content'],
+      },
+    },
     notes: { type: 'string' },
   },
-  required: ['agentsMd', 'notes'],
+  required: ['files', 'notes'],
 };
 
 const judgeSchema = {
@@ -89,6 +122,7 @@ if (runner === 'ollama') {
 const skillReference = await readSkillReference();
 const ollamaSkillContext = runner === 'ollama' ? await readSkillUsePrompt() : '';
 const judgePromptTemplate = await readFile(join(e2eRoot, 'prompts/judge-agents.md'), 'utf8');
+const agentMetadata = await readAgentMetadata();
 
 const result = await runScenario().catch((error) => ({
   scenario: scenarioName,
@@ -142,8 +176,8 @@ async function runScenario() {
     schema: generateSchema,
     cwd: projectDir,
   });
-  const agentsMd = normalizeAgentsMd(generated.agentsMd);
-  await writeFile(join(projectDir, 'AGENTS.md'), agentsMd);
+  const generatedFiles = normalizeGeneratedFiles(generated.files);
+  await writeGeneratedFiles(projectDir, generatedFiles);
 
   const criteria = await readFile(join(scenarioDir, 'criteria.md'), 'utf8');
   const projectFilesAfter = await readProjectFiles(projectDir);
@@ -152,7 +186,7 @@ async function runScenario() {
     skillReference,
     originalProjectFiles: projectFilesBefore,
     projectFiles: projectFilesAfter,
-    agentsMd,
+    generatedFiles: formatGeneratedFiles(generatedFiles),
   });
 
   const judgment = await agentGenerate({
@@ -164,7 +198,7 @@ async function runScenario() {
   const pass = Boolean(judgment.pass) && Number(judgment.score) >= 0.8;
 
   if (pass && updateAgentSnapshots) {
-    await writeScenarioSnapshot({ agentsMd, generated, judgment });
+    await writeScenarioSnapshot({ generatedFiles, generated, judgment });
   }
 
   if (pass && !process.env.KEEP_TEST_OUTPUT) {
@@ -230,28 +264,26 @@ Return JSON only with this shape:
 
 \`\`\`json
 {
-  "agentsMd": "complete root AGENTS.md content",
+  "files": [
+    {
+      "path": "relative/path.md",
+      "content": "complete file content"
+    }
+  ],
   "notes": "short implementation note"
 }
 \`\`\`
 
 Rules:
 
-- Create or repair only the root \`AGENTS.md\` content.
-- Keep \`AGENTS.md\` concise. It is an always-loaded navigation layer.
+- Include only files you create or change.
+- Use repository-relative file paths.
+- Do not use absolute paths or parent-directory traversal.
 - Wrap Markdown prose and bullets so lines stay under 100 characters.
-- Link or point to installed shared rules instead of copying their full text.
+- Format Markdown tables with spaces around each pipe separator.
 - The target project has installed \`agent-doc-rules\` at
-  \`.agents/skills/agent-doc-rules/\`; use reference paths under that directory.
-- Include these installed shared rule references when creating a Shared Rules
-  section: \`.agents/skills/agent-doc-rules/references/agents-md.md\`,
-  \`.agents/skills/agent-doc-rules/references/readme.md\`, and
-  \`.agents/skills/agent-doc-rules/references/documentation-architecture.md\`.
-- Preserve project-specific facts from the project README and any existing \`AGENTS.md\`.
-- Do not invent build commands, services, tools, owners, cloud accounts, issue systems, or technologies.
-- Do not recommend optional skills, Notion, task-manager workflows, worktrees, or external tools.
-- Include local overrides only when the project context supports them.
-- Include source-of-truth and verification guidance when the project context supports them.
+  \`.agents/skills/agent-doc-rules/\`.
+- Preserve facts from the project files. Do not invent repository details.
 ${optionalSkillContext}
 Project files:
 
@@ -261,10 +293,37 @@ ${projectFiles}
 `;
 }
 
-async function writeScenarioSnapshot({ agentsMd, generated, judgment }) {
+async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
   const snapshotDir = join(scenarioDir, 'snapshot');
+  const filesDir = join(snapshotDir, 'files');
   await mkdir(snapshotDir, { recursive: true });
-  await writeFile(join(snapshotDir, 'AGENTS.md'), agentsMd);
+  await rm(filesDir, { recursive: true, force: true });
+  await mkdir(filesDir, { recursive: true });
+
+  for (const file of generatedFiles) {
+    const target = join(filesDir, file.path);
+
+    await mkdir(dirname(target), { recursive: true });
+    await writeFile(target, file.content);
+  }
+
+  await writeFile(
+    join(snapshotDir, 'generated-files.json'),
+    `${JSON.stringify(generatedFiles, null, 2)}\n`,
+  );
+  await writeFile(
+    join(snapshotDir, 'metadata.json'),
+    `${JSON.stringify({
+      scenario: scenarioName,
+      runner,
+      agent: agentMetadata,
+      skillsCliVersion,
+      skillPackage: {
+        name: '@agent-doc-rules/skill',
+        source: relative(repoRoot, skillSource),
+      },
+    }, null, 2)}\n`,
+  );
   await writeFile(
     join(snapshotDir, 'judgment.json'),
     `${JSON.stringify({
@@ -278,6 +337,68 @@ async function writeScenarioSnapshot({ agentsMd, generated, judgment }) {
       judgeNotes: judgment.notes,
     }, null, 2)}\n`,
   );
+}
+
+async function readAgentMetadata() {
+  if (runner === 'codex') {
+    const { stdout } = await runCommand(codexBin, ['--version'], '', {});
+
+    return {
+      name: 'codex',
+      command: codexBin,
+      cliVersion: stdout.trim(),
+      model: {
+        name: codexModel,
+        reasoningEffort: codexReasoningEffort,
+        label: formatModelLabel(codexModel, codexReasoningEffort),
+        source: {
+          name: codexModelSource,
+          reasoningEffort: codexReasoningEffortSource,
+        },
+      },
+    };
+  }
+
+  return {
+    name: 'ollama',
+    host: ollamaHost,
+    model: {
+      generator: generatorModel,
+      judge: judgeModel,
+      label: generatorModel === judgeModel
+        ? generatorModel
+        : `${generatorModel} generator / ${judgeModel} judge`,
+    },
+  };
+}
+
+function formatModelLabel(model, reasoningEffort) {
+  return [model, reasoningEffort].filter(Boolean).join(' ') || null;
+}
+
+async function readCodexConfig() {
+  const codexHome = process.env.CODEX_HOME ?? join(homedir(), '.codex');
+  const configPath = join(codexHome, 'config.toml');
+  const content = await readFile(configPath, 'utf8').catch((error) => {
+    if (error.code === 'ENOENT') {
+      return '';
+    }
+
+    throw error;
+  });
+  const rootConfig = content.split(/\n(?=\[)/, 1)[0];
+
+  return {
+    model: readTomlString(rootConfig, 'model'),
+    modelReasoningEffort: readTomlString(rootConfig, 'model_reasoning_effort'),
+    source: process.env.CODEX_HOME ? '$CODEX_HOME/config.toml' : '~/.codex/config.toml',
+  };
+}
+
+function readTomlString(content, key) {
+  const match = content.match(new RegExp(`^${key}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s#]+))`, 'm'));
+
+  return match?.[1] ?? match?.[2] ?? match?.[3] ?? null;
 }
 
 async function assertOllamaAvailable() {
@@ -366,6 +487,10 @@ async function codexGenerate({ role, prompt, schema, cwd }) {
 
   if (codexModel) {
     args.push('--model', codexModel);
+  }
+
+  if (codexReasoningEffort) {
+    args.push('--config', `model_reasoning_effort=${JSON.stringify(codexReasoningEffort)}`);
   }
 
   args.push('--cd', cwd, '-');
@@ -479,6 +604,8 @@ async function readSkillReference() {
     'references/readme.md',
     'references/documentation-architecture.md',
     'references/readme-rubric.md',
+    'references/writing-style.md',
+    'docs/context-placement.md',
     'assets/templates/AGENTS.project.md',
     'assets/templates/AGENTS.overlay.md',
   ];
@@ -499,7 +626,7 @@ async function readProjectFiles(projectDir) {
   for (const file of files) {
     const rel = relative(projectDir, file);
 
-    if (rel.startsWith('.agents/skills/') || rel === 'skills-lock.json') {
+    if (rel.startsWith('.agents/skills/agent-doc-rules/') || rel === 'skills-lock.json') {
       continue;
     }
 
@@ -534,6 +661,10 @@ async function collectFiles(dir) {
   const files = [];
 
   for (const entry of entries) {
+    if (['node_modules', '.git'].includes(entry)) {
+      continue;
+    }
+
     const path = join(dir, entry);
     const info = await stat(path);
 
@@ -558,12 +689,54 @@ async function assertFile(path) {
   }
 }
 
-function normalizeAgentsMd(value) {
-  if (typeof value !== 'string' || value.trim().length === 0) {
-    throw new Error('Generator did not return non-empty agentsMd.');
+function normalizeGeneratedFiles(files) {
+  if (!Array.isArray(files) || files.length === 0) {
+    throw new Error('Generator did not return any files.');
   }
 
-  return `${value.trim()}\n`;
+  const seen = new Set();
+
+  return files.map((file) => {
+    if (!file || typeof file.path !== 'string' || typeof file.content !== 'string') {
+      throw new Error('Generator returned an invalid file entry.');
+    }
+
+    const normalizedPath = file.path.replaceAll('\\', '/').replace(/^\.\/+/, '');
+
+    if (!normalizedPath || normalizedPath.startsWith('/') || normalizedPath.includes('../')) {
+      throw new Error(`Generator returned unsafe file path: ${file.path}`);
+    }
+
+    if (normalizedPath.startsWith('.agents/skills/agent-doc-rules/')) {
+      throw new Error(`Generator must not modify installed skill files: ${normalizedPath}`);
+    }
+
+    if (seen.has(normalizedPath)) {
+      throw new Error(`Generator returned duplicate file path: ${normalizedPath}`);
+    }
+
+    seen.add(normalizedPath);
+
+    return {
+      path: normalizedPath,
+      content: `${file.content.trim()}\n`,
+    };
+  }).sort((a, b) => a.path.localeCompare(b.path));
+}
+
+async function writeGeneratedFiles(projectDir, files) {
+  for (const file of files) {
+    const target = join(projectDir, file.path);
+
+    await mkdir(dirname(target), { recursive: true });
+    await writeFile(target, file.content);
+  }
+}
+
+function formatGeneratedFiles(files) {
+  return files.map((file) => {
+    return `--- ${file.path} ---\n${file.content}`;
+  }).join('\n\n');
 }
 
 function render(template, values) {

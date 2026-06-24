@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Generated concise root AGENTS.md content from the README and linked installed skill references without inventing project details.",
-  "judgeNotes": "The generated AGENTS.md satisfies all critical criteria: it is concise, links installed skill references, includes required local rules, source-of-truth guidance, and verification guidance without copying shared rules or inventing project details."
+  "generatorNotes": "Created concise root agent instructions from README; `npm test` passes.",
+  "judgeNotes": "The generated AGENTS.md is complete, concise, links to the shared agent-doc-rules reference, preserves all README local rules, source-of-truth guidance, and verification requirements, and does not invent unsupported workflows or copy shared rules."
 }

@@ -1,0 +1,23 @@
+{
+  "scenario": "context-placement",
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.135.0",
+    "model": {
+      "name": "gpt-5.5",
+      "reasoningEffort": "xhigh",
+      "label": "gpt-5.5 xhigh",
+      "source": {
+        "name": "~/.codex/config.toml",
+        "reasoningEffort": "~/.codex/config.toml"
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@agent-doc-rules/skill",
+    "source": "packages/agent-doc-rules-skill"
+  }
+}

@@ -5,10 +5,9 @@ Critical criteria:
 - R1: Rewrites the existing root `AGENTS.md` into a concise navigation layer.
 - R2: Preserves project-specific facts from the README: English documentation
   and commit messages, documentation-only scope, and financial-data secrecy.
-- R3: Points to all shared rule files:
-  `.agents/skills/agent-doc-rules/references/agents-md.md`,
-  `.agents/skills/agent-doc-rules/references/readme.md`, and
-  `.agents/skills/agent-doc-rules/references/documentation-architecture.md`.
+- R3: Points to installed `agent-doc-rules` guidance, including
+  `.agents/skills/agent-doc-rules/references/agents-md.md`, instead of copying
+  the shared rules into the project `AGENTS.md`.
 - R4: Preserves source-of-truth guidance for `README.md` and `docs/decisions/`.
 - R5: Preserves verification guidance for Markdown checks.
 - R6: Removes the copied shared documentation architecture prose.

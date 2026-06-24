@@ -13,6 +13,8 @@ Use this rubric to review a generated or edited `README.md`.
 - **Actionability:** A new contributor can find the first useful action.
 - **Verification:** The README names relevant checks or states that no check is
   known.
+- **Plain English:** The README uses direct, concrete language and avoids
+  generic AI or marketing phrasing.
 - **Safety:** Secrets, credentials, account IDs, private hosts, and sensitive
   environment values are absent.
 - **No placeholders:** Empty template sections and fake badges are removed.
@@ -33,3 +35,4 @@ Ask these questions before accepting the change:
 - Would a project-specific detail be better placed in a nearby README, runbook,
   or reference file?
 - Does the README link to deeper docs before it becomes a long manual?
+- Could any sentence be shorter without losing meaning?

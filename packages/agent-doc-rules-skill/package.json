@@ -5,9 +5,27 @@
   "description": "Agent Skill for concise AGENTS.md, README, and repository documentation rules",
   "type": "module",
   "files": [
+    "README.md",
     "SKILL.md",
     "agents",
     "assets",
+    "docs",
     "references"
-  ]
+  ],
+  "devDependencies": {
+    "docmd-skills": "1.1.0",
+    "skill-meta-skill": "0.1.0"
+  },
+  "agentDocRules": {
+    "projectSkills": [
+      {
+        "name": "docmd-writer",
+        "source": "docmd-skills"
+      },
+      {
+        "name": "meta-skill",
+        "source": "skill-meta-skill"
+      }
+    ]
+  }
 }

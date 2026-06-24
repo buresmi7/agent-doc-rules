@@ -16,6 +16,8 @@ It is a navigation layer, not comprehensive documentation.
 - Store detailed procedures in `rules/`, `references/`, skills, or component
   docs.
 - Do not copy shared rules into project `AGENTS.md`; link to the shared rule.
+- When repairing a file that already copied shared rules, replace the copied
+  block with a short `Shared Rules` section that links to the installed rule.
 - State local overrides explicitly.
 - Prefer nested `AGENTS.md` files for directory-specific rules.
 
@@ -42,7 +44,8 @@ Canonical project docs and decision records.
 
 ## Verification
 
-Project-specific validation commands or checks.
+Project-specific validation commands or checks. If a check cannot run, state why
+and document the remaining risk.
 ```
 
 ## What To Include
@@ -51,6 +54,8 @@ Project-specific validation commands or checks.
 - Links to shared rules and project docs.
 - Local language, safety, security, or workflow overrides.
 - Project-specific verification commands.
+- A short rule to document the reason and residual risk when verification cannot
+  run.
 - Pointers to issue, PR, or proposal conventions.
 
 ## What To Avoid

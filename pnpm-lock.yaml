@@ -15,7 +15,31 @@ importers:
         specifier: ^0.22.1
         version: 0.22.1
 
+  e2e/context-placement/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  e2e/create-agent-skill-from-workflow/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
   e2e/create-basic/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  e2e/local-language-override/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  e2e/plain-english-doc-review/project:
     dependencies:
       '@agent-doc-rules/skill':
         specifier: workspace:*
@@ -27,7 +51,20 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
-  packages/agent-doc-rules-skill: {}
+  e2e/split-bloated-readme/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  packages/agent-doc-rules-skill:
+    devDependencies:
+      docmd-skills:
+        specifier: 1.1.0
+        version: 1.1.0
+      skill-meta-skill:
+        specifier: 0.1.0
+        version: 0.1.0
 
 packages:
 
@@ -101,6 +138,11 @@ packages:
 
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
+
+  docmd-skills@1.1.0:
+    resolution: {integrity: sha512-JEEqzkGI2pMSdjEB+8lnbdD9HD295y8fN12Z0R19aQovOBGA7a+bDj0+NpTyZDV4FS5of5v0S4to6BgVl9/Fxg==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
@@ -307,6 +349,11 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
+  skill-meta-skill@0.1.0:
+    resolution: {integrity: sha512-uJ4d7usKIYBpnzUJ31ntq3T9Fsv7kL02eGASGagejBvQJPEQH57m1Rfh3iE3faMffx6M7oCw1Jj+ln+RNRXmBA==}
+    engines: {node: '>=18'}
+    hasBin: true
+
   slash@5.1.0:
     resolution: {integrity: sha512-ZA6oR3T/pEyuqwMgAKT0/hAv8oAXckzbkmR0UkUosQ+Mc4RxGoJkRmwHgHufaenlyAgE1Mxgpdcrf75y6XcnDg==}
     engines: {node: '>=14.16'}
@@ -389,6 +436,8 @@ snapshots:
   devlop@1.1.0:
     dependencies:
       dequal: 2.0.3
+
+  docmd-skills@1.1.0: {}
 
   entities@4.5.0: {}
 
@@ -707,6 +756,8 @@ snapshots:
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
+
+  skill-meta-skill@0.1.0: {}
 
   slash@5.1.0: {}
 

@@ -7,12 +7,12 @@
   "packageManager": "pnpm@11.8.0",
   "scripts": {
     "test": "corepack pnpm run test:static",
-    "test:agent": "corepack pnpm --filter acme-status-bot run test:agent && corepack pnpm --filter ledger-notes run test:agent",
+    "test:agent": "corepack pnpm -r --filter './e2e/*/project' run test:agent",
     "test:audit": "node scripts/check-audit.mjs",
     "test:install": "node tools/check-skill-install.mjs",
-    "test:links": "lychee --offline --no-progress -- README.md AGENTS.md CHANGELOG.md packages/**/*.md e2e/**/*.md",
-    "test:markdown": "markdownlint-cli2 \"*.md\" \"packages/**/*.md\" \"e2e/**/*.md\"",
-    "skills:sync": "node tools/sync-local-skill.mjs",
+    "test:links": "lychee --offline --no-progress --exclude-path '(^|/)node_modules/' -- README.md AGENTS.md CHANGELOG.md docs/**/*.md packages/**/*.md e2e/**/*.md",
+    "test:markdown": "markdownlint-cli2 \"*.md\" \"docs/**/*.md\" \"packages/**/*.md\" \"e2e/**/*.md\" \"!**/node_modules/**\"",
+    "skills:sync": "node tools/sync-project-skills.mjs",
     "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:audit"
   },
   "devDependencies": {

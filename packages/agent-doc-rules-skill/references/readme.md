@@ -1,6 +1,8 @@
 # README Rules
 
 Use this rule when creating or maintaining a project `README.md`.
+Also apply [Documentation writing style](writing-style.md) for prose,
+structure, and plain-English review.
 
 ## Purpose
 

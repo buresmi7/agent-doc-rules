@@ -21,6 +21,28 @@
   install smoke test.
 - Updated E2E scenarios to install their workspace skill dependency with
   `npx skills add` before generating or repairing `AGENTS.md`.
+- Added a project-scoped maintainer skill set for skill authoring, document
+  coauthoring, Diataxis documentation, plain-English editing, and Markdown index
+  maintenance.
+- Use `skills-lock.json` as the source of truth for restoring external
+  project-scoped maintainer skills.
+- Added npm-sourced `docmd-writer` and `meta-skill` maintainer skills as
+  `devDependencies` of the skill workspace package.
+- Added a project skill sync wrapper that restores npm-sourced skill
+  dependencies from the skill package's `node_modules` into root
+  `.agents/skills/`.
+- Documented the maintainer skill sync model and add/update procedure.
+- Added plain-English documentation writing guidance to the published
+  `agent-doc-rules` skill.
+- Added attribution for documentation and skill-design principles used by the
+  published skill.
+- Added a package-level README and context-placement docs for the published
+  skill.
+- Refocused the root README on monorepo goals, projects, and maintainer
+  workflow.
+- Generalized the agent E2E harness to judge multi-file documentation changes.
+- Added E2E scenarios for README splitting, context placement, agent skill
+  extraction, plain-English README cleanup, and local language overrides.
 
 ## v0.1.6 - 2026-06-17
 

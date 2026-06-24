@@ -1,0 +1,13 @@
+{
+  "name": "faktury-cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+  },
+  "dependencies": {
+    "@agent-doc-rules/skill": "workspace:*"
+  }
+}

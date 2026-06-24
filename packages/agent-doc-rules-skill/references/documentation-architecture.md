@@ -31,11 +31,13 @@ lowest shared document and link to it from the others.
 ## Placement Rules
 
 - Put stable facts near the thing they describe.
-- Put repeated workflow behavior in a workflow or skill document.
+- Put repeated agent workflow behavior in a task-specific skill.
 - Put cross-cutting policy in `rules/`.
+- Put rationale for format or architecture choices in `docs/`, not in the root
+  README.
 - Put command reference in `references/`, not in always-loaded docs.
-- Put setup, install, and repair procedures in the nearest `references/`
-  directory, not in always-loaded docs or the root README.
+- Put setup, install, repair, and troubleshooting procedures in the nearest
+  detailed doc or skill reference, not in always-loaded docs or the root README.
 - Put README quality rules in `rules/readme.md`; do not copy them into project
   README files.
 - Put "why this rule exists" near the canonical rule. Use a short decision note

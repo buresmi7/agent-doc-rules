@@ -1,0 +1,10 @@
+{
+  "scenario": "plain-english-doc-review",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Rewrote the README in plain English and kept only facts present in the project files.",
+  "judgeNotes": "The generated README preserves the supported project facts, removes the generic marketing phrasing, stays concise, and does not invent setup, deployment, cloud, or workflow details."
+}

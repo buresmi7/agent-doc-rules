@@ -1,0 +1,10 @@
+{
+  "scenario": "create-agent-skill-from-workflow",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Moved the drafting workflow into a local skill, added AGENTS routing, and ran `npm test` (0 tests).",
+  "judgeNotes": "Generated documentation meets all critical criteria: it moves the repeated workflow into a task-specific skill, keeps README and AGENTS.md concise, preserves privacy and residual-risk rules, and does not invent unsupported project facts."
+}

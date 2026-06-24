@@ -1,0 +1,14 @@
+[
+  {
+    "path": ".agents/skills/release-notes/SKILL.md",
+    "content": "---\nname: release-notes\ndescription: Draft Atlas CLI release notes from the changelog and release input.\n---\n\n# Release Notes\n\nUse this skill when drafting or updating Atlas CLI release notes in\n`docs/releases/<version>.md`.\n\n## Workflow\n\n1. Read `CHANGELOG.md`.\n2. Read merged pull request titles from `docs/release-input.md`.\n3. Group changes into Added, Changed, Fixed, and Removed.\n4. Keep customer names and private issue links out of release notes.\n5. Write `docs/releases/<version>.md`.\n6. If the release input is incomplete, write a short residual-risk note instead\n   of inventing missing changes.\n\n## Verification\n\nRun `npm test` before publishing release documentation changes. If the check\ncannot run, state why and include the remaining risk.\n"
+  },
+  {
+    "path": "AGENTS.md",
+    "content": "# Atlas Release Notes - AI Agent Instructions\n\nAtlas Release Notes keeps release summaries for the Atlas CLI.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)\n- [README rules](.agents/skills/agent-doc-rules/references/readme.md)\n\n## Local Rules\n\n- Use the [release notes skill](.agents/skills/release-notes/SKILL.md) when drafting\n  `docs/releases/<version>.md`.\n- Keep detailed release drafting steps out of `README.md`; the skill is the\n  canonical workflow.\n\n## Source Of Truth\n\n- `CHANGELOG.md` lists current unreleased changes.\n- `docs/release-input.md` lists release input gathered from merged pull requests.\n- `README.md` is the human entry point and documentation index.\n\n## Verification\n\nRun `npm test` before publishing release documentation changes. If the check cannot\nrun, state why and include the remaining risk.\n"
+  },
+  {
+    "path": "README.md",
+    "content": "# Atlas Release Notes\n\nAtlas Release Notes keeps release summaries for the Atlas CLI.\n\n## Canonical Docs\n\n| Document | Content |\n| --- | --- |\n| `CHANGELOG.md` | Current unreleased changes. |\n| `docs/release-input.md` | Merged pull request title inputs and publication exclusions. |\n| `AGENTS.md` | Local agent routing and verification rules. |\n| `.agents/skills/release-notes/SKILL.md` | Agent workflow for drafting release notes. |\n\nDrafted release notes are written under `docs/releases/<version>.md`.\n\n## Verification\n\nRun this before publishing release documentation changes:\n\n```sh\nnpm test\n```\n"
+  }
+]

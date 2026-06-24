@@ -1,3 +1,5 @@
 node_modules/
 .lycheecache
 npm-debug.log*
+.agents/skills/*
+!.agents/skills/agent-doc-rules

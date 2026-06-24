@@ -1,0 +1,10 @@
+{
+  "scenario": "context-placement",
+  "runner": "codex",
+  "pass": true,
+  "score": 0.96,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Moved each inbox fact to a canonical doc and reduced notes.md to pointers. No Markdown or link checker is defined in package.json, so no doc check was run.",
+  "judgeNotes": "All critical placement requirements are met. README provides the project purpose, a useful test command, and a canonical docs index; AGENTS.md stays concise and routes agents to schema, safety, troubleshooting, and residual-risk guidance. Durable facts from notes.md were moved into appropriate docs without inventing unsupported project details or creating an unnecessary skill."
+}

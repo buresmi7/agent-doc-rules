@@ -1,6 +1,7 @@
-# Judge AGENTS.md
+# Judge Generated Documentation
 
-You are judging the root `AGENTS.md` produced for a temporary repository.
+You are judging generated documentation and agent-context files for a temporary
+repository.
 
 Return JSON only with this shape:
 
@@ -23,9 +24,11 @@ Scoring:
 
 - `pass` must be true only when all critical criteria pass.
 - `score` is from 0.0 to 1.0.
-- Fail if the output copies shared rules instead of linking to them.
-- Fail if the output invents project facts or tools.
 - Fail if the output omits a critical requirement from the criteria.
+- Fail if the output invents project facts, tools, services, commands, or
+  workflows not supported by the project context.
+- Fail if the output copies reusable shared rules when the criteria require
+  linking or concise routing.
 
 Scenario criteria:
 
@@ -51,8 +54,8 @@ Project context:
 {{projectFiles}}
 ```
 
-Generated `AGENTS.md`:
+Generated files:
 
-```markdown
-{{agentsMd}}
+```text
+{{generatedFiles}}
 ```
