@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Rewrote the README in plain English and kept only facts present in the project files.",
-  "judgeNotes": "The generated README preserves the supported project facts, removes the generic marketing phrasing, stays concise, and does not invent setup, deployment, cloud, or workflow details."
+  "generatorNotes": "Rewrote README.md in plain contributor-focused language and kept documented commands to the verified package script.",
+  "judgeNotes": "The README preserves the supported facts, replaces marketing phrasing with direct repository details, keeps the content concise, documents only the verified npm test command, and does not add unsupported docs, services, workflows, or agent files."
 }

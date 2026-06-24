@@ -53,3 +53,11 @@ Useful references included:
 - [docmd-io/docmd-skills](https://github.com/docmd-io/docmd-skills)
 - [github/awesome-copilot](https://github.com/github/awesome-copilot)
 - [b1rdmania/claude-plain-english-skill](https://github.com/b1rdmania/claude-plain-english-skill)
+
+## Local Meta-Work Workflow
+
+The documentation duplicate-check model comes from the earlier `meta-work`
+maintenance workflow: run deterministic Markdown and link checks first, then
+review only duplicate candidates with an agent. The published skill keeps that
+separation so routine validation stays cheap and semantic review remains
+explicit.

@@ -23,14 +23,20 @@ canonical, plain, and easy for agents and people to use.
    - For documentation placement, canonical homes, or skill/template structure,
      read [docs/context-placement.md](docs/context-placement.md) and
      [references/documentation-architecture.md](references/documentation-architecture.md).
+   - For documentation validation or duplicate checks, read
+     [references/validation.md](references/validation.md).
 3. When starter content is useful, adapt the templates in
    [assets/templates/](assets/templates/) instead of copying unrelated prose.
 4. Keep each reusable rule in one canonical file. Link to canonical rules from
    other files instead of duplicating them.
 5. Preserve project-specific facts from the consuming repository, but do not
-   invent workflows, tools, services, hosts, issue processes, or commands.
-6. Before finishing, run or name the repository's relevant Markdown, link, or
-   documentation checks. If a check cannot run, state why and the residual risk.
+   invent or carry forward unsupported workflows, tools, services, hosts, issue
+   processes, or commands. When a manifest such as `package.json` exists, use it
+   to verify documented scripts.
+6. Before finishing README, `AGENTS.md`, docs, skill, reference, or template
+   changes, run or name the repository's relevant Markdown, link, or
+   documentation checks. Prefer `npm run docs:check` when it exists. If a check
+   cannot run, state why and the residual risk.
 
 For context-placement or notes-triage tasks, make one pass over every source
 fact and assign it to a canonical home:
@@ -61,9 +67,10 @@ For design influences and attribution, see
 - Keep troubleshooting, setup, release, and repair procedures in human docs;
   put only routing links and short invariants in `AGENTS.md`.
 - For documentation placement tasks, put rationale and trade-off explanations in
-  durable `docs/` explanation or architecture files, and put fixture failure or
-  repair steps in `docs/` how-to or troubleshooting files. Keep `README.md`,
-  reference docs, and `AGENTS.md` to short pointers for those details.
+  durable `docs/` explanation or architecture files, not in schema, importer,
+  command, or API reference pages. Put fixture failure or repair steps in
+  `docs/` how-to or troubleshooting files. Keep `README.md`, reference docs,
+  and `AGENTS.md` to short pointers for those details.
 - When project notes describe a repeated workflow meant for agents, create or
   update a task-specific `.agents/skills/<name>/SKILL.md` and link to it instead
   of storing the full workflow in the README or `AGENTS.md`.
@@ -71,6 +78,8 @@ For design influences and attribution, see
   pointer to that skill; do not copy the full workflow there.
 - When adding verification guidance, include the command or check and state that
   skipped checks need a reason and residual-risk note.
+- When a repository exposes `docs:check`, prefer it for README, `AGENTS.md`,
+  docs, skill, reference, and template changes.
 - Put detailed procedures in references, docs, runbooks, or task-specific
   skills.
 - When moving facts out of an inbox file such as `notes.md`, remove that inbox

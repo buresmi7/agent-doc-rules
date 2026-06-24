@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
@@ -10,13 +10,18 @@
     "test:agent": "corepack pnpm -r --filter './e2e/*/project' run test:agent",
     "test:audit": "node scripts/check-audit.mjs",
     "test:install": "node tools/check-skill-install.mjs",
-    "test:links": "lychee --offline --no-progress --exclude-path '(^|/)node_modules/' -- README.md AGENTS.md CHANGELOG.md docs/**/*.md packages/**/*.md e2e/**/*.md",
-    "test:markdown": "markdownlint-cli2 \"*.md\" \"docs/**/*.md\" \"packages/**/*.md\" \"e2e/**/*.md\" \"!**/node_modules/**\"",
+    "docs:markdown": "agent-doc-rules-docs markdown",
+    "docs:links": "agent-doc-rules-docs links",
+    "docs:duplicates": "agent-doc-rules-docs-duplicates check",
+    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check",
+    "test:links": "corepack pnpm run docs:links",
+    "test:markdown": "corepack pnpm run docs:markdown",
     "skills:sync": "node tools/sync-project-skills.mjs",
     "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:audit"
   },
   "devDependencies": {
-    "@agent-doc-rules/skill": "workspace:*",
-    "markdownlint-cli2": "^0.22.1"
+    "@agent-doc-rules/docs-duplicates": "workspace:*",
+    "@agent-doc-rules/docs-validator": "workspace:*",
+    "@agent-doc-rules/skill": "workspace:*"
   }
 }

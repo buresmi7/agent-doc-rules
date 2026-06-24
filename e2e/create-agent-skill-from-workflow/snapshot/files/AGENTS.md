@@ -1,26 +1,17 @@
-# Atlas Release Notes - AI Agent Instructions
+# Agent Instructions
 
-Atlas Release Notes keeps release summaries for the Atlas CLI.
+## Skill Reference
 
-## Shared Rules
-
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
-- [README rules](.agents/skills/agent-doc-rules/references/readme.md)
-
-## Local Rules
-
-- Use the [release notes skill](.agents/skills/release-notes/SKILL.md) when drafting
-  `docs/releases/<version>.md`.
-- Keep detailed release drafting steps out of `README.md`; the skill is the
-  canonical workflow.
-
-## Source Of Truth
-
-- `CHANGELOG.md` lists current unreleased changes.
-- `docs/release-input.md` lists release input gathered from merged pull requests.
-- `README.md` is the human entry point and documentation index.
+- Follow `.agents/skills/agent-doc-rules/references/agents-md.md` for shared
+  agent documentation rules.
+- Use `.agents/skills/release-notes/SKILL.md` when drafting Atlas release notes.
 
 ## Verification
 
-Run `npm test` before publishing release documentation changes. If the check cannot
-run, state why and include the remaining risk.
+Run this check before publishing release documentation changes:
+
+```sh
+npm test
+```
+
+If the check is skipped, state the reason and residual risk in the final note.

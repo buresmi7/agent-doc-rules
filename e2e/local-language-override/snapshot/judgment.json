@@ -2,9 +2,9 @@
   "scenario": "local-language-override",
   "runner": "codex",
   "pass": true,
-  "score": 0.95,
+  "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Vytvořeny README.md a AGENTS.md, project-notes.md zúžen na ukazatel. Ověřeno: npm test.",
-  "judgeNotes": "Generated README.md and AGENTS.md satisfy all critical criteria. They are concise, in standard Czech with diacritics, preserve known project facts and commands, link shared AGENTS rules instead of copying them, and do not invent unsupported workflows or services. Minor polish only: README.md has an extra leading space before one wrapped line."
+  "generatorNotes": "Created concise Czech README and AGENTS.md from the supplied package and project notes.",
+  "judgeNotes": "Generated README.md and AGENTS.md are concise, useful, Czech with diacritics, preserve the supported project facts and commands, link shared rules instead of copying them, and do not invent unsupported workflows or services."
 }

@@ -1,27 +1,23 @@
-# Habitat Importer - AI Agent Instructions
-
-Habitat Importer converts field-team CSV files into normalized JSON species
-observations.
+# AGENTS.md
 
 ## Shared Rules
 
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
+Use `.agents/skills/agent-doc-rules/references/agents-md.md` for shared agent
+instruction guidance.
 
-## Local Rules
+## Project Routing
 
-- Read [docs/schema.md](docs/schema.md) before changing parser output.
-- Follow [docs/data-safety.md](docs/data-safety.md) before adding examples or
-  public docs with site data.
+- Read `README.md` for the project purpose and documentation index.
+- Read `docs/schema.md` before changing parser output.
+- Keep parser rationale in `docs/import-design.md`.
+- Keep fixture repair steps in `docs/troubleshooting-fixtures.md`.
 
-## Source Of Truth
+## Local Invariants
 
-- [docs/schema.md](docs/schema.md) defines CSV input and observation JSON fields.
-- [docs/output-format.md](docs/output-format.md) explains why output is JSON.
-- [docs/data-safety.md](docs/data-safety.md) is canonical for site-name safety.
-- [docs/troubleshooting.md](docs/troubleshooting.md) covers fixture failures.
+- Do not mention private site names in public docs.
+- Keep generated JSON examples out of commits when they include real site names.
 
 ## Verification
 
-- Run `npm test` before changing parser behavior.
-- For fixture failures, use [docs/troubleshooting.md](docs/troubleshooting.md).
-- If a required check cannot run, state why and document the remaining risk.
+Run `npm test` before changing parser behavior. If a relevant check is skipped,
+record the reason and residual risk in the handoff.

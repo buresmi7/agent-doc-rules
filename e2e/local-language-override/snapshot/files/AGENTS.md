@@ -8,20 +8,18 @@ Faktury CLI ověřuje CSV soubory s fakturami před importem do účetního syst
 
 ## Místní pravidla
 
-- Trvalou dokumentaci piš spisovnou češtinou se správnou českou diakritikou.
-- Názvy příkazů, cest k souborům a balíčků ponechávej beze změny.
-- Do dokumentace ani příkladů nevkládej skutečná jména dodavatelů, čísla faktur
-  ani daňová identifikační čísla.
-- Dlouhé postupy patří do `README.md` nebo do budoucích souborů v `docs/`.
+- Trvalá dokumentace projektu se píše standardní češtinou s českou diakritikou.
+- Názvy příkazů, cest k souborům a balíčků ponechte beze změny.
+- Do dokumentace ani příkladů nevkládejte skutečné názvy dodavatelů, čísla
+  faktur ani daňová identifikační čísla.
 
 ## Zdroj pravdy
 
-- `README.md` je vstupní dokument pro lidské přispěvatele.
-- `AGENTS.md` obsahuje místní pravidla pro agenty.
-- `package.json` je zdroj pravdy pro název balíčku, skripty a závislosti.
+- `README.md` obsahuje přehled projektu a základní ověřovací příkaz.
+- `package.json` je zdroj pravdy pro dostupné npm skripty.
 
 ## Ověření
 
-- Před změnou validačního chování spusť `npm test`.
-- Pokud kontrolu nelze spustit, uveď důvod a zbytkové riziko v závěrečné
-  poznámce.
+- Před změnou validačního chování spusťte `npm test`.
+- Pro změny dokumentace není v `package.json` samostatný kontrolní skript.
+- Pokud kontrolu nelze spustit, uveďte důvod a zbývající riziko.

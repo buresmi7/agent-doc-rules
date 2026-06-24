@@ -90,6 +90,10 @@ Command sections should be evidence-oriented:
 - Avoid commands that depend on private local state unless the README explains
   the prerequisite.
 - If a command is intentionally illustrative, label it as an example.
+- When a manifest such as `package.json` exists, treat its scripts as the
+  command source of truth. Do not preserve stale README commands that are absent
+  from the manifest unless the documentation clearly labels them as unverified
+  or external.
 
 ## What To Avoid
 

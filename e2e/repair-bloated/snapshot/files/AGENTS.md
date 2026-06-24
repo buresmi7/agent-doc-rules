@@ -4,16 +4,14 @@ Ledger Notes stores Markdown notes for personal bookkeeping experiments.
 
 ## Shared Rules
 
-- AGENTS.md rules: `.agents/skills/agent-doc-rules/references/agents-md.md`
-- Documentation architecture:
-  `.agents/skills/agent-doc-rules/references/documentation-architecture.md`
+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
 
 ## Local Rules
 
-- Write documentation and commit messages in English.
-- Treat this repository as documentation-only for now.
-- Do not commit secrets, bank data, real account numbers, exported statements,
-  tokens, or screenshots containing financial details.
+- Documentation and commit messages are written in English.
+- This repository is documentation-only for now.
+- Do not commit bank data, real account numbers, exported statements, tokens, or
+  screenshots containing financial details.
 
 ## Source Of Truth
 

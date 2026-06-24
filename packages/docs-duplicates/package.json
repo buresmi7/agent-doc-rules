@@ -1,0 +1,26 @@
+{
+  "name": "@agent-doc-rules/docs-duplicates",
+  "version": "0.1.0",
+  "description": "Semantic documentation duplicate checker powered by Codex",
+  "type": "module",
+  "bin": {
+    "agent-doc-rules-docs-duplicates": "bin/agent-doc-rules-docs-duplicates.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@openai/codex": "^0.142.0",
+    "fast-glob": "^3.3.3",
+    "mdast-util-to-string": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "sentence-splitter": "^5.0.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0"
+  }
+}

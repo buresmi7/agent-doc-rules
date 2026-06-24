@@ -39,6 +39,25 @@ npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules -a codex
 For project-scoped Codex installs, the skill is installed under
 `.agents/skills/agent-doc-rules/` and recorded in `skills-lock.json`.
 
+Install optional documentation validation tools:
+
+```bash
+pnpm add -D @agent-doc-rules/docs-validator @agent-doc-rules/docs-duplicates
+```
+
+Recommended scripts:
+
+```json
+{
+  "scripts": {
+    "docs:markdown": "agent-doc-rules-docs markdown",
+    "docs:links": "agent-doc-rules-docs links",
+    "docs:duplicates": "agent-doc-rules-docs-duplicates check",
+    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check"
+  }
+}
+```
+
 ## Usage
 
 Ask the agent to use the skill explicitly:
@@ -65,14 +84,14 @@ Common tasks:
 | `references/readme-rubric.md` | README review checklist. |
 | `references/documentation-architecture.md` | Source-of-truth and placement rules. |
 | `references/writing-style.md` | Plain-English documentation writing rules. |
+| `references/validation.md` | Documentation validation and duplicate-check guidance. |
 | `references/influences.md` | Attribution for borrowed principles. |
 | `assets/templates/` | Starter `AGENTS.md` templates. |
 | `docs/context-placement.md` | Human-facing guide to docs vs agent context. |
 
 ## Context Placement
 
-The central rule is simple: put each fact in the smallest durable home that can
-serve the right reader.
+Context placement decides the durable home for each project fact.
 
 Use:
 
@@ -90,7 +109,8 @@ See [Context Placement](docs/context-placement.md) for the full model.
 
 The skill uses original wording and local rules, but its design draws on Agent
 Skills progressive disclosure, Diataxis documentation types, and plain-English
-writing traditions.
+writing traditions. Its duplicate-review workflow is derived from the earlier
+`meta-work` documentation maintenance workflow.
 
 See [Influences And Attribution](references/influences.md).
 

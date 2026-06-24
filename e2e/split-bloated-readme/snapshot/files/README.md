@@ -1,24 +1,23 @@
 # Orchard Webhook Proxy
 
-Orchard Webhook Proxy receives webhook events from Orchard, validates each
+Orchard Webhook Proxy receives webhook events from Orchard, validates the
 signature, and forwards approved events to the internal billing queue.
 
 ## Quick Start
 
-Run the test suite from the repository root:
+Run the test suite:
 
-```sh
+```bash
 npm test
 ```
 
 ## Canonical Docs
 
-Use these files as the source of truth for their topics. Keep this README as the
-small entry point.
-
 | Document | Content |
 | --- | --- |
-| [AGENTS.md](AGENTS.md) | Agent routing and local rules |
-| [docs/architecture.md](docs/architecture.md) | Request flow and retry boundary |
-| [docs/contracts/billing-events.md](docs/contracts/billing-events.md) | Forwarded event fields |
-| [docs/operations.md](docs/operations.md) | Replay, release, and troubleshooting |
+| `AGENTS.md` | Agent rules, safety boundaries, and verification guidance |
+| `docs/architecture.md` | HTTP entry point, validation, queue forwarding, and retry storage |
+| `docs/operations.md` | Release steps and troubleshooting notes |
+| `docs/contracts/billing-events.md` | Billing queue event contract |
+
+When docs conflict, use the most specific document as the source of truth.

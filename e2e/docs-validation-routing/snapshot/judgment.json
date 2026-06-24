@@ -1,0 +1,10 @@
+{
+  "scenario": "docs-validation-routing",
+  "runner": "codex",
+  "pass": true,
+  "score": 0.96,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Created a concise root AGENTS.md using the installed agent-doc-rules guidance.",
+  "judgeNotes": "The generated AGENTS.md is concise, links to the shared AGENTS.md rule, uses npm run docs:check for documentation changes, avoids copied internals, and does not invent unsupported workflows or tooling."
+}

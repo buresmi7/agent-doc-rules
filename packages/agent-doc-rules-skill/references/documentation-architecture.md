@@ -34,7 +34,9 @@ lowest shared document and link to it from the others.
 - Put repeated agent workflow behavior in a task-specific skill.
 - Put cross-cutting policy in `rules/`.
 - Put rationale for format or architecture choices in `docs/`, not in the root
-  README.
+  README. Prefer a dedicated explanation or architecture page such as
+  `docs/architecture.md` or `docs/output-format.md`; do not make a schema,
+  importer, command, or API reference the canonical home for rationale.
 - Put command reference in `references/`, not in always-loaded docs.
 - Put setup, install, repair, and troubleshooting procedures in the nearest
   detailed doc or skill reference, not in always-loaded docs or the root README.

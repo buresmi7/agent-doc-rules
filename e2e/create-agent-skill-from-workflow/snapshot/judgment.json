@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Moved the drafting workflow into a local skill, added AGENTS routing, and ran `npm test` (0 tests).",
-  "judgeNotes": "Generated documentation meets all critical criteria: it moves the repeated workflow into a task-specific skill, keeps README and AGENTS.md concise, preserves privacy and residual-risk rules, and does not invent unsupported project facts."
+  "generatorNotes": "Moved the repeated release workflow from README into a project skill and added AGENTS routing. No checks were run because the harness is read-only.",
+  "judgeNotes": "The generated documentation creates a focused local release-notes skill, moves the repeated agent workflow out of README, keeps AGENTS.md as a concise routing layer, preserves privacy and residual-risk rules, and does not invent unsupported project facts."
 }

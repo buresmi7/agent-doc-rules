@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Repaired root AGENTS.md; no Markdown check command is defined in the provided project files.",
-  "judgeNotes": "The generated AGENTS.md is concise, links to shared agent-doc-rules guidance instead of copying it, preserves the Ledger Notes local constraints, source-of-truth guidance, and Markdown verification guidance, and removes the unsupported workflow/tool recommendations."
+  "generatorNotes": "Replaced copied shared guidance and unsupported workflow recommendations with concise local rules preserved from the project files.",
+  "judgeNotes": "The generated AGENTS.md is concise, preserves the README-specific constraints and source-of-truth guidance, links to the installed agent-doc-rules reference instead of copying shared prose, keeps Markdown verification guidance with skipped-check risk, and removes unsupported Notion, tm, optional skill, worktree, and lifecycle instructions."
 }

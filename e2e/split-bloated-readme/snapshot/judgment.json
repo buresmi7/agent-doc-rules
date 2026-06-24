@@ -2,9 +2,9 @@
   "scenario": "split-bloated-readme",
   "runner": "codex",
   "pass": true,
-  "score": 0.98,
+  "score": 0.96,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Split README details into focused docs and AGENTS.md. `npm test` passed; replay dry-run is missing from package scripts.",
-  "judgeNotes": "The generated docs satisfy the split: README is concise, `npm test` remains the only README command, durable architecture and operations details moved to `docs/`, AGENTS.md is a short routing layer with local rules and links to shared references, and the billing contract stays linked as the canonical source."
+  "generatorNotes": "Split the bloated README into a short entry point, agent rules, architecture, and operations docs. Named `npm test`; no `docs:check` script is declared.",
+  "judgeNotes": "The generated docs split the bloated README into a concise entry point, route architecture and operations detail into docs, preserve npm test as the only README command, keep AGENTS.md short with local rules, link to the installed AGENTS.md reference, and avoid duplicated contracts or invented sensitive details. Minor residual concern: operations still mentions the replay dry run from the original context, but it clearly notes that package.json does not currently declare that script."
 }

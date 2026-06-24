@@ -7,11 +7,11 @@
     "cliVersion": "codex-cli 0.135.0",
     "model": {
       "name": "gpt-5.5",
-      "reasoningEffort": "xhigh",
-      "label": "gpt-5.5 xhigh",
+      "reasoningEffort": "medium",
+      "label": "gpt-5.5 medium",
       "source": {
-        "name": "~/.codex/config.toml",
-        "reasoningEffort": "~/.codex/config.toml"
+        "name": "CODEX_MODEL",
+        "reasoningEffort": "agent-doc-rules default"
       }
     }
   },

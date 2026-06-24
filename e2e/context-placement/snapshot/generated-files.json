@@ -1,30 +1,26 @@
 [
   {
     "path": "AGENTS.md",
-    "content": "# Habitat Importer - AI Agent Instructions\n\nHabitat Importer converts field-team CSV files into normalized JSON species\nobservations.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)\n\n## Local Rules\n\n- Read [docs/schema.md](docs/schema.md) before changing parser output.\n- Follow [docs/data-safety.md](docs/data-safety.md) before adding examples or\n  public docs with site data.\n\n## Source Of Truth\n\n- [docs/schema.md](docs/schema.md) defines CSV input and observation JSON fields.\n- [docs/output-format.md](docs/output-format.md) explains why output is JSON.\n- [docs/data-safety.md](docs/data-safety.md) is canonical for site-name safety.\n- [docs/troubleshooting.md](docs/troubleshooting.md) covers fixture failures.\n\n## Verification\n\n- Run `npm test` before changing parser behavior.\n- For fixture failures, use [docs/troubleshooting.md](docs/troubleshooting.md).\n- If a required check cannot run, state why and document the remaining risk.\n"
+    "content": "# AGENTS.md\n\n## Shared Rules\n\nUse `.agents/skills/agent-doc-rules/references/agents-md.md` for shared agent\ninstruction guidance.\n\n## Project Routing\n\n- Read `README.md` for the project purpose and documentation index.\n- Read `docs/schema.md` before changing parser output.\n- Keep parser rationale in `docs/import-design.md`.\n- Keep fixture repair steps in `docs/troubleshooting-fixtures.md`.\n\n## Local Invariants\n\n- Do not mention private site names in public docs.\n- Keep generated JSON examples out of commits when they include real site names.\n\n## Verification\n\nRun `npm test` before changing parser behavior. If a relevant check is skipped,\nrecord the reason and residual risk in the handoff.\n"
   },
   {
-    "path": "docs/data-safety.md",
-    "content": "# Data Safety\n\nDo not mention private site names in public docs.\n\nKeep generated JSON examples out of commits when they include real site names.\n"
-  },
-  {
-    "path": "docs/output-format.md",
-    "content": "# Output Format Decision\n\nHabitat Importer writes normalized observations as JSON because downstream\nreview tools do not agree on a CSV dialect.\n\nKeep parser-output details in [schema](schema.md). This page records the format\nrationale.\n"
+    "path": "docs/import-design.md",
+    "content": "# Import Design\n\nHabitat Importer converts field-team CSV files into normalized JSON\nobservations.\n\nThe importer writes JSON because downstream review tools do not agree on a CSV\ndialect. JSON gives those tools one normalized observation format to consume.\n\nKeep generated JSON examples out of commits when they include real site names.\n"
   },
   {
     "path": "docs/schema.md",
-    "content": "# Observation Schema\n\nUse this page as the reference for parser input and observation JSON output.\n\n## CSV Input\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n| Column |\n| --- |\n| `species` |\n| `site` |\n| `observed_at` |\n| `count` |\n\nRows with empty `species` values are dropped. The importer records the dropped\nrow number in the import report.\n\n## JSON Output\n\nObservation JSON contains these fields:\n\n| Field | Source CSV Column |\n| --- | --- |\n| `species` | `species` |\n| `site` | `site` |\n| `observedAt` | `observed_at` |\n| `count` | `count` |\n"
+    "content": "# Observation Schema\n\nObservation JSON contains `species`, `site`, `observedAt`, and `count`.\n\n## CSV Input\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n| Column | Output field |\n| --- | --- |\n| `species` | `species` |\n| `site` | `site` |\n| `observed_at` | `observedAt` |\n| `count` | `count` |\n\nRows with empty `species` values are dropped. The importer records the row\nnumber for each dropped row in the import report.\n\nDo not include private site names in public schema examples or generated JSON\nexamples.\n"
   },
   {
-    "path": "docs/troubleshooting.md",
-    "content": "# Troubleshooting Fixtures\n\n## Fixture Failures\n\nWhen a fixture fails:\n\n1. Run `npm test`.\n2. Inspect the failing row number.\n3. Check [docs/schema.md](schema.md) before changing schema docs or parser\n   output.\n\nDo not change schema docs until the failing row is understood.\n"
+    "path": "docs/troubleshooting-fixtures.md",
+    "content": "# Troubleshooting Fixtures\n\nIf a fixture fails, run the test suite:\n\n```sh\nnpm test\n```\n\nInspect the failing row number before changing schema documentation. Schema docs\nshould describe parser behavior, not hide fixture problems.\n"
   },
   {
     "path": "notes.md",
-    "content": "# Documentation Inbox\n\nDurable notes moved to:\n\n- [README.md](README.md)\n- [AGENTS.md](AGENTS.md)\n- [docs/schema.md](docs/schema.md)\n- [docs/output-format.md](docs/output-format.md)\n- [docs/data-safety.md](docs/data-safety.md)\n- [docs/troubleshooting.md](docs/troubleshooting.md)\n"
+    "content": "# Documentation Inbox\n\nDurable notes from this inbox have moved into `README.md`, `AGENTS.md`, and\n`docs/`.\n"
   },
   {
     "path": "README.md",
-    "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\n## Canonical Docs\n\nThe listed document is canonical for its topic.\n\n| Document | Content |\n| --- | --- |\n| `AGENTS.md` | Agent routing, local invariants, and verification rules |\n| `docs/schema.md` | CSV input columns and observation JSON fields |\n| `docs/output-format.md` | Why the importer writes JSON output |\n| `docs/data-safety.md` | Rules for private site names and generated examples |\n| `docs/troubleshooting.md` | Steps for fixture failures |\n\n## Verification\n\nRun the test suite before changing parser behavior.\n\n```sh\nnpm test\n```\n"
+    "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\nRun `npm test` before changing parser behavior.\n\n## Documentation\n\n- [Observation schema](docs/schema.md) describes accepted CSV input and JSON\n  output fields.\n- [Import design](docs/import-design.md) explains why the importer writes JSON.\n- [Troubleshooting fixtures](docs/troubleshooting-fixtures.md) covers failing\n  fixture checks.\n"
   }
 ]

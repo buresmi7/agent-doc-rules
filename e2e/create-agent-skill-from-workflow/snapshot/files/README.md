@@ -6,16 +6,14 @@ Atlas Release Notes keeps release summaries for the Atlas CLI.
 
 | Document | Content |
 | --- | --- |
-| `CHANGELOG.md` | Current unreleased changes. |
-| `docs/release-input.md` | Merged pull request title inputs and publication exclusions. |
-| `AGENTS.md` | Local agent routing and verification rules. |
-| `.agents/skills/release-notes/SKILL.md` | Agent workflow for drafting release notes. |
-
-Drafted release notes are written under `docs/releases/<version>.md`.
+| `CHANGELOG.md` | Source changes for release note drafting |
+| `docs/release-input.md` | Merged pull request title input for the next release |
+| `.agents/skills/release-notes/SKILL.md` | Agent workflow for drafting release notes |
+| `AGENTS.md` | Repository-specific agent routing and checks |
 
 ## Verification
 
-Run this before publishing release documentation changes:
+Run the test suite before publishing release documentation changes:
 
 ```sh
 npm test

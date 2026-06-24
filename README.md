@@ -23,6 +23,8 @@ validate, and test that skill before it is installed in other projects.
 | [`packages/agent-doc-rules-skill/`](packages/agent-doc-rules-skill/) | Published skill package. Start here for install and usage docs. |
 | [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Human-facing documentation for the skill itself. |
 | [`packages/agent-doc-rules-skill/docs/`](packages/agent-doc-rules-skill/docs/) | Product docs for the skill. |
+| [`packages/docs-validator/`](packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
+| [`packages/docs-duplicates/`](packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`e2e/`](e2e/) | Agent E2E scenarios for documentation and context placement behavior. |
 | [`tools/`](tools/) | Monorepo support scripts and shared E2E runner. |
 | [`docs/maintainer-skills.md`](docs/maintainer-skills.md) | Maintainer skill sync model and update procedure. |
@@ -66,18 +68,16 @@ Run static checks:
 corepack pnpm test
 ```
 
+Run the explicit documentation validation gate:
+
+```bash
+corepack pnpm run docs:check
+```
+
 Run agent E2E tests when an agent runner is configured:
 
 ```bash
 corepack pnpm run test:agent
-```
-
-The Codex runner reads `model` and `model_reasoning_effort` from
-`$CODEX_HOME/config.toml` when they are present. Use environment variables to
-pin them for a run:
-
-```bash
-CODEX_MODEL=gpt-5.5 CODEX_REASONING_EFFORT=xhigh corepack pnpm run test:agent
 ```
 
 Refresh passing snapshots after intentional behavior changes:
@@ -86,9 +86,8 @@ Refresh passing snapshots after intentional behavior changes:
 UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
-Each refreshed snapshot writes `snapshot/metadata.json` with the agent model,
-reasoning effort, runner, CLI version, and `skills` CLI version used for that
-run.
+See [Agent E2E Workspaces](e2e/README.md) for runner configuration and snapshot
+metadata.
 
 ## Maintainer Skills
 
@@ -106,6 +105,8 @@ Release tags use `vMAJOR.MINOR.PATCH`.
 Before publishing, verify:
 
 - `corepack pnpm test` passes,
+- `corepack pnpm run docs:check` passes when documentation validation behavior
+  changed,
 - `corepack pnpm run test:install` passes,
 - `npx skills add . --list` discovers `agent-doc-rules`,
 - external maintainer skills have been reviewed if

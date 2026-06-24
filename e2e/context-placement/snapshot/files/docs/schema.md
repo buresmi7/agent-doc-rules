@@ -1,28 +1,20 @@
 # Observation Schema
 
-Use this page as the reference for parser input and observation JSON output.
+Observation JSON contains `species`, `site`, `observedAt`, and `count`.
 
 ## CSV Input
 
 The parser accepts UTF-8 CSV input with these columns:
 
-| Column |
-| --- |
-| `species` |
-| `site` |
-| `observed_at` |
-| `count` |
-
-Rows with empty `species` values are dropped. The importer records the dropped
-row number in the import report.
-
-## JSON Output
-
-Observation JSON contains these fields:
-
-| Field | Source CSV Column |
+| Column | Output field |
 | --- | --- |
 | `species` | `species` |
 | `site` | `site` |
-| `observedAt` | `observed_at` |
+| `observed_at` | `observedAt` |
 | `count` | `count` |
+
+Rows with empty `species` values are dropped. The importer records the row
+number for each dropped row in the import report.
+
+Do not include private site names in public schema examples or generated JSON
+examples.

@@ -1,0 +1,22 @@
+{
+  "name": "@agent-doc-rules/docs-validator",
+  "version": "0.1.0",
+  "description": "Markdown and link validation CLI for agent-doc-rules projects",
+  "type": "module",
+  "bin": {
+    "agent-doc-rules-docs": "bin/agent-doc-rules-docs.mjs"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.3",
+    "linkinator": "^7.6.1",
+    "markdownlint-cli2": "^0.22.1"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "docs-validation-routing-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:markdown": "agent-doc-rules-docs markdown",
+    "docs:links": "agent-doc-rules-docs links",
+    "docs:duplicates": "agent-doc-rules-docs-duplicates check",
+    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check",
+    "test": "node --test",
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+  },
+  "dependencies": {
+    "@agent-doc-rules/skill": "workspace:*"
+  },
+  "devDependencies": {
+    "@agent-doc-rules/docs-duplicates": "workspace:*",
+    "@agent-doc-rules/docs-validator": "workspace:*"
+  }
+}

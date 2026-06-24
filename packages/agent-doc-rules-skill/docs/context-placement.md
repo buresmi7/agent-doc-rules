@@ -68,9 +68,9 @@ explanation.
 Keep explanation and repair content in `docs/` even when it starts as a short
 note. A format rationale belongs in a dedicated explanation or architecture page
 such as `docs/architecture.md` or `docs/output-format.md`, not as the main prose
-inside a schema or API reference. Fixture-failure steps belong in a
-troubleshooting or how-to page. `README.md` and reference docs may summarize and
-link to those pages, but should not be their canonical home.
+inside a schema, importer, command, or API reference. Put fixture repair notes
+beside the relevant troubleshooting material. `README.md` and reference docs may
+summarize and link to those pages, but should not be their canonical home.
 
 ## AGENTS.md
 
@@ -87,12 +87,12 @@ Good `AGENTS.md` content includes:
 - links to troubleshooting docs when checks fail.
 
 Keep it short. Put troubleshooting procedures in docs or skills and link to
-them. If a required check cannot run, tell agents to state why and document the
-remaining risk.
+them. Verification guidance should make skipped checks auditable by recording
+the blocker and what remains unverified.
 
 Do not place fixture-failure procedures directly in `AGENTS.md`; link to the
 troubleshooting or how-to document instead. Include the verification command and
-the skipped-check residual-risk rule as short bullets.
+a short skipped-check note requirement.
 
 ## Skills
 

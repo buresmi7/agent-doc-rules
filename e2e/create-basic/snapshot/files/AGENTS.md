@@ -1,11 +1,4 @@
-# Acme Status Bot - AI Agent Instructions
-
-Acme Status Bot is a small internal service that reads public status feeds and
-creates a daily Markdown summary for operators.
-
-## Shared Rules
-
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
+# AGENTS.md
 
 ## Source Of Truth
 
@@ -24,3 +17,8 @@ creates a daily Markdown summary for operators.
 
 - Run `npm test` before publishing documentation or template changes.
 - If tests cannot run, document the reason and remaining risk.
+
+## Skill Reference
+
+- Shared `AGENTS.md` guidance lives in
+  `.agents/skills/agent-doc-rules/references/agents-md.md`.

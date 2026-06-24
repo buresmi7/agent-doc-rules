@@ -49,11 +49,19 @@ Refresh snapshots from a passing run with:
 UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
-For Codex runs, the runner reads `model` and `model_reasoning_effort` from
-`$CODEX_HOME/config.toml` when present. Override them for a refresh with:
+For Codex runs, the runner reads `model` from `$CODEX_HOME/config.toml` when
+present and uses `medium` reasoning effort by default. Override them for a
+refresh with:
 
 ```bash
-CODEX_MODEL=gpt-5.5 CODEX_REASONING_EFFORT=xhigh UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
+CODEX_MODEL=gpt-5.5 CODEX_REASONING_EFFORT=medium UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
+```
+
+To write comparison snapshots without replacing `snapshot/`, set
+`AGENT_E2E_SNAPSHOT_DIR` to a directory name:
+
+```bash
+AGENT_E2E_SNAPSHOT_DIR=snapshot-gpt-5-5-medium UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
 Review the diff before committing refreshed snapshots.

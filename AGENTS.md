@@ -40,6 +40,8 @@ Do not treat these restored maintainer skills as part of the published
 - Skill product docs: `packages/agent-doc-rules-skill/docs/`
 - Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
 - Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
+- Markdown/docs validator: `packages/docs-validator/`
+- Semantic duplicate checker: `packages/docs-duplicates/`
 - npm-sourced maintainer skill dependencies:
   `packages/agent-doc-rules-skill/package.json`
 - Project-scoped maintainer skill lockfile: `skills-lock.json`
@@ -68,11 +70,13 @@ Do not treat these restored maintainer skills as part of the published
 ## Maintenance
 
 - Update `CHANGELOG.md` when changing released skill behavior or templates.
-- Review external skill changes before committing lockfile updates; skills run
-  with full agent permissions. Commit the lockfile, not generated external skill
-  copies.
+- Review external skill updates before committing lockfile changes; keep the
+  risk model in `docs/maintainer-skills.md`. Commit the lockfile, not generated
+  external skill copies.
 - Update `pnpm-lock.yaml` when workspace metadata or project skill package
   dependencies change.
 - Before finishing, run `corepack pnpm test`.
+- For documentation validation changes, also run `corepack pnpm run
+  docs:check`.
 - When the skill layout changes, also run `corepack pnpm run skills:sync` and
   `corepack pnpm run test:install`.

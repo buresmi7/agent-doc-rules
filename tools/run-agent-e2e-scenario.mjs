@@ -12,6 +12,7 @@ const projectFixtureDir = process.env.SCENARIO_DIR
   : process.cwd();
 const scenarioDir = dirname(projectFixtureDir);
 const scenarioName = process.env.SCENARIO_NAME ?? basename(scenarioDir);
+const snapshotDirName = readSnapshotDirName();
 const scenarioRequire = createRequire(join(projectFixtureDir, 'package.json'));
 const skillPackageJson = scenarioRequire.resolve('@agent-doc-rules/skill/package.json');
 const skillSource = dirname(skillPackageJson);
@@ -29,11 +30,11 @@ const judgeModel = process.env.OLLAMA_JUDGE_MODEL ?? process.env.OLLAMA_MODEL;
 const updateAgentSnapshots = process.env.UPDATE_AGENT_SNAPSHOTS === '1';
 const codexConfig = runner === 'codex' ? await readCodexConfig() : {};
 const codexModel = process.env.CODEX_MODEL ?? codexConfig.model ?? null;
+const defaultCodexReasoningEffort = 'medium';
 const codexReasoningEffort = (
   process.env.CODEX_REASONING_EFFORT
   ?? process.env.CODEX_MODEL_REASONING_EFFORT
-  ?? codexConfig.modelReasoningEffort
-  ?? null
+  ?? defaultCodexReasoningEffort
 );
 const codexModelSource = process.env.CODEX_MODEL
   ? 'CODEX_MODEL'
@@ -45,9 +46,7 @@ const codexReasoningEffortSource = (
     ? 'CODEX_REASONING_EFFORT'
     : process.env.CODEX_MODEL_REASONING_EFFORT
       ? 'CODEX_MODEL_REASONING_EFFORT'
-      : codexConfig.modelReasoningEffort
-        ? codexConfig.source
-        : null
+      : 'agent-doc-rules default'
 );
 
 const generateSchema = {
@@ -294,7 +293,7 @@ ${projectFiles}
 }
 
 async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
-  const snapshotDir = join(scenarioDir, 'snapshot');
+  const snapshotDir = join(scenarioDir, snapshotDirName);
   const filesDir = join(snapshotDir, 'files');
   await mkdir(snapshotDir, { recursive: true });
   await rm(filesDir, { recursive: true, force: true });
@@ -337,6 +336,16 @@ async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
       judgeNotes: judgment.notes,
     }, null, 2)}\n`,
   );
+}
+
+function readSnapshotDirName() {
+  const value = process.env.AGENT_E2E_SNAPSHOT_DIR ?? 'snapshot';
+
+  if (!value || value === '.' || value === '..' || value.includes('/') || value.includes('\\')) {
+    throw new Error(`AGENT_E2E_SNAPSHOT_DIR must be a directory name, got ${JSON.stringify(value)}`);
+  }
+
+  return value;
 }
 
 async function readAgentMetadata() {
@@ -390,7 +399,6 @@ async function readCodexConfig() {
 
   return {
     model: readTomlString(rootConfig, 'model'),
-    modelReasoningEffort: readTomlString(rootConfig, 'model_reasoning_effort'),
     source: process.env.CODEX_HOME ? '$CODEX_HOME/config.toml' : '~/.codex/config.toml',
   };
 }

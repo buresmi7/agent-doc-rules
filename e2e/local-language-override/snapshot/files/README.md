@@ -1,36 +1,39 @@
 # Faktury CLI
 
-Faktury CLI ověřuje CSV soubory s fakturami před importem do účetního systému.
-Balíček se jmenuje `faktury-cli` a je soukromý.
+Faktury CLI ověřuje CSV soubory s fakturami před jejich importem do účetního
+systému.
 
-## Rychlý start
+## První užitečný krok
 
-Spusť testy:
+Spusťte testy z kořene repozitáře:
 
-```bash
+```sh
 npm test
 ```
-
-Příkaz používá `node --test`.
 
 ## Kanonické dokumenty
 
 | Dokument | Obsah |
 | --- | --- |
-| `README.md` | Přehled projektu a základní ověření pro lidi. |
-| `AGENTS.md` | Místní pravidla pro agenty a ověřovací pokyny. |
-| `package.json` | Název balíčku, typ modulu, skripty a závislosti. |
+| `README.md` | Přehled projektu a základní příkaz pro ověření |
+| `AGENTS.md` | Místní pravidla pro agenty a ověřování |
+| `package.json` | Zdroj pravdy pro dostupné npm skripty |
 
-## Dokumentace
+Pokud se dokumenty liší v dostupných příkazech, platí `package.json`.
 
-Pravidla pro agenty a místní pravidla dokumentace jsou v `AGENTS.md`.
-Při psaní příkladů nepoužívej skutečná jména dodavatelů, čísla faktur ani
- daňová identifikační čísla.
+## Bezpečnost dat
 
-## Ověření
+Do dokumentace, příkladů ani vygenerovaných fixture dat nevkládejte skutečné
+názvy dodavatelů, čísla faktur ani daňová identifikační čísla.
 
-Před změnou validačního chování spusť:
+## Ověření změn
 
-```bash
+Před změnou validačního chování spusťte:
+
+```sh
 npm test
 ```
+
+Repozitář nemá samostatný skript pro kontrolu dokumentace. U změn dokumentace
+zkontrolujte Markdown ručně a uveďte důvod i zbývající riziko, pokud nelze
+relevantní kontrolu spustit.

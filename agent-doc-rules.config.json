@@ -1,0 +1,55 @@
+{
+  "docs": {
+    "include": [
+      "*.md",
+      "docs/**/*.md",
+      "packages/**/*.md",
+      "e2e/**/*.md"
+    ],
+    "exclude": [
+      "node_modules/**",
+      ".git/**",
+      "dist/**",
+      "coverage/**",
+      ".tmp/**",
+      "repos/**",
+      "worktrees/**"
+    ],
+    "links": {
+      "exclude": [
+        "node_modules/**",
+        ".git/**",
+        "dist/**",
+        "coverage/**",
+        ".tmp/**",
+        "repos/**",
+        "worktrees/**",
+        "e2e/**/snapshot*/**"
+      ],
+      "skip": [
+        "^https://"
+      ]
+    },
+    "duplicates": {
+      "exclude": [
+        "node_modules/**",
+        ".git/**",
+        "dist/**",
+        "coverage/**",
+        ".tmp/**",
+        "repos/**",
+        "worktrees/**",
+        "e2e/**/snapshot*/**"
+      ],
+      "includeReferences": false,
+      "includeSameFile": false,
+      "warnScore": 0.78,
+      "failScore": 0.92,
+      "minWords": 6,
+      "minChars": 40,
+      "maxCandidates": 25,
+      "model": "gpt-5.5",
+      "reasoningEffort": "low"
+    }
+  }
+}

@@ -2,9 +2,9 @@
   "scenario": "create-basic",
   "runner": "codex",
   "pass": true,
-  "score": 1,
+  "score": 0.95,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Created concise root agent instructions from README; `npm test` passes.",
-  "judgeNotes": "The generated AGENTS.md is complete, concise, links to the shared agent-doc-rules reference, preserves all README local rules, source-of-truth guidance, and verification requirements, and does not invent unsupported workflows or copy shared rules."
+  "generatorNotes": "Created a concise root AGENTS.md from README facts. Tests not run because this is a generated patch response only.",
+  "judgeNotes": "The generated AGENTS.md includes the required source-of-truth routing, local project rules, verification guidance, and a concise skill reference to the installed agent-doc-rules AGENTS guidance without copying shared rules or inventing unsupported workflows."
 }

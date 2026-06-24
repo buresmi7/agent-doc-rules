@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## v0.3.0 - 2026-06-24
+
+- Added workspace packages for deterministic Markdown/link validation and
+  Codex-assisted semantic duplicate review.
+- Added `agent-doc-rules.config.json` as shared documentation validation
+  configuration.
+- Added skill guidance for using `docs:check` when repositories expose a
+  documentation validation gate.
+- Added an E2E scenario for documentation validation routing.
+- Updated agent E2E snapshots to include model, reasoning effort, runner, CLI
+  version, and `skills` CLI version metadata.
+
 ## v0.2.0 - 2026-06-24
 
 - Changed the release artifact from vendored `rules/` and `templates/`

@@ -5,8 +5,7 @@ description: Draft Atlas CLI release notes from the changelog and release input.
 
 # Release Notes
 
-Use this skill when drafting or updating Atlas CLI release notes in
-`docs/releases/<version>.md`.
+Use this skill when drafting `docs/releases/<version>.md` for the Atlas CLI.
 
 ## Workflow
 
@@ -20,5 +19,10 @@ Use this skill when drafting or updating Atlas CLI release notes in
 
 ## Verification
 
-Run `npm test` before publishing release documentation changes. If the check
-cannot run, state why and include the remaining risk.
+Run the repository test suite before publishing release documentation changes:
+
+```sh
+npm test
+```
+
+If the check is skipped, state the reason and residual risk in the final note.
