@@ -8,6 +8,9 @@ This repository develops, validates, tests, and releases that skill. The skill
 is the product; the rest of the monorepo exists to maintain it before projects
 install it.
 
+**Main package:** [packages/agent-doc-rules-skill/](packages/agent-doc-rules-skill/)
+contains install commands, usage examples, package contents, and product docs.
+
 ## Use This Repository When
 
 - You maintain the published `agent-doc-rules` skill.
@@ -44,26 +47,6 @@ skill, reference, or template changes.
 See [Agent E2E Workspaces](e2e/README.md) for runner configuration and snapshot
 metadata.
 
-## Usage Examples
-
-Ask an agent to use the skill by name:
-
-```text
-Use $agent-doc-rules to review this README for stale commands and duplicated rules.
-```
-
-```text
-Use $agent-doc-rules to decide whether this note belongs in README.md,
-AGENTS.md, docs/, or a task-specific skill.
-```
-
-```text
-Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
-```
-
-For product-level install and usage docs, start with the
-[skill package README](packages/agent-doc-rules-skill/README.md).
-
 ## Repository Map
 
 | Path | Purpose |
@@ -88,7 +71,7 @@ not part of the published skill artifact.
 | --- | --- |
 | [`AGENTS.md`](AGENTS.md) | Project-specific agent routing, invariants, and verification rules. |
 | [`packages/agent-doc-rules-skill/SKILL.md`](packages/agent-doc-rules-skill/SKILL.md) | Skill entry point and routing workflow. |
-| [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Install, usage, package contents, and development notes for the skill. |
+| [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Install, examples, package contents, and development notes for the skill. |
 | [`packages/agent-doc-rules-skill/docs/context-placement.md`](packages/agent-doc-rules-skill/docs/context-placement.md) | How to choose a durable home for each project fact. |
 | [`packages/agent-doc-rules-skill/references/`](packages/agent-doc-rules-skill/references/) | Source of truth for reusable README, `AGENTS.md`, writing, validation, and documentation architecture rules. |
 | [`docs/maintainer-skills.md`](docs/maintainer-skills.md) | How project-scoped maintainer skills are declared, restored, reviewed, and locked. |

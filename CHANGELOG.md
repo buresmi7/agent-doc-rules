@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Moved primary usage examples into the skill package README and made the root
+  README point to the package as the main product entry point.
+- Reworded the project `AGENTS.md` template's skipped-check guidance to avoid
+  duplicating the skill's canonical verification rule.
+
 ## v0.3.0 - 2026-06-24
 
 - Added workspace packages for deterministic Markdown/link validation and

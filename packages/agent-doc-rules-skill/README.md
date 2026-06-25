@@ -60,10 +60,25 @@ Recommended scripts:
 
 ## Usage
 
-Ask the agent to use the skill explicitly:
+Ask the agent to use the skill by name.
+
+Main examples:
 
 ```text
 Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
+```
+
+```text
+Use $agent-doc-rules to review this README for stale commands and duplicated rules.
+```
+
+```text
+Use $agent-doc-rules to decide whether this note belongs in README.md,
+AGENTS.md, docs/, or a task-specific skill.
+```
+
+```text
+Use $agent-doc-rules to add a project-specific documentation overlay.
 ```
 
 Common tasks:
@@ -107,12 +122,8 @@ See [Context Placement](docs/context-placement.md) for the full model.
 
 ## Influences
 
-The skill uses original wording and local rules, but its design draws on Agent
-Skills progressive disclosure, Diataxis documentation types, and plain-English
-writing traditions. Its duplicate-review workflow is derived from the earlier
-`meta-work` documentation maintenance workflow.
-
-See [Influences And Attribution](references/influences.md).
+See [Influences And Attribution](references/influences.md) for attribution,
+design influences, and duplicate-review provenance.
 
 ## Development
 

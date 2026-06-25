@@ -28,4 +28,4 @@ mind before making changes.
 ## Verification
 
 - List project-specific checks that should be run before finishing changes.
-- If a check cannot be run, explain why and state the remaining risk.
+- Add the local reporting rule for checks that cannot run.

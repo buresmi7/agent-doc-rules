@@ -30,8 +30,7 @@ This repository also restores a small project-scoped skill set under
 - Use `$update-markdown-file-index` when maintaining Markdown indexes of files
   or directories.
 
-Do not treat these restored maintainer skills as part of the published
-`agent-doc-rules` skill artifact.
+Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
 
 ## Source Of Truth
 
