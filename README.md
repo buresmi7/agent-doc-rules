@@ -1,104 +1,103 @@
-# Agent Doc Rules Monorepo
+# Agent Doc Rules
 
-This monorepo develops and tests the reusable `agent-doc-rules` Agent Skill.
+`agent-doc-rules` is a reusable Agent Skill for keeping repository docs,
+`AGENTS.md` files, and task-specific agent skills short, accurate, and easy to
+maintain.
 
-The skill is the product. Everything else in this repository exists to maintain,
-validate, and test that skill before it is installed in other projects.
+This repository develops, validates, tests, and releases that skill. The skill
+is the product; the rest of the monorepo exists to maintain it before projects
+install it.
 
-## Goals
+## Use This Repository When
 
-- Publish one reusable Agent Skill for repository documentation and agent
-  context architecture.
-- Help projects decide what belongs in human docs, `AGENTS.md`, and
-  task-specific agent skills.
-- Keep documentation short, canonical, and written in plain English.
-- Test the skill against realistic documentation and agent-context scenarios.
-- Keep monorepo maintenance tooling separate from the installable skill
-  artifact.
+- You maintain the published `agent-doc-rules` skill.
+- You change reusable documentation rules, references, or starter templates.
+- You work on the Markdown/link validator or semantic duplicate checker.
+- You test documentation and agent-context behavior in E2E scenarios.
+- You prepare a release of the skill package.
 
-## Projects
+## Quick Start
+
+Run these commands from the repository root:
+
+```bash
+corepack pnpm install
+corepack pnpm run skills:sync
+corepack pnpm test
+```
+
+Use `corepack pnpm run docs:check` before finishing README, `AGENTS.md`, docs,
+skill, reference, or template changes.
+
+## Common Tasks
+
+| Task | Command |
+| --- | --- |
+| Install dependencies | `corepack pnpm install` |
+| Sync local and project-scoped skills | `corepack pnpm run skills:sync` |
+| Verify local skill installation wiring | `corepack pnpm run test:install` |
+| Run static Markdown, link, and audit checks | `corepack pnpm test` |
+| Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
+| Run agent E2E tests when a runner is configured | `corepack pnpm run test:agent` |
+| Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
+
+See [Agent E2E Workspaces](e2e/README.md) for runner configuration and snapshot
+metadata.
+
+## Usage Examples
+
+Ask an agent to use the skill by name:
+
+```text
+Use $agent-doc-rules to review this README for stale commands and duplicated rules.
+```
+
+```text
+Use $agent-doc-rules to decide whether this note belongs in README.md,
+AGENTS.md, docs/, or a task-specific skill.
+```
+
+```text
+Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
+```
+
+For product-level install and usage docs, start with the
+[skill package README](packages/agent-doc-rules-skill/README.md).
+
+## Repository Map
 
 | Path | Purpose |
 | --- | --- |
-| [`packages/agent-doc-rules-skill/`](packages/agent-doc-rules-skill/) | Published skill package. Start here for install and usage docs. |
-| [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Human-facing documentation for the skill itself. |
+| [`packages/agent-doc-rules-skill/`](packages/agent-doc-rules-skill/) | Published skill package and installable artifact. |
+| [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Human-facing product README for the skill. |
 | [`packages/agent-doc-rules-skill/docs/`](packages/agent-doc-rules-skill/docs/) | Product docs for the skill. |
+| [`packages/agent-doc-rules-skill/references/`](packages/agent-doc-rules-skill/references/) | Canonical reusable rules loaded by the skill. |
+| [`packages/agent-doc-rules-skill/assets/templates/`](packages/agent-doc-rules-skill/assets/templates/) | Starter templates shipped with the skill. |
 | [`packages/docs-validator/`](packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-duplicates/`](packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`e2e/`](e2e/) | Agent E2E scenarios for documentation and context placement behavior. |
 | [`tools/`](tools/) | Monorepo support scripts and shared E2E runner. |
 | [`docs/maintainer-skills.md`](docs/maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
-## Skill Package
+Root scripts, E2E projects, generated maintainer skills, and monorepo docs are
+not part of the published skill artifact.
 
-Use the package README for product-level documentation:
+## Canonical Docs
 
-- [Install the skill](packages/agent-doc-rules-skill/README.md#install)
-- [Use the skill](packages/agent-doc-rules-skill/README.md#usage)
-- [Understand the context placement model](packages/agent-doc-rules-skill/docs/context-placement.md)
-- [Review influences and attribution](packages/agent-doc-rules-skill/references/influences.md)
+| Document | Content |
+| --- | --- |
+| [`AGENTS.md`](AGENTS.md) | Project-specific agent routing, invariants, and verification rules. |
+| [`packages/agent-doc-rules-skill/SKILL.md`](packages/agent-doc-rules-skill/SKILL.md) | Skill entry point and routing workflow. |
+| [`packages/agent-doc-rules-skill/README.md`](packages/agent-doc-rules-skill/README.md) | Install, usage, package contents, and development notes for the skill. |
+| [`packages/agent-doc-rules-skill/docs/context-placement.md`](packages/agent-doc-rules-skill/docs/context-placement.md) | How to choose a durable home for each project fact. |
+| [`packages/agent-doc-rules-skill/references/`](packages/agent-doc-rules-skill/references/) | Source of truth for reusable README, `AGENTS.md`, writing, validation, and documentation architecture rules. |
+| [`docs/maintainer-skills.md`](docs/maintainer-skills.md) | How project-scoped maintainer skills are declared, restored, reviewed, and locked. |
+| [`CHANGELOG.md`](CHANGELOG.md) | Released skill and template behavior changes. |
 
-The installable artifact is `packages/agent-doc-rules-skill/`. Root scripts,
-E2E projects, generated maintainer skills, and monorepo docs are not part of
-the published skill.
+When docs conflict, prefer the narrowest canonical document for that detail.
+Keep human orientation in this README and long procedures in the linked docs.
 
-## Maintainer Workflow
-
-Install dependencies:
-
-```bash
-corepack pnpm install
-```
-
-Sync the local skill and project-scoped maintainer skills:
-
-```bash
-corepack pnpm run skills:sync
-```
-
-Verify local skill wiring:
-
-```bash
-corepack pnpm run test:install
-```
-
-Run static checks:
-
-```bash
-corepack pnpm test
-```
-
-Run the explicit documentation validation gate:
-
-```bash
-corepack pnpm run docs:check
-```
-
-Run agent E2E tests when an agent runner is configured:
-
-```bash
-corepack pnpm run test:agent
-```
-
-Refresh passing snapshots after intentional behavior changes:
-
-```bash
-UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
-```
-
-See [Agent E2E Workspaces](e2e/README.md) for runner configuration and snapshot
-metadata.
-
-## Maintainer Skills
-
-This repository restores project-scoped maintainer skills under
-`.agents/skills/`. They help maintain this monorepo; they are not part of the
-published `agent-doc-rules` skill.
-
-See [Maintainer Skill Sync](docs/maintainer-skills.md) for how those skills are
-declared, restored, reviewed, and locked.
-
-## Publishing
+## Release Checklist
 
 Release tags use `vMAJOR.MINOR.PATCH`.
 
@@ -112,8 +111,7 @@ Before publishing, verify:
 - external maintainer skills have been reviewed if
   `packages/agent-doc-rules-skill/package.json` or `skills-lock.json` changed,
 - `CHANGELOG.md` describes released skill or template behavior changes,
-- reusable skill content does not include project-specific workflows, host
-  names, account IDs, secrets, or private environment notes.
+- reusable skill content passes the repository safety review.
 
 ## Maintainers
 
