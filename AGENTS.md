@@ -39,6 +39,7 @@ Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
 - Skill product docs: `packages/agent-doc-rules-skill/docs/`
 - Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
 - Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
+- Monorepo developer docs: `docs/development.md`
 - Markdown/docs validator: `packages/docs-validator/`
 - Semantic duplicate checker: `packages/docs-duplicates/`
 - npm-sourced maintainer skill dependencies:
@@ -54,6 +55,10 @@ Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
 - Use English for all persisted content in this repository.
 - Keep always-loaded docs short; move reusable detail into the skill references.
 - Do not duplicate canonical rules across root docs and skill references.
+- Keep the root `README.md` as a short monorepo entry point. It should say what
+  the repository is for, link to `packages/agent-doc-rules-skill/README.md` for
+  the main package, and link to `docs/development.md` for monorepo development.
+  Put other monorepo detail in `docs/`.
 - Do not add project-specific commands, issue workflows, cloud accounts, host
   names, secrets, or private environment notes.
 - The skill directory is a private pnpm workspace package so the root monorepo

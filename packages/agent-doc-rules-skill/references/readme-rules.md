@@ -93,6 +93,9 @@ Command sections should be evidence-oriented:
 - Avoid commands that depend on private local state unless the README explains
   the prerequisite.
 - If a command is intentionally illustrative, label it as an example.
+- Do not add generic install or setup steps just because a README has a test
+  command. A setup step needs evidence from the existing docs, the user request,
+  or a local manifest.
 - When a manifest such as `package.json` exists, treat its scripts as the
   command source of truth. Do not preserve stale README commands that are absent
   from the manifest unless the documentation clearly labels them as unverified
@@ -105,6 +108,8 @@ Command sections should be evidence-oriented:
 
 - Marketing copy that does not help a contributor operate the project.
 - Install or test commands that have not been verified.
+- Generic package-manager instructions that are not supported by local
+  evidence.
 - Full architecture explanations that belong in `docs/`.
 - Duplicated rules from `AGENTS.md`, skills, or shared rule files.
 - Long troubleshooting sections that belong in `references/` or runbooks.

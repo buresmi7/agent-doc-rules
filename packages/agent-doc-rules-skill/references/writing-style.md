@@ -37,6 +37,8 @@ and a reference page should not hide required setup in prose.
 
 - Say what is true in this repository, not what is generally true.
 - Document commands only after verifying them or marking them as examples.
+- During plain-English rewrites, keep the supported workflow intact instead of
+  adding common setup, install, deploy, or package-manager steps.
 - Put long setup, release, and troubleshooting procedures in a detailed doc and
   link to it.
 - Keep local policy in `AGENTS.md`; keep human orientation in `README.md`.
@@ -63,6 +65,8 @@ Before accepting documentation, check:
 - Can a reader tell what this file is for in the first few lines?
 - Does each section have one clear job?
 - Are commands, paths, and tool names accurate for this repository?
+- Did the rewrite introduce any generic workflow step that was not in the
+  source docs, user request, or local manifests?
 - Is any rule duplicated from another canonical file?
 - Can any sentence be shorter without losing meaning?
 - Does the final section give a useful next action or stop cleanly?

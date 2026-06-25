@@ -1,0 +1,10 @@
+{
+  "scenario": "factual-change-rejection",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "No README change made: package.json engines is >=20 <24 and README currently says Node.js 20 and 22, so adding Node.js 24 would contradict project facts.",
+  "judgeNotes": "Generated output correctly made no files, left README unchanged, and noted that Node.js 24 conflicts with package.json engines >=20 <24."
+}

@@ -12,6 +12,8 @@ task-specific skill for agents.
 - Keeps `AGENTS.md` short, local, and useful for agent routing.
 - Shapes `README.md` as a human entry point, not a full manual.
 - Separates long-lived docs from task-specific agent workflows.
+- Reviews repository docs for false, contradictory, unsupported, stale, or
+  misleading claims.
 - Applies plain-English writing rules to repository documentation.
 - Uses progressive disclosure so detailed rules live in references, not in the
   always-loaded skill entry point.
@@ -73,6 +75,11 @@ Use $agent-doc-rules to review this README for stale commands and duplicated rul
 ```
 
 ```text
+Use $agent-doc-rules to review these docs for factual accuracy, contradictions,
+and unsupported claims.
+```
+
+```text
 Use $agent-doc-rules to decide whether this note belongs in README.md,
 AGENTS.md, docs/, or a task-specific skill.
 ```
@@ -87,24 +94,72 @@ Common tasks:
 - write or review a README,
 - decide whether information belongs in docs, `AGENTS.md`, or a skill,
 - add a project-specific documentation overlay,
-- review docs for plain English and duplicated rules.
+- review docs for factual accuracy, plain English, and duplicated rules.
 
-## Package Contents
+## Feature Guide
 
-| Path | Purpose |
-| --- | --- |
-| `SKILL.md` | Skill entry point and routing workflow. |
-| `references/agents-rules.md` | Rules for `AGENTS.md`. |
-| `references/agents-rubric.md` | Review checklist for generated or repaired `AGENTS.md`. |
-| `references/doc-audit.md` | Audit workflow for moving facts and repairing stale docs. |
-| `references/readme-rules.md` | Rules for README files. |
-| `references/readme-rubric.md` | README review checklist. |
-| `references/documentation-architecture.md` | Source-of-truth and placement rules. |
-| `references/writing-style.md` | Plain-English documentation writing rules. |
-| `references/validation.md` | Documentation validation and duplicate-check guidance. |
-| `references/influences.md` | Attribution for borrowed principles. |
-| `assets/templates/` | Starter `AGENTS.md` templates. |
-| `docs/context-placement.md` | Human-facing guide to docs vs agent context. |
+- [Agent Instructions](#agent-instructions)
+- [README Shaping](#readme-shaping)
+- [Documentation Placement](#documentation-placement)
+- [Documentation Repair](#documentation-repair)
+- [Factual Documentation Review](#factual-documentation-review)
+- [Plain-English Cleanup](#plain-english-cleanup)
+- [Validation Tools](#validation-tools)
+- [Starter Templates](#starter-templates)
+
+### Agent Instructions
+
+Create or repair `AGENTS.md` files so agents get a brief project orientation,
+short routing rules, local constraints, nested instruction pointers, and
+verification commands. The detailed rules live in
+[`references/agents-rules.md`](references/agents-rules.md), with review checks
+in [`references/agents-rubric.md`](references/agents-rubric.md).
+
+### README Shaping
+
+Keep README files useful as human entry points. The skill trims runbooks,
+removes stale commands, and links to deeper docs instead of copying detail into
+the README. See [`references/readme-rules.md`](references/readme-rules.md) and
+[`references/readme-rubric.md`](references/readme-rubric.md).
+
+### Documentation Placement
+
+Decide whether a fact belongs in `README.md`, `docs/`, `AGENTS.md`, a skill,
+or a skill reference. The compact rule set is
+[`references/documentation-architecture.md`](references/documentation-architecture.md);
+the fuller guide is [`docs/context-placement.md`](docs/context-placement.md).
+
+### Documentation Repair
+
+Move bloated, stale, duplicated, or inbox-style documentation into the right
+canonical home. The audit workflow lives in
+[`references/doc-audit.md`](references/doc-audit.md).
+
+### Factual Documentation Review
+
+Check documentation claims against project evidence before editing. If a
+requested change conflicts with local manifests, source files, configs, tests,
+or canonical docs, the skill tells the agent to report the conflict instead of
+writing unsupported text. See
+[`references/factual-review.md`](references/factual-review.md).
+
+### Plain-English Cleanup
+
+Rewrite repository documentation in direct, specific language. The skill cuts
+padding, avoids generic AI phrasing, and keeps the reader's task first. See
+[`references/writing-style.md`](references/writing-style.md).
+
+### Validation Tools
+
+Use the optional CLIs to check Markdown, local links, and likely duplicate
+documentation passages. The validation guidance lives in
+[`references/validation.md`](references/validation.md).
+
+### Starter Templates
+
+Start new agent instruction files from the templates in
+[`assets/templates/`](assets/templates/) instead of copying unrelated project
+rules.
 
 ## Context Placement
 

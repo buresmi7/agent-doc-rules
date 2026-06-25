@@ -59,3 +59,9 @@ Generated files:
 ```text
 {{generatedFiles}}
 ```
+
+Generator notes:
+
+```text
+{{generatorNotes}}
+```

@@ -45,6 +45,10 @@ Keep rationale, troubleshooting, release steps, and repair procedures out of the
 README unless they are one-line pointers. Put the durable content in `docs/` and
 link to it.
 
+If an inbox note says why a format, workflow, or architecture choice exists,
+the README may summarize that fact, but it must link to a `docs/` explanation or
+architecture page that owns the rationale.
+
 When triaging an inbox file such as `notes.md`, move every durable fact to its
 new canonical home. Then remove the inbox file or replace it with a short pointer
 that names those homes. Do not leave the original facts duplicated in the inbox.
@@ -73,6 +77,9 @@ such as `docs/architecture.md` or `docs/output-format.md`, not as the main prose
 inside a schema, importer, command, or API reference. Put fixture repair notes
 beside the relevant troubleshooting material. `README.md` and reference docs may
 summarize and link to those pages, but should not be their canonical home.
+
+Use this placement even for one-sentence rationale notes. A short reason still
+needs a stable explanation home when the user asks to organize durable notes.
 
 ## AGENTS.md
 

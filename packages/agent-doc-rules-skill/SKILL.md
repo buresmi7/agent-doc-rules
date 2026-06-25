@@ -1,6 +1,6 @@
 ---
 name: agent-doc-rules
-description: Maintain repo-level AGENTS.md, README.md, docs placement, and agent workflow extraction. Use for agent docs, documentation architecture, plain-English repository documentation, overlays, and stale-doc repair; do not use as a general product-doc writer.
+description: Maintain repo-level AGENTS.md, README.md, docs placement, factual review, and agent workflow extraction. Use for agent docs, documentation architecture, plain-English repository documentation, overlays, and stale-doc repair; do not use as a general product-doc writer.
 ---
 
 # Agent Doc Rules
@@ -31,6 +31,9 @@ canonical, plain, and easy for agents and people to use.
      [references/documentation-architecture.md](references/documentation-architecture.md).
    - For repairing bloated docs, moving inbox notes, or auditing duplicated
      durable facts, read [references/doc-audit.md](references/doc-audit.md).
+   - For factual accuracy, contradictions, unsupported claims, stale facts, or
+     misleading documentation review, read
+     [references/factual-review.md](references/factual-review.md).
    - For documentation validation or duplicate checks, read
      [references/validation.md](references/validation.md).
 3. When starter content is useful, adapt the templates in
@@ -76,8 +79,15 @@ For design influences and attribution, see
   `Skill Reference` section that links to
   `.agents/skills/agent-doc-rules/references/agents-rules.md`; do not copy the
   referenced rule text.
+- Root `AGENTS.md` files should start with a brief project orientation from the
+  local README or manifest, not only generic section headings.
+- When creating a nested `AGENTS.md`, add a short root `AGENTS.md` pointer that
+  names the nested file path and says when agents should read it.
 - Keep troubleshooting, setup, release, and repair procedures in human docs;
   put only routing links and short invariants in `AGENTS.md`.
+- When simplifying existing docs, do not add generic setup, install, test,
+  deployment, or package-manager steps unless the source docs, user request, or
+  local manifests support them.
 - Move ordinary human runbooks to `docs/` and link to them; do not turn them
   into task-specific skills unless they are repeated agent workflows.
 - For documentation placement tasks, put rationale and trade-off explanations in
@@ -85,6 +95,10 @@ For design influences and attribution, see
   command, or API reference pages. Put fixture failure or repair steps in
   `docs/` how-to or troubleshooting files. Keep `README.md`, reference docs,
   and `AGENTS.md` to short pointers for those details.
+- During notes triage, treat facts introduced as a reason, rationale, why, or
+  trade-off as explanation content. Create or update a `docs/` explanation or
+  architecture page for that content instead of leaving the README as the only
+  home.
 - When project notes describe a repeated workflow meant for agents, create or
   update a task-specific `.agents/skills/<name>/SKILL.md` and link to it instead
   of storing the full workflow in the README or `AGENTS.md`.
@@ -101,5 +115,7 @@ For design influences and attribution, see
   behind.
 - Make local overrides explicit, narrow, and easy to find.
 - Keep persisted content in the language required by the consuming repository.
-- Do not include secrets, account IDs, private host names, customer identifiers,
-  or environment-specific notes in reusable docs.
+- Do not include secrets, real customer names, emails, account IDs, private host
+  names, tokens, or environment-specific notes in reusable docs. When source
+  notes contain sensitive examples, keep only a short safety rule that names the
+  sensitive categories to avoid.

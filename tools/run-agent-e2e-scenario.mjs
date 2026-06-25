@@ -186,6 +186,7 @@ async function runScenario() {
     originalProjectFiles: projectFilesBefore,
     projectFiles: projectFilesAfter,
     generatedFiles: formatGeneratedFiles(generatedFiles),
+    generatorNotes: generated.notes,
   });
 
   const judgment = await agentGenerate({
@@ -615,6 +616,7 @@ async function readSkillReference() {
     'references/readme-rules.md',
     'references/documentation-architecture.md',
     'references/readme-rubric.md',
+    'references/factual-review.md',
     'references/validation.md',
     'references/writing-style.md',
     'docs/context-placement.md',

@@ -14,7 +14,8 @@ await checkSkillFrontmatter();
 await checkPackageFiles();
 await checkOpenAiMetadata();
 await checkMarkdownLinks();
-await checkSkillReadmeIndex();
+await checkSkillReadmeFeatureGuide();
+await checkFactualReviewContract();
 await checkForbiddenText();
 
 if (errors.length > 0) {
@@ -72,6 +73,26 @@ async function checkSkillFrontmatter() {
   if (!description.includes('do not use as a general product-doc writer')) {
     errors.push('SKILL.md description must state the product-doc boundary.');
   }
+
+  if (!content.includes('When creating a nested `AGENTS.md`')) {
+    errors.push('SKILL.md must keep nested AGENTS.md root-pointer guidance always loaded.');
+  }
+
+  if (!content.includes('brief project orientation')) {
+    errors.push('SKILL.md must keep root AGENTS.md project orientation guidance always loaded.');
+  }
+
+  if (!content.includes('real customer names, emails, account IDs, private host')) {
+    errors.push('SKILL.md must explicitly name sensitive documentation categories.');
+  }
+
+  if (!content.includes('do not add generic setup, install, test')) {
+    errors.push('SKILL.md must keep unsupported generic setup-step guidance always loaded.');
+  }
+
+  if (!content.includes('reason, rationale, why, or') || !content.includes('README as the only')) {
+    errors.push('SKILL.md must keep notes-triage rationale placement guidance always loaded.');
+  }
 }
 
 async function checkPackageFiles() {
@@ -120,28 +141,102 @@ async function checkMarkdownLinks() {
   }
 }
 
-async function checkSkillReadmeIndex() {
+async function checkSkillReadmeFeatureGuide() {
   const readme = await readFile(join(skillDir, 'README.md'), 'utf8');
-  const indexedPaths = new Set([...readme.matchAll(/\| `([^`]+)` \|/g)].map((match) => match[1]));
-  const expectedPaths = [
-    'SKILL.md',
+
+  if (!readme.includes('## Feature Guide')) {
+    errors.push('Skill README must include a Feature Guide section.');
+  }
+
+  if (readme.includes('## Package Contents')) {
+    errors.push('Skill README should use Feature Guide instead of Package Contents.');
+  }
+
+  const expectedFeatureLinks = [
+    '[Agent Instructions](#agent-instructions)',
+    '[README Shaping](#readme-shaping)',
+    '[Documentation Placement](#documentation-placement)',
+    '[Documentation Repair](#documentation-repair)',
+    '[Factual Documentation Review](#factual-documentation-review)',
+    '[Plain-English Cleanup](#plain-english-cleanup)',
+    '[Validation Tools](#validation-tools)',
+    '[Starter Templates](#starter-templates)',
+  ];
+
+  for (const link of expectedFeatureLinks) {
+    if (!readme.includes(link)) {
+      errors.push(`Skill README Feature Guide must link to ${link}.`);
+    }
+  }
+
+  const expectedReferenceLinks = [
     'references/agents-rules.md',
     'references/agents-rubric.md',
     'references/doc-audit.md',
     'references/readme-rules.md',
     'references/readme-rubric.md',
     'references/documentation-architecture.md',
+    'references/factual-review.md',
     'references/writing-style.md',
     'references/validation.md',
-    'references/influences.md',
     'assets/templates/',
     'docs/context-placement.md',
   ];
 
-  for (const path of expectedPaths) {
-    if (!indexedPaths.has(path)) {
-      errors.push(`Skill README package contents must list ${path}.`);
+  for (const path of expectedReferenceLinks) {
+    if (!readme.includes(`](${path})`)) {
+      errors.push(`Skill README Feature Guide must link to ${path}.`);
     }
+  }
+}
+
+async function checkFactualReviewContract() {
+  const skill = await readFile(join(skillDir, 'SKILL.md'), 'utf8');
+  const reference = await readFile(join(skillDir, 'references/factual-review.md'), 'utf8');
+  const readme = await readFile(join(skillDir, 'README.md'), 'utf8');
+
+  const routingTerms = [
+    'factual accuracy',
+    'contradictions',
+    'unsupported claims',
+    'misleading documentation review',
+    'references/factual-review.md',
+  ];
+
+  for (const term of routingTerms) {
+    if (!skill.includes(term)) {
+      errors.push(`SKILL.md factual-review routing must mention ${term}.`);
+    }
+  }
+
+  const requiredReferenceTerms = [
+    '## Evidence Rules',
+    '## Detection Pass',
+    '## Finding Types',
+    '## Severity',
+    '## Report Format',
+    'false|contradiction|unsupported|misleading|stale-risk|overclaim',
+    'fail|warn|note',
+    'Claim:',
+    'Evidence:',
+    'Impact:',
+    'Fix:',
+    'Confidence: confirmed|likely|needs maintainer confirmation',
+    'Do not apply a requested documentation change when local evidence contradicts',
+  ];
+
+  for (const term of requiredReferenceTerms) {
+    if (!reference.includes(term)) {
+      errors.push(`factual-review.md must include ${term}.`);
+    }
+  }
+
+  if (!readme.includes('factual accuracy, contradictions')) {
+    errors.push('Skill README must include factual-review usage language.');
+  }
+
+  if (!skill.includes('local manifests support them')) {
+    errors.push('SKILL.md must block unsupported generic workflow additions.');
   }
 }
 

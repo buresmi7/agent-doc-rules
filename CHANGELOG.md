@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.5.0 - 2026-06-25
+
+- Added factual documentation review guidance for false, contradictory,
+  unsupported, stale, misleading, or overbroad repository claims, including
+  requested edits that conflict with local evidence.
+- Added a factual-change-rejection E2E scenario and passed generator notes into
+  the E2E judge prompt.
+- Tightened README rewrite guidance so plain-English edits do not add generic
+  setup or package-manager steps without local evidence.
+- Replaced the skill README package-contents table with a linked feature guide.
+- Moved monorepo maintainer details from the root README into
+  `docs/development.md`, leaving the root README as a short entry point.
+- Clarified that note-triage rationale belongs in a `docs/` explanation or
+  architecture page, not only in the root README.
+- Clarified that root `AGENTS.md` files must start with a brief project
+  orientation and point to nested `AGENTS.md` files when directory-specific
+  rules are created.
+- Tightened sensitive-note handling so generated docs name sensitive categories
+  such as customer names, emails, account IDs, private hosts, and tokens instead
+  of carrying example values forward.
+
 ## v0.4.0 - 2026-06-25
 
 - Moved primary usage examples into the skill package README and made the root
