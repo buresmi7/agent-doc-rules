@@ -18,7 +18,8 @@
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
     "skills:sync": "node tools/sync-project-skills.mjs",
-    "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:audit"
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:audit",
+    "verify:release": "corepack pnpm run skills:sync && corepack pnpm run test:install && corepack pnpm test && corepack pnpm run docs:check && corepack pnpm run test:agent"
   },
   "devDependencies": {
     "@agent-doc-rules/docs-duplicates": "workspace:*",

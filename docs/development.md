@@ -71,6 +71,17 @@ temporary projects. Each scenario has a prompt, criteria, fixture project, and
 snapshot. See [e2e/README.md](../e2e/README.md) for runner configuration and
 snapshot refresh rules.
 
+Use [E2E Failure Triage](e2e-failure-triage.md) when a scenario fails and
+[E2E Rule Matrix](e2e-rule-matrix.md) to identify the rule surface covered by a
+scenario.
+
+### Rule Placement
+
+Use the [Rule Placement Rubric](rule-placement.md) when an E2E failure or code
+review finding raises a new behavior question. It explains when to change
+always-loaded `SKILL.md`, a loaded reference, maintainer docs, test criteria,
+fixtures, or deterministic tooling.
+
 ### Maintainer Skill Sync
 
 Maintainer skills are restored from `skills-lock.json` and the local skill
@@ -88,6 +99,7 @@ workspace with `corepack pnpm run skills:sync`. The sync model is documented in
 | Run static Markdown, link, and audit checks | `corepack pnpm test` |
 | Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
 | Run agent E2E tests when a runner is configured | `corepack pnpm run test:agent` |
+| Run the full release verification gate | `corepack pnpm run verify:release` |
 | Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
 
 See [Agent E2E Workspaces](../e2e/README.md) for runner configuration and
@@ -105,6 +117,9 @@ snapshot metadata.
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`e2e/`](../e2e/) | Agent E2E scenarios for documentation and context placement behavior. |
+| [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | Maintainer workflow for diagnosing failed agent E2E scenarios. |
+| [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |
+| [`docs/rule-placement.md`](rule-placement.md) | Rubric for deciding whether a behavior belongs in `SKILL.md`, references, docs, criteria, fixtures, or tooling. |
 | [`tools/`](../tools/) | Monorepo support scripts and shared E2E runner. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
@@ -120,6 +135,9 @@ not part of the published skill artifact.
 | [`packages/agent-doc-rules-skill/README.md`](../packages/agent-doc-rules-skill/README.md) | Install, examples, feature guide, and development notes for the skill. |
 | [`packages/agent-doc-rules-skill/docs/context-placement.md`](../packages/agent-doc-rules-skill/docs/context-placement.md) | How to choose a durable home for each project fact. |
 | [`packages/agent-doc-rules-skill/references/`](../packages/agent-doc-rules-skill/references/) | Source of truth for reusable README, `AGENTS.md`, writing, validation, and documentation architecture rules. |
+| [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | How maintainers diagnose failed agent E2E scenarios. |
+| [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Which skill behavior each E2E scenario protects. |
+| [`docs/rule-placement.md`](rule-placement.md) | Where new maintainer or skill behavior should be encoded. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | How project-scoped maintainer skills are declared, restored, reviewed, and locked. |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Released skill and template behavior changes. |
 
@@ -133,6 +151,7 @@ Release tags use `vMAJOR.MINOR.PATCH`.
 
 Before publishing, verify:
 
+- `corepack pnpm run verify:release` passes,
 - `corepack pnpm test` passes,
 - `corepack pnpm run test:skill` passes,
 - `corepack pnpm run docs:check` passes when documentation validation behavior

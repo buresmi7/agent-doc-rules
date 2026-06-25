@@ -93,6 +93,10 @@ async function checkSkillFrontmatter() {
   if (!content.includes('reason, rationale, why, or') || !content.includes('README as the only')) {
     errors.push('SKILL.md must keep notes-triage rationale placement guidance always loaded.');
   }
+
+  if (!content.includes('instead of burying the') || !content.includes('Source Of Truth')) {
+    errors.push('SKILL.md must keep dedicated Shared Rules section guidance always loaded.');
+  }
 }
 
 async function checkPackageFiles() {

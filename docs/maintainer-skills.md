@@ -19,6 +19,23 @@ Generated copies under `.agents/skills/` are ignored by Git, except for the
 `agent-doc-rules` symlink. Commit the manifests and lockfiles, not generated
 external skill directories.
 
+## Installed Maintainer Skills
+
+These links identify the skill sources this project restores or uses as direct
+inspiration. Review upstream changes before accepting a new `computedHash` in
+`skills-lock.json`.
+
+| Skill | Source | Link |
+| --- | --- | --- |
+| `agent-doc-rules` | Local workspace | [`packages/agent-doc-rules-skill/SKILL.md`](../packages/agent-doc-rules-skill/SKILL.md) |
+| `doc-coauthoring` | `anthropics/skills` | [upstream skill](https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md) |
+| `skill-creator` | `anthropics/skills` | [upstream skill](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md) |
+| `documentation-writer` | `github/awesome-copilot` | [upstream skill](https://github.com/github/awesome-copilot/tree/main/skills/documentation-writer) |
+| `update-markdown-file-index` | `github/awesome-copilot` | [upstream skill](https://github.com/github/awesome-copilot/tree/main/skills/update-markdown-file-index) |
+| `plain-english` | `b1rdmania/claude-plain-english-skill` | [upstream skill](https://github.com/b1rdmania/claude-plain-english-skill/blob/main/SKILL.md) |
+| `docmd-writer` | `docmd-skills` npm package | [upstream skill](https://github.com/docmd-io/docmd-skills/tree/main/skills/docmd-writer) |
+| `meta-skill` | `skill-meta-skill` npm package | [upstream skill](https://github.com/joohw/meta-skill/blob/main/SKILL.md) |
+
 ## Why There Is A Wrapper
 
 The `skills experimental_sync` command scans `node_modules` in the current

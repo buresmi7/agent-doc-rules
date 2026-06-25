@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Added maintainer docs for E2E failure triage, rule placement, and scenario to
+  rule coverage.
+- Added a `verify:release` script that runs skill sync, install smoke tests,
+  static checks, docs validation, and agent E2E tests.
+- Documented source and inspiration links for project-scoped maintainer skills.
+- Improved agent E2E failure output with a generated `failure-summary.json`.
+- Clarified that `AGENTS.md` shared-rule links belong in a dedicated
+  `Shared Rules` or `Skill Reference` section.
+
 ## v0.5.0 - 2026-06-25
 
 - Added factual documentation review guidance for false, contradictory,

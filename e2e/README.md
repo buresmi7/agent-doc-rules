@@ -35,6 +35,13 @@ scenario may return an empty file list when the correct behavior is no change.
 The shared runner lives at `tools/run-agent-e2e-scenario.mjs`; each scenario
 project calls it through its local `test:agent` script.
 
+When a scenario fails, the runner leaves the temporary output directory in
+place and writes `failure-summary.json` at the output root. Read that summary
+first, then inspect `project/` inside the same directory. Use
+[E2E Failure Triage](../docs/e2e-failure-triage.md) and
+[E2E Rule Matrix](../docs/e2e-rule-matrix.md) before changing rules or
+criteria.
+
 `snapshot/` contains example output from a passing run. It is not an exact
 golden assertion because wording can vary between models and Codex versions.
 The real pass/fail decision comes from the criteria and judge step.

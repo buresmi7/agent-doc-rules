@@ -145,8 +145,20 @@ if (!result.pass) {
     console.error(`fix: ${fix}`);
   }
 
+  if (result.generatedFilePaths?.length > 0) {
+    console.error(`generated: ${result.generatedFilePaths.join(', ')}`);
+  }
+
+  if (result.generatorNotes) {
+    console.error(`generator notes: ${result.generatorNotes}`);
+  }
+
   if (result.outputDir) {
     console.error(`output: ${result.outputDir}`);
+  }
+
+  if (result.failureSummaryPath) {
+    console.error(`summary: ${result.failureSummaryPath}`);
   }
 
   process.exit(1);
@@ -196,9 +208,20 @@ async function runScenario() {
     cwd: projectDir,
   });
   const pass = Boolean(judgment.pass) && Number(judgment.score) >= 0.8;
+  const failureSummaryPath = join(tempDir, 'failure-summary.json');
 
   if (pass && updateAgentSnapshots) {
     await writeScenarioSnapshot({ generatedFiles, generated, judgment });
+  }
+
+  if (!pass) {
+    await writeFailureSummary({
+      tempDir,
+      projectDir,
+      generatedFiles,
+      generated,
+      judgment,
+    });
   }
 
   if (pass && !process.env.KEEP_TEST_OUTPUT) {
@@ -209,7 +232,10 @@ async function runScenario() {
     scenario: scenarioName,
     ...judgment,
     pass,
+    generatedFilePaths: generatedFiles.map((file) => file.path),
+    generatorNotes: generated.notes,
     outputDir: pass ? undefined : tempDir,
+    failureSummaryPath: pass ? undefined : failureSummaryPath,
   };
 }
 
@@ -338,6 +364,35 @@ async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
       judgeNotes: judgment.notes,
     }, null, 2)}\n`,
   );
+}
+
+async function writeFailureSummary({ tempDir, projectDir, generatedFiles, generated, judgment }) {
+  const summary = {
+    scenario: scenarioName,
+    runner,
+    pass: false,
+    score: judgment.score ?? null,
+    failedCriteria: judgment.failedCriteria ?? [],
+    requiredFixes: judgment.requiredFixes ?? [],
+    generatorNotes: generated.notes ?? '',
+    judgeNotes: judgment.notes ?? '',
+    generatedFiles: generatedFiles.map((file) => ({
+      path: file.path,
+      projectPath: join('project', file.path).replaceAll('\\', '/'),
+      lineCount: file.content.trimEnd() ? file.content.trimEnd().split('\n').length : 0,
+    })),
+    inspect: {
+      outputDir: tempDir,
+      projectDir: relative(tempDir, projectDir),
+      triageDoc: 'docs/e2e-failure-triage.md',
+      ruleMatrix: 'docs/e2e-rule-matrix.md',
+      rulePlacement: 'docs/rule-placement.md',
+      criteria: relative(repoRoot, join(scenarioDir, 'criteria.md')),
+      prompt: relative(repoRoot, join(scenarioDir, 'prompt.md')),
+    },
+  };
+
+  await writeFile(join(tempDir, 'failure-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
 }
 
 function readSnapshotDirName() {

@@ -30,7 +30,8 @@ This repository also restores a small project-scoped skill set under
 - Use `$update-markdown-file-index` when maintaining Markdown indexes of files
   or directories.
 
-Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
+Keep the maintainer-skill artifact boundary and source links in
+`docs/maintainer-skills.md`.
 
 ## Source Of Truth
 
@@ -40,6 +41,9 @@ Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
 - Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
 - Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
 - Monorepo developer docs: `docs/development.md`
+- Rule placement rubric: `docs/rule-placement.md`
+- E2E failure triage: `docs/e2e-failure-triage.md`
+- E2E rule matrix: `docs/e2e-rule-matrix.md`
 - Markdown/docs validator: `packages/docs-validator/`
 - Semantic duplicate checker: `packages/docs-duplicates/`
 - npm-sourced maintainer skill dependencies:
@@ -70,6 +74,8 @@ Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
   with `corepack pnpm run skills:sync`.
 - Keep each E2E scenario's `project/` directory as a standalone workspace
   project that installs its skill dependency through `npx skills add`.
+- When an E2E scenario fails, use `docs/e2e-failure-triage.md` and
+  `docs/rule-placement.md` before changing skill rules or criteria.
 
 ## Maintenance
 
@@ -84,3 +90,4 @@ Keep the maintainer-skill artifact boundary in `docs/maintainer-skills.md`.
   docs:check`.
 - When the skill layout changes, also run `corepack pnpm run skills:sync` and
   `corepack pnpm run test:install`.
+- Before tagging a release, run `corepack pnpm run verify:release`.
