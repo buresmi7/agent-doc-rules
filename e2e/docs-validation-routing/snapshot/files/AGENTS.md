@@ -4,7 +4,7 @@ This repository keeps short operational notes for internal reporting scripts.
 
 ## Shared Rules
 
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
 
 ## Local Rules
 

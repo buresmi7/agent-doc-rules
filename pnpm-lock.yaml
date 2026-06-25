@@ -18,6 +18,12 @@ importers:
         specifier: workspace:*
         version: link:packages/agent-doc-rules-skill
 
+  e2e/compliant-noop/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
   e2e/context-placement/project:
     dependencies:
       '@agent-doc-rules/skill':
@@ -49,7 +55,19 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
+  e2e/human-runbook-not-skill/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
   e2e/local-language-override/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  e2e/nested-agents-override/project:
     dependencies:
       '@agent-doc-rules/skill':
         specifier: workspace:*
@@ -67,7 +85,19 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
+  e2e/sensitive-notes-redaction/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
   e2e/split-bloated-readme/project:
+    dependencies:
+      '@agent-doc-rules/skill':
+        specifier: workspace:*
+        version: link:../../../packages/agent-doc-rules-skill
+
+  e2e/stale-readme-commands/project:
     dependencies:
       '@agent-doc-rules/skill':
         specifier: workspace:*

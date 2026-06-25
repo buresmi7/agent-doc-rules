@@ -1,6 +1,6 @@
 [
   {
     "path": "AGENTS.md",
-    "content": "# Ledger Notes Agent Instructions\n\nLedger Notes stores Markdown notes for personal bookkeeping experiments.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)\n\n## Local Rules\n\n- Documentation and commit messages are written in English.\n- This repository is documentation-only for now.\n- Do not commit bank data, real account numbers, exported statements, tokens, or\n  screenshots containing financial details.\n\n## Source Of Truth\n\n- `README.md` describes the current project scope.\n- `docs/decisions/` stores accepted decisions.\n\n## Verification\n\n- Run Markdown checks before release.\n- If a check cannot run, state why and note the remaining risk.\n"
+    "content": "# Ledger Notes Agent Instructions\n\nLedger Notes stores Markdown notes for personal bookkeeping experiments.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n\n## Local Rules\n\n- Documentation and commit messages are written in English.\n- This repository is documentation-only for now.\n- Do not commit bank data, real account numbers, exported statements, tokens, or\n  screenshots containing financial details.\n\n## Source Of Truth\n\n- `README.md` describes the current project scope.\n- `docs/decisions/` stores accepted decisions.\n\n## Verification\n\n- Run Markdown checks before release.\n- If a check cannot run, state why and note the remaining risk.\n"
   }
 ]

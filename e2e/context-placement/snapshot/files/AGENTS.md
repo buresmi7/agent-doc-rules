@@ -2,7 +2,7 @@
 
 ## Shared Rules
 
-Use `.agents/skills/agent-doc-rules/references/agents-md.md` for shared agent
+Use `.agents/skills/agent-doc-rules/references/agents-rules.md` for shared agent
 instruction guidance.
 
 ## Project Routing

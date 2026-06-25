@@ -16,8 +16,8 @@ states a narrower local override.
 
 ## Shared Rules
 
-- AGENTS.md rules: `.agents/skills/agent-doc-rules/references/agents-md.md`
-- README rules: `.agents/skills/agent-doc-rules/references/readme.md`
+- AGENTS.md rules: `.agents/skills/agent-doc-rules/references/agents-rules.md`
+- README rules: `.agents/skills/agent-doc-rules/references/readme-rules.md`
 - Documentation architecture: `.agents/skills/agent-doc-rules/references/documentation-architecture.md`
 
 ## Local Overrides

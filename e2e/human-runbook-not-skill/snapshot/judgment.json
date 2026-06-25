@@ -1,0 +1,10 @@
+{
+  "scenario": "human-runbook-not-skill",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Cleaned the README, added concise AGENTS.md guidance, moved the human restore procedure to docs, and verified with `npm run docs:check`.",
+  "judgeNotes": "Generated documentation satisfies all critical criteria: README is concise, the human restore runbook lives under docs, AGENTS.md is a short routing and verification layer, no task-specific skill was created, supported facts are preserved, and no unsupported workflows or infrastructure were invented."
+}

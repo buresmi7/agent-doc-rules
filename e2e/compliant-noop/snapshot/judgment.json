@@ -1,0 +1,10 @@
+{
+  "scenario": "compliant-noop",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "No documentation changes were necessary. Verified with npm run docs:check.",
+  "judgeNotes": "No generated files were returned, so the compliant repository was left unchanged. This satisfies the noop requirement and avoids adding duplicate docs, invented workflows, or style-only rewrites."
+}

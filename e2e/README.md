@@ -29,7 +29,8 @@ avoid spelling out the expected skill behavior. Put project facts in
 
 `project/` is copied into a temporary project during the test. The agent returns
 the files it created or changed, the runner writes them into the temporary
-project, and the full generated file set is judged against `criteria.md`.
+project, and the full generated file set is judged against `criteria.md`. A
+scenario may return an empty file list when the correct behavior is no change.
 
 The shared runner lives at `tools/run-agent-e2e-scenario.mjs`; each scenario
 project calls it through its local `test:agent` script.

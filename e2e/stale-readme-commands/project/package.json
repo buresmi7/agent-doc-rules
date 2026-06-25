@@ -1,0 +1,14 @@
+{
+  "name": "metric-cards",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo tests ok",
+    "docs:check": "echo docs ok",
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+  },
+  "dependencies": {
+    "@agent-doc-rules/skill": "workspace:*"
+  }
+}

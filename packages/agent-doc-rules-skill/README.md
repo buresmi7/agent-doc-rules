@@ -94,8 +94,10 @@ Common tasks:
 | Path | Purpose |
 | --- | --- |
 | `SKILL.md` | Skill entry point and routing workflow. |
-| `references/agents-md.md` | Rules for `AGENTS.md`. |
-| `references/readme.md` | Rules for README files. |
+| `references/agents-rules.md` | Rules for `AGENTS.md`. |
+| `references/agents-rubric.md` | Review checklist for generated or repaired `AGENTS.md`. |
+| `references/doc-audit.md` | Audit workflow for moving facts and repairing stale docs. |
+| `references/readme-rules.md` | Rules for README files. |
 | `references/readme-rubric.md` | README review checklist. |
 | `references/documentation-architecture.md` | Source-of-truth and placement rules. |
 | `references/writing-style.md` | Plain-English documentation writing rules. |

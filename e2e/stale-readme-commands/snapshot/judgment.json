@@ -1,0 +1,10 @@
+{
+  "scenario": "stale-readme-commands",
+  "runner": "codex",
+  "pass": true,
+  "score": 0.94,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Repaired stale README commands against package.json and added a concise root AGENTS.md.",
+  "judgeNotes": "Generated docs remove stale lint/deploy commands, preserve npm test and npm run docs:check, avoid invented hosting/deploy workflows, and keep AGENTS.md concise with shared-rule routing and skipped-check reporting. Minor weakness: AGENTS.md source-of-truth guidance is present only as package.json command guidance, not a distinct Source Of Truth section."
+}

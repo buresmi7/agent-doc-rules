@@ -1,0 +1,10 @@
+{
+  "scenario": "nested-agents-override",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Created root instructions and an importer-local override so directory-specific rules stay near the package they govern.",
+  "judgeNotes": "The generated root AGENTS.md is concise, links to the installed shared guidance, routes importer work to the nested AGENTS.md, and preserves supported verification guidance. The nested importer AGENTS.md contains the importer-only schema, sample anonymity, and test-command rules without inventing unsupported project facts or adding unrelated files."
+}

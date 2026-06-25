@@ -6,7 +6,7 @@ Critical criteria:
 - R2: Preserves project-specific facts from the README: English documentation
   and commit messages, documentation-only scope, and financial-data secrecy.
 - R3: Points to installed `agent-doc-rules` guidance, including
-  `.agents/skills/agent-doc-rules/references/agents-md.md`, instead of copying
+  `.agents/skills/agent-doc-rules/references/agents-rules.md`, instead of copying
   the shared rules into the project `AGENTS.md`.
 - R4: Preserves source-of-truth guidance for `README.md` and `docs/decisions/`.
 - R5: Preserves verification guidance for Markdown checks.

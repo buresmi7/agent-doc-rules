@@ -22,6 +22,9 @@ It is not a full architecture document, runbook, changelog, or agent rule file.
 - State the repository's role before listing commands or internals.
 - Keep setup, usage, verification, and operational notes in separate sections.
 - Put long procedures in the nearest detailed doc and link to them.
+- When an existing README carries a full human runbook, move the procedure into
+  `docs/` and leave a short pointer in the README. Do not convert ordinary
+  human runbooks into agent skills.
 - Prefer tables for indexes, supported targets, commands, and canonical docs.
 - Include commands only when they are known to work.
 - Mark project status, limitations, and safety boundaries explicitly.
@@ -94,6 +97,9 @@ Command sections should be evidence-oriented:
   command source of truth. Do not preserve stale README commands that are absent
   from the manifest unless the documentation clearly labels them as unverified
   or external.
+- Do not infer hidden test harness or agent-runner scripts such as `test:agent`.
+  Document them only when they are visible in the target manifest and relevant
+  to the README's audience.
 
 ## What To Avoid
 

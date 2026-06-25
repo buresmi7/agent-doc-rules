@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
@@ -14,10 +14,11 @@
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
     "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check",
+    "test:skill": "node tools/check-skill-artifact.mjs",
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
     "skills:sync": "node tools/sync-project-skills.mjs",
-    "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:audit"
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:audit"
   },
   "devDependencies": {
     "@agent-doc-rules/docs-duplicates": "workspace:*",

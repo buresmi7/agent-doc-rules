@@ -1,0 +1,14 @@
+{
+  "name": "beacon-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo all tests ok",
+    "test:importer": "echo importer tests ok",
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+  },
+  "dependencies": {
+    "@agent-doc-rules/skill": "workspace:*"
+  }
+}

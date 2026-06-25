@@ -1,7 +1,7 @@
 [
   {
     "path": "AGENTS.md",
-    "content": "# AGENTS.md\n\n## Shared Rules\n\nUse `.agents/skills/agent-doc-rules/references/agents-md.md` for shared agent\ninstruction guidance.\n\n## Project Routing\n\n- Read `README.md` for the project purpose and documentation index.\n- Read `docs/schema.md` before changing parser output.\n- Keep parser rationale in `docs/import-design.md`.\n- Keep fixture repair steps in `docs/troubleshooting-fixtures.md`.\n\n## Local Invariants\n\n- Do not mention private site names in public docs.\n- Keep generated JSON examples out of commits when they include real site names.\n\n## Verification\n\nRun `npm test` before changing parser behavior. If a relevant check is skipped,\nrecord the reason and residual risk in the handoff.\n"
+    "content": "# AGENTS.md\n\n## Shared Rules\n\nUse `.agents/skills/agent-doc-rules/references/agents-rules.md` for shared agent\ninstruction guidance.\n\n## Project Routing\n\n- Read `README.md` for the project purpose and documentation index.\n- Read `docs/schema.md` before changing parser output.\n- Keep parser rationale in `docs/import-design.md`.\n- Keep fixture repair steps in `docs/troubleshooting-fixtures.md`.\n\n## Local Invariants\n\n- Do not mention private site names in public docs.\n- Keep generated JSON examples out of commits when they include real site names.\n\n## Verification\n\nRun `npm test` before changing parser behavior. If a relevant check is skipped,\nrecord the reason and residual risk in the handoff.\n"
   },
   {
     "path": "docs/import-design.md",

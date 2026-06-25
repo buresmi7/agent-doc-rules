@@ -4,7 +4,7 @@ Ledger Notes stores Markdown notes for personal bookkeeping experiments.
 
 ## Shared Rules
 
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
 
 ## Local Rules
 

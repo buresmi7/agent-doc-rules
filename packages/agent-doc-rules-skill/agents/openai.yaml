@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Doc Rules"
-  short_description: "Rules for concise agent documentation"
+  short_description: "Repo docs, AGENTS.md, and context placement rules"
   default_prompt: "Use $agent-doc-rules to create or repair concise repository agent documentation."

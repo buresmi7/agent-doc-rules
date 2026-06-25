@@ -21,4 +21,4 @@
 ## Skill Reference
 
 - Shared `AGENTS.md` guidance lives in
-  `.agents/skills/agent-doc-rules/references/agents-md.md`.
+  `.agents/skills/agent-doc-rules/references/agents-rules.md`.

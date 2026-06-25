@@ -39,6 +39,7 @@ skill, reference, or template changes.
 | Install dependencies | `corepack pnpm install` |
 | Sync local and project-scoped skills | `corepack pnpm run skills:sync` |
 | Verify local skill installation wiring | `corepack pnpm run test:install` |
+| Check published skill metadata and package links | `corepack pnpm run test:skill` |
 | Run static Markdown, link, and audit checks | `corepack pnpm test` |
 | Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
 | Run agent E2E tests when a runner is configured | `corepack pnpm run test:agent` |
@@ -87,6 +88,7 @@ Release tags use `vMAJOR.MINOR.PATCH`.
 Before publishing, verify:
 
 - `corepack pnpm test` passes,
+- `corepack pnpm run test:skill` passes,
 - `corepack pnpm run docs:check` passes when documentation validation behavior
   changed,
 - `corepack pnpm run test:install` passes,

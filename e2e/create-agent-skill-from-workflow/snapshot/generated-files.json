@@ -5,7 +5,7 @@
   },
   {
     "path": "AGENTS.md",
-    "content": "# Agent Instructions\n\n## Skill Reference\n\n- Follow `.agents/skills/agent-doc-rules/references/agents-md.md` for shared\n  agent documentation rules.\n- Use `.agents/skills/release-notes/SKILL.md` when drafting Atlas release notes.\n\n## Verification\n\nRun this check before publishing release documentation changes:\n\n```sh\nnpm test\n```\n\nIf the check is skipped, state the reason and residual risk in the final note.\n"
+    "content": "# Agent Instructions\n\n## Skill Reference\n\n- Follow `.agents/skills/agent-doc-rules/references/agents-rules.md` for shared\n  agent documentation rules.\n- Use `.agents/skills/release-notes/SKILL.md` when drafting Atlas release notes.\n\n## Verification\n\nRun this check before publishing release documentation changes:\n\n```sh\nnpm test\n```\n\nIf the check is skipped, state the reason and residual risk in the final note.\n"
   },
   {
     "path": "README.md",

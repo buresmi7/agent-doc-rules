@@ -1,6 +1,7 @@
 # AGENTS.md Rules
 
-Use this rule when creating or maintaining `AGENTS.md` files.
+Use this rule when creating or maintaining `AGENTS.md` files. For review, also
+use [AGENTS.md review rubric](agents-rubric.md).
 
 ## Purpose
 
@@ -20,6 +21,9 @@ It is a navigation layer, not comprehensive documentation.
   block with a short `Shared Rules` section that links to the installed rule.
 - State local overrides explicitly.
 - Prefer nested `AGENTS.md` files for directory-specific rules.
+- When adding a nested `AGENTS.md`, keep the root file short but point agents to
+  the nested file before they edit that directory. Do not repeat the nested
+  rules in the root file.
 
 ## Recommended Root Structure
 
@@ -30,8 +34,8 @@ Brief project orientation.
 
 ## Shared Rules
 
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-md.md)
-- [README rules](.agents/skills/agent-doc-rules/references/readme.md)
+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
+- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)
 - [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)
 
 ## Local Rules

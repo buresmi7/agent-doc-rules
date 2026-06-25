@@ -4,7 +4,7 @@ Faktury CLI ověřuje CSV soubory s fakturami před importem do účetního syst
 
 ## Sdílená pravidla
 
-- [Pravidla pro `AGENTS.md`](.agents/skills/agent-doc-rules/references/agents-md.md)
+- [Pravidla pro `AGENTS.md`](.agents/skills/agent-doc-rules/references/agents-rules.md)
 
 ## Místní pravidla
 

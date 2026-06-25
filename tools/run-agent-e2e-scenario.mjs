@@ -55,7 +55,7 @@ const generateSchema = {
   properties: {
     files: {
       type: 'array',
-      minItems: 1,
+      minItems: 0,
       items: {
         type: 'object',
         additionalProperties: false,
@@ -276,6 +276,7 @@ Return JSON only with this shape:
 Rules:
 
 - Include only files you create or change.
+- If no file changes are needed, return an empty \`files\` array.
 - Use repository-relative file paths.
 - Do not use absolute paths or parent-directory traversal.
 - Wrap Markdown prose and bullets so lines stay under 100 characters.
@@ -608,10 +609,13 @@ async function readSkillUsePrompt() {
 async function readSkillReference() {
   const files = [
     'SKILL.md',
-    'references/agents-md.md',
-    'references/readme.md',
+    'references/agents-rules.md',
+    'references/agents-rubric.md',
+    'references/doc-audit.md',
+    'references/readme-rules.md',
     'references/documentation-architecture.md',
     'references/readme-rubric.md',
+    'references/validation.md',
     'references/writing-style.md',
     'docs/context-placement.md',
     'assets/templates/AGENTS.project.md',
@@ -698,8 +702,8 @@ async function assertFile(path) {
 }
 
 function normalizeGeneratedFiles(files) {
-  if (!Array.isArray(files) || files.length === 0) {
-    throw new Error('Generator did not return any files.');
+  if (!Array.isArray(files)) {
+    throw new Error('Generator did not return a files array.');
   }
 
   const seen = new Set();

@@ -1,6 +1,8 @@
 # Context Placement
 
-Use this guide when deciding where project information should live.
+Use this guide when deciding where project information should live. Agents that
+need only the short rule set should use
+[Documentation Architecture](../references/documentation-architecture.md).
 
 ## Core Rule
 
@@ -122,6 +124,10 @@ two bullets and link to the skill instead of copying the workflow.
 
 Do not create a skill for facts that should be visible to humans first. Do not
 create a skill for one-off project notes or ordinary human runbooks.
+
+When a README contains an ordinary human runbook, move the detailed procedure to
+`docs/` and leave a short README pointer. The fact that a workflow has steps is
+not enough to make it a skill; the workflow must be meant for agents.
 
 ## Review Questions
 

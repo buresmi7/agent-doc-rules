@@ -1,11 +1,34 @@
 # Changelog
 
-## Unreleased
+## v0.4.0 - 2026-06-25
 
 - Moved primary usage examples into the skill package README and made the root
   README point to the package as the main product entry point.
 - Reworded the project `AGENTS.md` template's skipped-check guidance to avoid
   duplicating the skill's canonical verification rule.
+- Added an `AGENTS.md` review rubric and documentation audit workflow to the
+  published skill references.
+- Renamed reusable rule references from `agents-md.md` and `readme.md` to
+  `agents-rules.md` and `readme-rules.md`.
+- Tightened the skill trigger boundary around repository-level docs and agent
+  workflow extraction.
+- Clarified that root `AGENTS.md` should point to nested `AGENTS.md` files when
+  directory-specific rules are added.
+- Clarified that root `AGENTS.md` files should not duplicate nested
+  directory-specific rule details.
+- Clarified that ordinary human runbooks should move from README files into
+  `docs/`, not into task-specific skills.
+- Clarified that README command lists must not infer hidden harness commands
+  such as `test:agent`.
+- Clarified that agents should make no file changes when existing docs already
+  satisfy the requested audit or repair task.
+- Split context-placement explanation from the shorter documentation
+  architecture rule set.
+- Added a static skill artifact check for frontmatter, package metadata,
+  relative links, README contents, stale paths, and OpenAI prompt metadata.
+- Added E2E boundary scenarios for no-op review, nested `AGENTS.md` overrides,
+  human runbooks that should not become skills, stale README commands, and
+  sensitive notes redaction.
 
 ## v0.3.0 - 2026-06-24
 

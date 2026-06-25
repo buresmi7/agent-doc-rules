@@ -9,6 +9,6 @@ Critical criteria:
 - D3: Keeps validation guidance short and does not copy duplicate-check
   thresholds, Codex model settings, or long tool internals into `AGENTS.md`.
 - D4: Includes a short `Shared Rules` or `Skill Reference` section that links
-  to `.agents/skills/agent-doc-rules/references/agents-md.md`.
+  to `.agents/skills/agent-doc-rules/references/agents-rules.md`.
 - D5: Does not invent issue workflows, cloud services, deployment commands,
   owners, host names, secrets, or project-specific tooling.

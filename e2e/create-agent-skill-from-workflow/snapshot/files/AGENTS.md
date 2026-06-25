@@ -2,7 +2,7 @@
 
 ## Skill Reference
 
-- Follow `.agents/skills/agent-doc-rules/references/agents-md.md` for shared
+- Follow `.agents/skills/agent-doc-rules/references/agents-rules.md` for shared
   agent documentation rules.
 - Use `.agents/skills/release-notes/SKILL.md` when drafting Atlas release notes.
 

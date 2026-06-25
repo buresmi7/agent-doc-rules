@@ -2,7 +2,7 @@
 
 ## Shared Rules
 
-- Follow `.agents/skills/agent-doc-rules/references/agents-md.md` for general
+- Follow `.agents/skills/agent-doc-rules/references/agents-rules.md` for general
   `AGENTS.md` maintenance rules.
 - Inspect `README.md` and `docs/` before editing repository documentation.
 - Keep repository documentation in English.

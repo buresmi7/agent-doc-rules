@@ -1,6 +1,6 @@
 ---
 name: agent-doc-rules
-description: Maintain concise AGENTS.md, README.md, and repository docs. Use for agent docs, documentation architecture, plain-English documentation writing, and overlays.
+description: Maintain repo-level AGENTS.md, README.md, docs placement, and agent workflow extraction. Use for agent docs, documentation architecture, plain-English repository documentation, overlays, and stale-doc repair; do not use as a general product-doc writer.
 ---
 
 # Agent Doc Rules
@@ -13,16 +13,24 @@ canonical, plain, and easy for agents and people to use.
 1. Inspect the repository before editing. Identify existing `AGENTS.md`,
    `README.md`, docs, templates, local overrides, and verification commands.
 2. Load only the references needed for the task:
-   - For `AGENTS.md`, read [references/agents-md.md](references/agents-md.md).
+   - For `AGENTS.md`, read [references/agents-rules.md](references/agents-rules.md).
+   - For `AGENTS.md` reviews, also read
+     [references/agents-rubric.md](references/agents-rubric.md).
    - For documentation writing, rewriting, or style cleanup, read
      [references/writing-style.md](references/writing-style.md).
-   - For README work, read [references/readme.md](references/readme.md) and
-     [references/writing-style.md](references/writing-style.md).
+   - For README work, read
+     [references/readme-rules.md](references/readme-rules.md) and
+     [references/writing-style.md](references/writing-style.md). If the README
+     carries a long runbook or procedure, also read
+     [docs/context-placement.md](docs/context-placement.md) and
+     [references/doc-audit.md](references/doc-audit.md).
    - For README reviews, also read
      [references/readme-rubric.md](references/readme-rubric.md).
    - For documentation placement, canonical homes, or skill/template structure,
      read [docs/context-placement.md](docs/context-placement.md) and
      [references/documentation-architecture.md](references/documentation-architecture.md).
+   - For repairing bloated docs, moving inbox notes, or auditing duplicated
+     durable facts, read [references/doc-audit.md](references/doc-audit.md).
    - For documentation validation or duplicate checks, read
      [references/validation.md](references/validation.md).
 3. When starter content is useful, adapt the templates in
@@ -32,7 +40,9 @@ canonical, plain, and easy for agents and people to use.
 5. Preserve project-specific facts from the consuming repository, but do not
    invent or carry forward unsupported workflows, tools, services, hosts, issue
    processes, or commands. When a manifest such as `package.json` exists, use it
-   to verify documented scripts.
+   to verify documented scripts. Do not infer hidden harness commands such as
+   `test:agent` unless they are visible in the target project manifest and
+   relevant to the user's task.
 6. Before finishing README, `AGENTS.md`, docs, skill, reference, or template
    changes, run or name the repository's relevant Markdown, link, or
    documentation checks. Prefer `npm run docs:check` when it exists. If a check
@@ -58,14 +68,18 @@ For design influences and attribution, see
 ## Output Rules
 
 - Keep always-loaded agent instructions concise and scannable.
+- If existing docs already satisfy the task, make no file changes. Do not
+  rewrite compliant docs for style-only normalization.
 - Write repository docs in plain, concrete English unless the consuming
   repository sets a different language rule.
 - When creating or repairing `AGENTS.md`, include a short `Shared Rules` or
   `Skill Reference` section that links to
-  `.agents/skills/agent-doc-rules/references/agents-md.md`; do not copy the
+  `.agents/skills/agent-doc-rules/references/agents-rules.md`; do not copy the
   referenced rule text.
 - Keep troubleshooting, setup, release, and repair procedures in human docs;
   put only routing links and short invariants in `AGENTS.md`.
+- Move ordinary human runbooks to `docs/` and link to them; do not turn them
+  into task-specific skills unless they are repeated agent workflows.
 - For documentation placement tasks, put rationale and trade-off explanations in
   durable `docs/` explanation or architecture files, not in schema, importer,
   command, or API reference pages. Put fixture failure or repair steps in
