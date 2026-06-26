@@ -44,6 +44,10 @@ export function extractMarkdownUnits({ file, content, minWords = 6, minChars = 4
   const units = [];
 
   visit(tree, ['heading', 'paragraph'], (node) => {
+    if (node.type === 'paragraph' && isMarkdownTableBlock(sliceNodeContent(content, node))) {
+      return;
+    }
+
     const text = normalizeWhitespace(toString(node));
 
     for (const sentence of splitIntoUnits(text)) {
@@ -90,6 +94,35 @@ function isUsefulUnit({ text, normalized, words, minWords, minChars }) {
 
   const alphaNumericCount = (text.match(/[a-z0-9]/gi) ?? []).length;
   return alphaNumericCount / Math.max(text.length, 1) >= 0.45;
+}
+
+function sliceNodeContent(content, node) {
+  const start = node.position?.start?.offset;
+  const end = node.position?.end?.offset;
+
+  if (!Number.isInteger(start) || !Number.isInteger(end)) {
+    return '';
+  }
+
+  return content.slice(start, end);
+}
+
+function isMarkdownTableBlock(raw) {
+  const lines = raw
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length < 2) {
+    return false;
+  }
+
+  const allPipeRows = lines.every((line) => line.startsWith('|') && line.endsWith('|') && line.split('|').length >= 4);
+  if (!allPipeRows) {
+    return false;
+  }
+
+  return lines.some((line) => /^\|\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|$/.test(line));
 }
 
 function normalizeWhitespace(text) {

@@ -8,7 +8,7 @@ use [AGENTS.md review rubric](agents-rubric.md).
 `AGENTS.md` is an always-loaded entry point for AI agents. It should provide
 orientation, local invariants, and links to deeper docs.
 
-It is a navigation layer, not comprehensive documentation.
+It is a navigation layer, not full documentation.
 
 ## Core Rules
 

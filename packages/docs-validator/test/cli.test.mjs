@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import test from 'node:test';
@@ -8,8 +8,14 @@ import { resolveDocsOptions } from '../src/config.mjs';
 import {
   buildLinkinatorArgs,
   buildMarkdownlintArgs,
+  findWriteGoodIssues,
+  findWordingIssues,
+  maskMarkdownForProseLint,
+  normalizeWordingTerms,
+  normalizeWriteGoodOptions,
   resolveMarkdownFiles,
   runCheck,
+  runWording,
 } from '../src/runner.mjs';
 
 test('include and exclude globs resolve Markdown files', async () => {
@@ -94,6 +100,10 @@ test('check stops on the first failing subcheck', async () => {
         calls.push('links');
         return 0;
       },
+      runWording: async () => {
+        calls.push('wording');
+        return 0;
+      },
     },
   );
 
@@ -101,11 +111,12 @@ test('check stops on the first failing subcheck', async () => {
   assert.deepEqual(calls, ['markdown']);
 });
 
-test('check can pass separate markdown and link options', async () => {
+test('check can pass separate markdown, wording, and link options', async () => {
   const calls = [];
   const code = await runCheck(
     {
       markdownOptions: { include: ['*.md'] },
+      wordingOptions: { include: ['docs/wording.md'] },
       linksOptions: { include: ['docs/**/*.md'] },
     },
     {
@@ -117,14 +128,47 @@ test('check can pass separate markdown and link options', async () => {
         calls.push(['links', options.include]);
         return 0;
       },
+      runWording: async (options) => {
+        calls.push(['wording', options.include]);
+        return 0;
+      },
     },
   );
 
   assert.equal(code, 0);
   assert.deepEqual(calls, [
     ['markdown', ['*.md']],
+    ['wording', ['docs/wording.md']],
     ['links', ['docs/**/*.md']],
   ]);
+});
+
+test('check stops before links when wording fails', async () => {
+  const calls = [];
+  const code = await runCheck(
+    {
+      markdownOptions: { include: ['*.md'] },
+      wordingOptions: { include: ['docs/wording.md'] },
+      linksOptions: { include: ['docs/**/*.md'] },
+    },
+    {
+      runMarkdown: async () => {
+        calls.push('markdown');
+        return 0;
+      },
+      runWording: async () => {
+        calls.push('wording');
+        return 1;
+      },
+      runLinks: async () => {
+        calls.push('links');
+        return 0;
+      },
+    },
+  );
+
+  assert.equal(code, 1);
+  assert.deepEqual(calls, ['markdown', 'wording']);
 });
 
 test('cli flags override config defaults', async () => {
@@ -148,11 +192,228 @@ test('cli flags override config defaults', async () => {
   assert.deepEqual(options.skip, ['^https://override.invalid']);
 });
 
+test('wording command reads config terms and allow patterns', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-wording-config-'));
+  await writeFile(join(root, 'agent-doc-rules.config.json'), JSON.stringify({
+    docs: {
+      wording: {
+        writeGood: {
+          passive: true,
+          fail: true,
+        },
+        forbiddenTerms: [{ term: 'magic workflow', suggest: 'release workflow' }],
+        allow: ['allowed magic workflow'],
+      },
+    },
+  }));
+
+  const options = await resolveDocsOptions({
+    ...parseArgs(['wording', '--root', root]),
+  });
+
+  assert.deepEqual(options.forbiddenTerms, [
+    { term: 'magic workflow', suggest: 'release workflow' },
+  ]);
+  assert.deepEqual(options.allow, ['allowed magic workflow']);
+  assert.deepEqual(options.writeGood, {
+    passive: true,
+    fail: true,
+  });
+});
+
+test('wording scanner ignores fenced code blocks and allow patterns', () => {
+  const terms = normalizeWordingTerms([{ term: 'polish pass', suggest: 'cleanup checklist' }]);
+  const findings = findWordingIssues([
+    '# Guide',
+    'Run the polish pass before release.',
+    '```',
+    'polish pass',
+    '```',
+    'This line is allowed polish pass.',
+  ].join('\n'), {
+    file: 'README.md',
+    terms,
+    allowPatterns: [/allowed polish pass/i],
+  });
+
+  assert.deepEqual(findings, [
+    {
+      file: 'README.md',
+      line: 2,
+      term: 'polish pass',
+      suggest: 'cleanup checklist',
+    },
+  ]);
+});
+
+test('wording command reports configured forbidden terms', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-wording-'));
+  await writeFile(join(root, 'README.md'), '# Readme\n\nRun the project polish pass.\n');
+  const output = [];
+
+  const code = await runWording({
+    root,
+    include: ['*.md'],
+    exclude: [],
+    forbiddenTerms: [{ term: 'polish pass', suggest: 'cleanup checklist' }],
+    allow: [],
+    writeGood: false,
+  }, {
+    logger: {
+      log: (message) => output.push(message),
+      error: (message) => output.push(message),
+    },
+  });
+
+  assert.equal(code, 1);
+  assert.match(output.join('\n'), /Documentation wording check failed/);
+  assert.match(output.join('\n'), /polish pass/);
+});
+
+test('write-good suggestions warn without failing by default', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-write-good-'));
+  await writeFile(join(root, 'README.md'), '# Readme\n\nThere is a clearer command.\n');
+  const output = [];
+
+  const code = await runWording({
+    root,
+    include: ['*.md'],
+    exclude: [],
+    forbiddenTerms: [],
+    allow: [],
+    writeGood: { fail: false },
+  }, {
+    logger: {
+      log: (message) => output.push(message),
+      error: (message) => output.push(message),
+    },
+  });
+
+  assert.equal(code, 0);
+  assert.match(output.join('\n'), /write-good wording suggestions/);
+});
+
+test('write-good suggestions can fail when configured', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-write-good-fail-'));
+  await writeFile(join(root, 'README.md'), '# Readme\n\nThere is a clearer command.\n');
+
+  const code = await runWording({
+    root,
+    include: ['*.md'],
+    exclude: [],
+    forbiddenTerms: [],
+    allow: [],
+    writeGood: { fail: true },
+  }, {
+    logger: {
+      log: () => {},
+      error: () => {},
+    },
+  });
+
+  assert.equal(code, 1);
+});
+
+test('write-good scanner ignores code and table content', () => {
+  const content = [
+    '# Readme',
+    '```',
+    'There is a generated statement.',
+    '```',
+    '| Task | Command |',
+    '| --- | --- |',
+    '| There is a table statement. | `run` |',
+    'There is a prose statement.',
+  ].join('\n');
+
+  const findings = findWriteGoodIssues(content, {
+    file: 'README.md',
+    writeGoodOptions: normalizeWriteGoodOptions({}).options,
+  });
+
+  assert.deepEqual(findings.map((finding) => finding.line), [8]);
+});
+
+test('Markdown masking preserves offsets', () => {
+  const content = 'Before `There is code` after.';
+  const masked = maskMarkdownForProseLint(content);
+
+  assert.equal(masked.length, content.length);
+  assert.match(masked, /^Before\s+after\.$/);
+});
+
 test('runCommand dispatches check command', async () => {
   const code = await runCommand('check', {}, {
     runMarkdown: async () => 0,
+    runWording: async () => 0,
     runLinks: async () => 0,
   });
 
   assert.equal(code, 0);
+});
+
+test('init command writes a starter config', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-init-'));
+  let stdout = '';
+
+  const code = await runCommand('init', { root }, {
+    stdout: { write: (chunk) => { stdout += chunk; } },
+  });
+
+  assert.equal(code, 0);
+  assert.match(stdout, /Recommended package scripts/);
+
+  const config = JSON.parse(await readFile(join(root, 'agent-doc-rules.config.json'), 'utf8'));
+  assert.deepEqual(config.docs.links, {
+    skip: [],
+    checkFragments: true,
+  });
+  assert.deepEqual(config.docs.wording, {
+    writeGood: {
+      passive: false,
+      illusion: false,
+      weasel: false,
+      adverb: false,
+      tooWordy: false,
+      eprime: false,
+      fail: false,
+    },
+    forbiddenTerms: [],
+    allow: [],
+  });
+  assert.equal(config.docs.style.model, 'gpt-5-nano');
+  assert.equal(config.docs.style.maxUnits, 80);
+  assert.equal(config.docs.duplicates.model, 'gpt-5-nano');
+});
+
+test('init command refuses to overwrite existing config without force', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-init-existing-'));
+  await writeFile(join(root, 'agent-doc-rules.config.json'), '{"docs":{}}\n');
+  let stderr = '';
+
+  const code = await runCommand('init', { root }, {
+    stderr: { write: (chunk) => { stderr += chunk; } },
+  });
+
+  assert.equal(code, 1);
+  assert.match(stderr, /already exists/);
+});
+
+test('init command can print without writing files', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-init-print-'));
+  let stdout = '';
+
+  const code = await runCommand('init', { root, print: true }, {
+    stdout: { write: (chunk) => { stdout += chunk; } },
+  });
+
+  assert.equal(code, 0);
+  assert.match(stdout, /"docs"/);
+  assert.match(stdout, /"docs:style"/);
+  assert.match(stdout, /"docs:check"/);
+
+  await assert.rejects(
+    readFile(join(root, 'agent-doc-rules.config.json'), 'utf8'),
+    /ENOENT/,
+  );
 });

@@ -31,3 +31,12 @@ export const duplicateDefaults = {
   model: 'gpt-5-nano',
   reasoningEffort: 'low',
 };
+
+export const styleDefaults = {
+  includeReferences: false,
+  minWords: 6,
+  minChars: 40,
+  maxUnits: 80,
+  model: 'gpt-5-nano',
+  reasoningEffort: 'low',
+};

@@ -44,12 +44,32 @@ Recommended scripts:
 {
   "scripts": {
     "docs:markdown": "agent-doc-rules-docs markdown",
+    "docs:wording": "agent-doc-rules-docs wording",
+    "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
-    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check"
+    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check"
   }
 }
 ```
+
+Create a starter config before tuning include, exclude, link, or duplicate
+settings:
+
+```bash
+agent-doc-rules-docs init
+```
+
+Use `agent-doc-rules-docs init --print` when you want to inspect the config
+without writing files.
+
+Use wording validation for deterministic prose linting. The default checker uses
+`write-good` with a low-noise profile. Add project-specific forbidden terms only
+when a repository has a phrase that must fail.
+
+Use AI style review when the check needs sentence-level judgment. Keep it
+bounded: send parsed Markdown sentence units, cap the number of units, and
+return structured `fail`, `warn`, and `ok` findings.
 
 ## Duplicate Review
 

@@ -32,6 +32,9 @@ and a reference page should not hide required setup in prose.
 - Explain necessary terms at the first use when the target reader may not know
   them.
 - Keep examples close to the rule they demonstrate.
+- Name workflows by the action or decision they support. Avoid idiomatic or
+  metaphorical labels such as "polish pass"; use direct names such as "cleanup
+  review", "install check", or "release verification".
 
 ## Repository Documentation Rules
 
@@ -52,6 +55,7 @@ and a reference page should not hide required setup in prose.
 - Marketing claims that do not help someone operate the project.
 - Generic AI phrasing such as "unlock", "seamless", "robust", "leverage", or
   "comprehensive" when a plainer word works.
+- Workflow names that sound clever but do not explain the task.
 - Long preambles that explain what the document will do before doing it.
 - Summary endings that repeat the section instead of giving a next action.
 - Three-part lists created only for rhythm.
@@ -69,4 +73,5 @@ Before accepting documentation, check:
   source docs, user request, or local manifests?
 - Is any rule duplicated from another canonical file?
 - Can any sentence be shorter without losing meaning?
+- Are workflow and section names clear to readers who do not know the idiom?
 - Does the final section give a useful next action or stop cleanly?

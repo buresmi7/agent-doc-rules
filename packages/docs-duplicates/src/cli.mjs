@@ -1,5 +1,6 @@
 import { checkDuplicates } from './check.mjs';
-import { resolveDuplicateOptions } from './config.mjs';
+import { resolveDuplicateOptions, resolveStyleOptions } from './config.mjs';
+import { checkStyle } from './style.mjs';
 
 export async function main(argv = process.argv.slice(2)) {
   const parsed = parseArgs(argv);
@@ -9,8 +10,12 @@ export async function main(argv = process.argv.slice(2)) {
     return;
   }
 
-  const options = await resolveDuplicateOptions(parsed);
-  const result = await checkDuplicates(options);
+  const options = parsed.command === 'style'
+    ? await resolveStyleOptions(parsed)
+    : await resolveDuplicateOptions(parsed);
+  const result = parsed.command === 'style'
+    ? await checkStyle(options)
+    : await checkDuplicates(options);
   process.stdout.write(result.report);
 
   if (result.code !== 0) {
@@ -25,7 +30,7 @@ export function parseArgs(argv) {
     return { command: 'check', help: true };
   }
 
-  if (command !== 'check') {
+  if (!['check', 'duplicates', 'style'].includes(command)) {
     throw new Error(`Unknown command: ${command}`);
   }
 
@@ -60,6 +65,8 @@ export function parseArgs(argv) {
       parsed.minChars = Number(readValue(rest, ++index, arg));
     } else if (arg === '--max-candidates') {
       parsed.maxCandidates = Number(readValue(rest, ++index, arg));
+    } else if (arg === '--max-units') {
+      parsed.maxUnits = Number(readValue(rest, ++index, arg));
     } else if (arg === '--model') {
       parsed.model = readValue(rest, ++index, arg);
     } else if (arg === '--reasoning-effort') {
@@ -87,7 +94,12 @@ function readValue(args, index, option) {
 }
 
 function usage() {
-  return `Usage: agent-doc-rules-docs-duplicates check [options]
+  return `Usage: agent-doc-rules-docs-duplicates <command> [options]
+
+Commands:
+  check         Run semantic duplicate review. Same as duplicates.
+  duplicates    Run semantic duplicate review.
+  style         Run AI style review for Markdown sentences.
 
 Options:
   --root <dir>                  Repository root. Defaults to current directory.
@@ -101,6 +113,7 @@ Options:
   --min-words <number>          Minimum words per prose unit.
   --min-chars <number>          Minimum characters per prose unit.
   --max-candidates <number>     Maximum candidate pairs sent to Codex.
+  --max-units <number>          Maximum sentence units sent to Codex for style review.
   --model <model>               Codex model. Defaults to gpt-5-nano.
   --reasoning-effort <effort>   Codex reasoning effort. Defaults to low.
   --codex-bin <path>            Override Codex binary for local debugging.`;

@@ -20,8 +20,8 @@ repository state.
 
 ## Classify The Failure
 
-Use [E2E Rule Matrix](e2e-rule-matrix.md) to identify the behavior the scenario
-protects, then choose the fix with [Rule Placement Rubric](rule-placement.md).
+Use `docs/e2e-rule-matrix.md` to identify the behavior the scenario protects.
+Use `docs/rule-placement.md` to choose the fix.
 
 Common classifications:
 

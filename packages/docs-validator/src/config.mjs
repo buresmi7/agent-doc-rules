@@ -29,11 +29,15 @@ export async function resolveDocsOptions({
   exclude = [],
   skip = [],
   checkFragments,
+  forbiddenTerms = [],
+  allow = [],
+  writeGood,
 } = {}) {
   const resolvedRoot = resolve(root);
   const config = await loadDocsConfig({ root: resolvedRoot, configPath });
   const commandConfig = config[command] ?? {};
   const linkConfig = command === 'links' ? (config.links ?? {}) : {};
+  const wordingConfig = command === 'wording' ? (config.wording ?? {}) : {};
 
   return {
     root: resolvedRoot,
@@ -41,6 +45,9 @@ export async function resolveDocsOptions({
     exclude: chooseArray(exclude, commandConfig.exclude, config.exclude, defaultExclude),
     skip: chooseArray(skip, linkConfig.skip, commandConfig.skip, []),
     checkFragments: checkFragments ?? linkConfig.checkFragments ?? commandConfig.checkFragments ?? true,
+    forbiddenTerms: chooseArray(forbiddenTerms, wordingConfig.forbiddenTerms, commandConfig.forbiddenTerms, []),
+    allow: chooseArray(allow, wordingConfig.allow, commandConfig.allow, []),
+    writeGood: chooseObject(writeGood, wordingConfig.writeGood, commandConfig.writeGood, {}),
   };
 }
 
@@ -52,6 +59,20 @@ function chooseArray(...candidates) {
   }
 
   return [];
+}
+
+function chooseObject(...candidates) {
+  for (const candidate of candidates) {
+    if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) {
+      return candidate;
+    }
+
+    if (candidate === false) {
+      return false;
+    }
+  }
+
+  return {};
 }
 
 function resolvePath(root, path) {

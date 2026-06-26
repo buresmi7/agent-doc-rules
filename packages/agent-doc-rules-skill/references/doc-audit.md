@@ -23,6 +23,9 @@ asked for an audit report.
   as evidence.
 - Verify documented commands against manifests such as `package.json` when one
   exists.
+- When moving procedures into `docs/`, recheck the commands inside the moved
+  text. Unsupported commands must be removed or marked unavailable wherever they
+  land, not only in the README.
 - Do not infer hidden harness commands such as `test:agent`; a script belongs in
   docs only when the target manifest or user request supports it.
 - Preserve supported project-specific facts even when rewriting the surrounding

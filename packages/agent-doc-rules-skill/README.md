@@ -96,6 +96,17 @@ Common tasks:
 - add a project-specific documentation overlay,
 - review docs for factual accuracy, plain English, and duplicated rules.
 
+## Adoption And Tools
+
+- [Adoption Guide](docs/adoption.md) shows the smallest setup for consuming
+  repositories.
+- [Tool Map](docs/tool-map.md) maps common documentation tasks to the right
+  skill reference or CLI.
+- [Config Reference](docs/config-reference.md) documents
+  `agent-doc-rules.config.json`.
+- [Recipes](docs/recipes.md) gives before-and-after patterns based on the E2E
+  scenarios.
+
 ## Feature Guide
 
 - [Agent Instructions](#agent-instructions)
@@ -106,6 +117,7 @@ Common tasks:
 - [Plain-English Cleanup](#plain-english-cleanup)
 - [Validation Tools](#validation-tools)
 - [Starter Templates](#starter-templates)
+- [Adoption Docs](#adoption-docs)
 
 ### Agent Instructions
 
@@ -151,8 +163,9 @@ padding, avoids generic AI phrasing, and keeps the reader's task first. See
 
 ### Validation Tools
 
-Use the optional CLIs to check Markdown, local links, and likely duplicate
-documentation passages. The validation guidance lives in
+Use the optional CLIs to check Markdown, deterministic prose wording, AI
+sentence style, local links, and likely duplicate documentation passages. The
+validation guidance lives in
 [`references/validation.md`](references/validation.md).
 
 ### Starter Templates
@@ -160,6 +173,15 @@ documentation passages. The validation guidance lives in
 Start new agent instruction files from the templates in
 [`assets/templates/`](assets/templates/) instead of copying unrelated project
 rules.
+
+### Adoption Docs
+
+Use the product docs when rolling the skill into another repository:
+
+- [Adoption Guide](docs/adoption.md)
+- [Tool Map](docs/tool-map.md)
+- [Config Reference](docs/config-reference.md)
+- [Recipes](docs/recipes.md)
 
 ## Context Placement
 

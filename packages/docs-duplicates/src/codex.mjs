@@ -29,6 +29,33 @@ export const codexOutputSchema = {
   required: ['matches'],
 };
 
+export const styleOutputSchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
+    findings: {
+      type: 'array',
+      items: {
+        type: 'object',
+        additionalProperties: false,
+        properties: {
+          id: { type: 'string' },
+          status: { type: 'string', enum: ['fail', 'warn', 'ok'] },
+          category: {
+            type: 'string',
+            enum: ['unclear', 'idiom', 'vague', 'ai-voice', 'too-long', 'passive', 'ok'],
+          },
+          issue: { type: 'string' },
+          suggestion: { type: 'string' },
+          confidence: { type: 'number', minimum: 0, maximum: 1 },
+        },
+        required: ['id', 'status', 'category', 'issue', 'suggestion', 'confidence'],
+      },
+    },
+  },
+  required: ['findings'],
+};
+
 export async function runCodexClassifier(candidates, {
   root,
   model,
@@ -42,6 +69,35 @@ export async function runCodexClassifier(candidates, {
   try {
     await writeFile(schemaFile, JSON.stringify(codexOutputSchema, null, 2));
     const prompt = buildCodexPrompt(candidates);
+    const invocation = buildCodexInvocation({
+      root,
+      model,
+      reasoningEffort,
+      codexBin,
+      schemaFile,
+      outputFile,
+    });
+
+    await runCodex(invocation, prompt);
+    return parseCodexResponse(await readFile(outputFile, 'utf8'));
+  } finally {
+    await rm(tempDir, { recursive: true, force: true });
+  }
+}
+
+export async function runCodexStyleReviewer(units, {
+  root,
+  model,
+  reasoningEffort,
+  codexBin,
+} = {}) {
+  const tempDir = await mkdtemp(join(tmpdir(), 'docs-style-codex-'));
+  const schemaFile = join(tempDir, 'schema.json');
+  const outputFile = join(tempDir, 'last-message.json');
+
+  try {
+    await writeFile(schemaFile, JSON.stringify(styleOutputSchema, null, 2));
+    const prompt = buildStylePrompt(units);
     const invocation = buildCodexInvocation({
       root,
       model,
@@ -93,6 +149,38 @@ Return JSON matching the provided schema. Use score as duplicate confidence from
 # Candidate Pairs
 
 ${formattedCandidates}`;
+}
+
+export function buildStylePrompt(units) {
+  const formattedUnits = units.map((unit) => `## ${unit.id}
+
+Location: ${unit.file}:${unit.line}
+${unit.text}`).join('\n\n');
+
+  return `You are reviewing repository documentation sentence by sentence.
+
+Review only the sentences listed below. Do not inspect the repository and do not
+invent findings for text that is not shown.
+
+Use these labels:
+
+- fail: the sentence has a clear style problem that should block documentation
+  changes, such as an unclear idiom, metaphorical workflow name, vague AI-like
+  phrasing, or wording that makes the task hard to understand.
+- warn: the sentence is understandable but a maintainer should consider a
+  clearer rewrite.
+- ok: the sentence is clear enough for repository documentation.
+
+Prefer concrete wording. Be strict about workflow, process, and section names
+that sound clever but do not explain the task. Do not flag paths, commands,
+package names, code identifiers, or necessary technical terms.
+
+Return only findings that are fail or warn. If every sentence is ok, return an
+empty findings array. Use confidence from 0.0 to 1.0.
+
+# Sentences
+
+${formattedUnits}`;
 }
 
 export function buildCodexInvocation({

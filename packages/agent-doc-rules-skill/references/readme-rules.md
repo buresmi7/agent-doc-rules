@@ -100,6 +100,9 @@ Command sections should be evidence-oriented:
   command source of truth. Do not preserve stale README commands that are absent
   from the manifest unless the documentation clearly labels them as unverified
   or external.
+- When moving a README runbook into `docs/`, recheck every moved command against
+  the manifest. Do not leave unsupported commands as actionable setup, release,
+  troubleshooting, or repair steps in the new doc.
 - Do not infer hidden test harness or agent-runner scripts such as `test:agent`.
   Document them only when they are visible in the target manifest and relevant
   to the README's audience.

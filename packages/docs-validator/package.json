@@ -17,6 +17,7 @@
   "dependencies": {
     "fast-glob": "^3.3.3",
     "linkinator": "^7.6.1",
-    "markdownlint-cli2": "^0.22.1"
+    "markdownlint-cli2": "^0.22.1",
+    "write-good": "^1.0.8"
   }
 }

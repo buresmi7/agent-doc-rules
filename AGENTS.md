@@ -7,14 +7,13 @@ repository generic; project-specific rules belong in consuming repositories.
 
 Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, skill
 references, templates, E2E documentation scenarios, and documentation
-architecture. The root package depends on the local skill workspace and
-`corepack pnpm run skills:sync` installs it into `.agents/skills/` with the
+architecture. The root package depends on the local skill workspace. Run
+`corepack pnpm run skills:sync` to install it into `.agents/skills/` with the
 project-scoped maintainer skills.
 
 ## Project Skills
 
-This repository also restores a small project-scoped skill set under
-`.agents/skills/` for maintainer work:
+This repository keeps project-scoped maintainer skills under `.agents/skills/`:
 
 - Use `$skill-creator` when creating, changing, evaluating, or improving the
   published skill.
@@ -25,12 +24,12 @@ This repository also restores a small project-scoped skill set under
   code-block conventions from the npm-sourced writer skill.
 - Use `$meta-skill` when evaluating, designing, or refining reusable Agent
   Skills.
-- Use `$plain-english` as a final pass for simpler English and less generic AI
-  prose.
+- Use `$plain-english` before finishing docs or prose changes to simplify
+  English and reduce generic AI prose.
 - Use `$update-markdown-file-index` when maintaining Markdown indexes of files
   or directories.
 
-Keep the maintainer-skill artifact boundary and source links in
+Keep generated maintainer skill files and their source links documented in
 `docs/maintainer-skills.md`.
 
 ## Source Of Truth
@@ -50,14 +49,16 @@ Keep the maintainer-skill artifact boundary and source links in
   `packages/agent-doc-rules-skill/package.json`
 - Project-scoped maintainer skill lockfile: `skills-lock.json`
 - Maintainer skill sync procedure: `docs/maintainer-skills.md`
+- Project cleanup checklist: `docs/project-cleanup.md`
 - Generated project-scoped maintainer skills: `.agents/skills/`
 - E2E workspace projects: `e2e/*/project/`
 - Monorepo support scripts: `tools/`
 
 ## Rules
 
-- Use English for all persisted content in this repository.
-- Keep always-loaded docs short; move reusable detail into the skill references.
+- Use English for repository files that are committed or generated for reuse.
+- Keep files that agents read by default short; move reusable detail into the
+  skill references.
 - Do not duplicate canonical rules across root docs and skill references.
 - Keep the root `README.md` as a short monorepo entry point. It should say what
   the repository is for, link to `packages/agent-doc-rules-skill/README.md` for
@@ -79,12 +80,16 @@ Keep the maintainer-skill artifact boundary and source links in
 
 ## Maintenance
 
-- Update `CHANGELOG.md` when changing released skill behavior or templates.
-- Review external skill updates before committing lockfile changes; keep the
-  risk model in `docs/maintainer-skills.md`. Commit the lockfile, not generated
-  external skill copies.
+- Use the release checklist in `docs/development.md` for changelog and publish
+  preparation requirements.
+- Review external skill updates before committing lockfile changes; follow the
+  maintainer-skill guidance in `docs/maintainer-skills.md`. Commit the
+  lockfile, not generated external skill copies.
 - Update `pnpm-lock.yaml` when workspace metadata or project skill package
   dependencies change.
+- Use `docs/project-cleanup.md` before finishing changes to docs, skills,
+  validation tools, E2E tests, install flows, or release workflows that affect
+  more than one file or behavior.
 - Before finishing, run `corepack pnpm test`.
 - For documentation validation changes, also run `corepack pnpm run
   docs:check`.

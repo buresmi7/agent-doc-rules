@@ -1,8 +1,8 @@
-# Docs Duplicates
+# Docs AI Review
 
-`@agent-doc-rules/docs-duplicates` checks documentation for likely semantic
-duplicates. It uses a deterministic Markdown prefilter first, then asks Codex
-to classify only the candidate pairs.
+`@agent-doc-rules/docs-duplicates` provides Codex-backed documentation review.
+It checks likely semantic duplicates and can review Markdown sentences for
+style issues.
 
 ## Install
 
@@ -14,12 +14,16 @@ pnpm add -D @agent-doc-rules/docs-duplicates
 
 ```bash
 agent-doc-rules-docs-duplicates check
+agent-doc-rules-docs-duplicates style
 ```
+
+`check` and `duplicates` run semantic duplicate review. `style` runs AI review
+for Markdown sentences.
 
 The command resolves the bundled `@openai/codex` binary from this package. It
 does not rely on `codex` being present in `PATH`.
 
-Default model settings:
+Default model settings for both AI checks:
 
 - model: `gpt-5-nano`
 - reasoning effort: `low`
@@ -42,6 +46,16 @@ does not expose the default model.
 
 `fail` returns a non-zero exit code. Warning-only results return zero.
 
+## Style Review
+
+Style review parses Markdown into sentence units, sends only those units to
+Codex, and asks for `fail` or `warn` findings. It is meant for judgment calls
+such as unclear workflow names, vague AI-like phrasing, long sentences, or
+sentences that are understandable but need a maintainer rewrite.
+
+Use deterministic wording checks for known banned terms. Use AI style review
+when the question depends on the sentence.
+
 ## Config
 
 Duplicate settings live under `docs.duplicates` in the root
@@ -56,6 +70,12 @@ Duplicate settings live under `docs.duplicates` in the root
       "failScore": 0.92,
       "model": "gpt-5-nano",
       "reasoningEffort": "low"
+    },
+    "style": {
+      "includeReferences": false,
+      "maxUnits": 80,
+      "model": "gpt-5-nano",
+      "reasoningEffort": "low"
     }
   }
 }
@@ -64,3 +84,6 @@ Duplicate settings live under `docs.duplicates` in the root
 The duplicate-review workflow is derived from the earlier `meta-work`
 documentation maintenance workflow, where deterministic duplicate candidates
 were reviewed separately from Markdown and link checks.
+
+See the skill package [Config Reference](../agent-doc-rules-skill/docs/config-reference.md)
+for shared include, exclude, wording, and AI style settings.

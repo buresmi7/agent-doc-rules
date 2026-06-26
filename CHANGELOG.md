@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Added adoption, tool-map, config-reference, and recipe docs for consuming
+  repositories.
+- Added `agent-doc-rules-docs init` to scaffold or print a starter
+  `agent-doc-rules.config.json` and recommended package scripts.
+- Added `write-good` backed deterministic wording checks to
+  `agent-doc-rules-docs`, with optional project-specific forbidden terms.
+- Added Codex-backed sentence-level style review through
+  `agent-doc-rules-docs-duplicates style`.
+- Added a maintainer project cleanup checklist and linked it from development docs
+  and agent instructions.
+- Added writing-style guidance to avoid idiomatic or metaphorical workflow
+  names.
+- Clarified that moved README runbooks must recheck commands in the destination
+  docs and must not keep unsupported commands as actionable steps.
+- Split the agent E2E runner into smaller modules for agent runtime, prompts,
+  project files, skill installation, and process helpers.
+- Added E2E runner utility tests to `corepack pnpm test`.
 - Added maintainer docs for E2E failure triage, rule placement, and scenario to
   rule coverage.
 - Added a `verify:release` script that runs skill sync, install smoke tests,

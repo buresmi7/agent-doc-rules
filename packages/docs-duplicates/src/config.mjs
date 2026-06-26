@@ -5,6 +5,7 @@ import {
   defaultExclude,
   defaultInclude,
   duplicateDefaults,
+  styleDefaults,
 } from './defaults.mjs';
 
 export async function loadDocsConfig({ root = process.cwd(), configPath } = {}) {
@@ -45,6 +46,25 @@ export async function resolveDuplicateOptions(flags = {}) {
     model: flags.model ?? duplicateConfig.model ?? duplicateDefaults.model,
     reasoningEffort: flags.reasoningEffort ?? duplicateConfig.reasoningEffort ?? duplicateDefaults.reasoningEffort,
     codexBin: flags.codexBin ?? duplicateConfig.codexBin,
+  };
+}
+
+export async function resolveStyleOptions(flags = {}) {
+  const root = resolve(flags.root ?? process.cwd());
+  const config = await loadDocsConfig({ root, configPath: flags.configPath });
+  const styleConfig = config.style ?? {};
+
+  return {
+    root,
+    include: chooseArray(flags.include, styleConfig.include, config.include, defaultInclude),
+    exclude: chooseArray(flags.exclude, styleConfig.exclude, config.exclude, defaultExclude),
+    includeReferences: flags.includeReferences ?? styleConfig.includeReferences ?? styleDefaults.includeReferences,
+    minWords: chooseNumber(flags.minWords, styleConfig.minWords, styleDefaults.minWords),
+    minChars: chooseNumber(flags.minChars, styleConfig.minChars, styleDefaults.minChars),
+    maxUnits: chooseNumber(flags.maxUnits, styleConfig.maxUnits, styleDefaults.maxUnits),
+    model: flags.model ?? styleConfig.model ?? styleDefaults.model,
+    reasoningEffort: flags.reasoningEffort ?? styleConfig.reasoningEffort ?? styleDefaults.reasoningEffort,
+    codexBin: flags.codexBin ?? styleConfig.codexBin,
   };
 }
 
