@@ -55,6 +55,18 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
+  e2e/docs-wording-command-fail/project:
+    devDependencies:
+      '@agent-doc-rules/docs-validator':
+        specifier: workspace:*
+        version: link:../../../packages/docs-validator
+
+  e2e/docs-wording-command-pass/project:
+    devDependencies:
+      '@agent-doc-rules/docs-validator':
+        specifier: workspace:*
+        version: link:../../../packages/docs-validator
+
   e2e/factual-change-rejection/project:
     dependencies:
       '@agent-doc-rules/skill':

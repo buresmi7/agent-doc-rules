@@ -58,8 +58,9 @@ and document the remaining risk.
 - Links to shared rules and project docs.
 - Local language, safety, security, or workflow overrides.
 - Project-specific verification commands.
-- A short rule to document the reason and residual risk when verification cannot
-  run.
+- A short rule that makes skipped verification visible. Existing local wording
+  such as "say what remained unchecked" satisfies this; do not rewrite it only
+  to match this reference's preferred wording.
 - Pointers to issue, PR, or proposal conventions.
 
 ## What To Avoid

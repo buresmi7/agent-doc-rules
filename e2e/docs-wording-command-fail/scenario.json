@@ -1,0 +1,12 @@
+{
+  "name": "docs-wording-command-fail",
+  "command": "agent-doc-rules-docs",
+  "args": ["wording"],
+  "expect": {
+    "exitCode": 1,
+    "stderrIncludes": [
+      "write-good wording suggestions failed:",
+      "README.md"
+    ]
+  }
+}

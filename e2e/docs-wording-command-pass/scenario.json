@@ -1,0 +1,10 @@
+{
+  "name": "docs-wording-command-pass",
+  "command": "agent-doc-rules-docs",
+  "args": ["wording"],
+  "expect": {
+    "exitCode": 0,
+    "stdoutIncludes": ["Documentation wording check passed."],
+    "stderrExcludes": ["write-good wording suggestions failed:"]
+  }
+}

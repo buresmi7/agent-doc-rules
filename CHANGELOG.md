@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.6.0 - 2026-06-26
+
 - Added adoption, tool-map, config-reference, and recipe docs for consuming
   repositories.
 - Added `agent-doc-rules-docs init` to scaffold or print a starter
@@ -18,6 +20,12 @@
   docs and must not keep unsupported commands as actionable steps.
 - Split the agent E2E runner into smaller modules for agent runtime, prompts,
   project files, skill installation, and process helpers.
+- Added command E2E scenarios for prepared projects that run deterministic
+  commands instead of an AI agent.
+- Isolated Codex agent E2E subprocesses from maintainer-local Codex config and
+  home-directory rules.
+- Clarified that agents should not rewrite supported skipped-check wording only
+  to match preferred shared-rule phrasing.
 - Added E2E runner utility tests to `corepack pnpm test`.
 - Added maintainer docs for E2E failure triage, rule placement, and scenario to
   rule coverage.

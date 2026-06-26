@@ -1,7 +1,7 @@
 # Monorepo Development
 
 Use this page for monorepo maintainer workflows, including dependency install,
-skill sync, validators, E2E fixtures, and release checks.
+project skill sync, validators, E2E fixtures, and release checks.
 
 For install commands, usage examples, the feature guide, and product docs, use
 the [main package README](../packages/agent-doc-rules-skill/README.md).
@@ -66,27 +66,28 @@ Run `corepack pnpm run docs:check` for the configured documentation checks.
 
 ### Project Cleanup Checklist
 
-The [project cleanup checklist](project-cleanup.md) helps maintainers verify
+Open [docs/project-cleanup.md](project-cleanup.md) for the checklist that covers
 documentation placement, command evidence, setup behavior, implementation
-complexity, and test evidence for changes that affect more than one file or
-behavior.
+complexity, and test evidence across multi-file changes.
 
-### Agent E2E Scenarios
+### E2E Scenarios
 
-The [e2e/](../e2e/) workspace tests how the installed skill behaves in
-temporary projects. Each scenario has a prompt, criteria, fixture project, and
-snapshot. See [e2e/README.md](../e2e/README.md) for runner configuration and
-snapshot refresh rules.
+The [e2e/](../e2e/) workspace runs tests against prepared fixture projects with
+either an AI agent or a command runner. Agent scenarios have a prompt, criteria,
+fixture project, and snapshot. Command scenarios have a fixture project and
+`scenario.json`.
+See [e2e/README.md](../e2e/README.md) for runner configuration and snapshot
+refresh rules.
 
-Use `docs/e2e-failure-triage.md` when a scenario fails. Use
-`docs/e2e-rule-matrix.md` to see which rule a scenario tests.
+Related references: `docs/e2e-failure-triage.md` for failed runs and
+`docs/e2e-rule-matrix.md` for rule coverage.
 
 ### Rule Placement
 
 Use `docs/rule-placement.md` when an E2E failure or code review finding raises
-a new behavior question. It explains when to change always-loaded `SKILL.md`, a
-loaded reference, maintainer docs, test criteria, fixtures, or deterministic
-tooling.
+uncertainty about where to document or enforce a rule. It explains when to
+change always-loaded `SKILL.md`, a loaded reference, maintainer docs, test
+criteria, fixtures, or deterministic tooling.
 
 ### Maintainer Skill Sync
 
@@ -108,12 +109,13 @@ explains how maintainers review and restore them.
 | Run static Markdown, link, and audit checks | `corepack pnpm test` |
 | Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
 | Create a starter docs-tool config in a consuming project | `agent-doc-rules-docs init` |
+| Run command E2E scenarios | `corepack pnpm run test:e2e-command` |
 | Run agent E2E tests when a runner is configured | `corepack pnpm run test:agent` |
 | Run the full release verification gate | `corepack pnpm run verify:release` |
 | Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
 
-See [Agent E2E Workspaces](../e2e/README.md) for runner configuration and
-snapshot metadata.
+See [E2E Workspaces](../e2e/README.md) for runner configuration and snapshot
+metadata.
 
 ## Repository Map
 
@@ -130,7 +132,7 @@ snapshot metadata.
 | [`packages/agent-doc-rules-skill/assets/templates/`](../packages/agent-doc-rules-skill/assets/templates/) | Starter templates shipped with the skill. |
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
-| [`e2e/`](../e2e/) | Agent E2E scenarios for documentation and context placement behavior. |
+| [`e2e/`](../e2e/) | Agent and command E2E scenarios for documentation and context placement behavior. |
 | [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | Maintainer workflow for diagnosing failed agent E2E scenarios. |
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |
 | [`docs/rule-placement.md`](rule-placement.md) | Rubric for deciding whether a behavior belongs in `SKILL.md`, references, docs, criteria, fixtures, or tooling. |
@@ -161,7 +163,7 @@ not part of the published skill artifact.
 
 When docs conflict, use the document that is the canonical source for that
 detail.
-Keep the root README focused on repository purpose, the first useful command,
+Keep the root README focused on repository purpose, the first command to run,
 and where to start. Put long procedures in the linked docs.
 
 ## Release Checklist

@@ -15,7 +15,7 @@ Use this rubric to review a generated or repaired `AGENTS.md`.
 - **Source of truth:** Canonical files are linked, and conflicts name the file
   that wins.
 - **Verification:** Required checks are named, and skipped checks require a
-  reason plus remaining-risk note.
+  reason plus remaining-risk note or otherwise make unchecked work explicit.
 - **Truthfulness:** Commands, tools, hosts, issue workflows, and services are not
   invented or carried forward when unsupported.
 - **Safety:** Secrets, credentials, account IDs, customer data, private hosts,

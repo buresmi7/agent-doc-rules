@@ -1,6 +1,16 @@
 import { spawn } from 'node:child_process';
 
 export function runCommand(command, args, input, options = {}) {
+  return runCommandCapture(command, args, input, options).then((result) => {
+    if (result.code === 0) {
+      return { stdout: result.stdout, stderr: result.stderr };
+    }
+
+    throw new Error(`${command} ${args.join(' ')} failed with exit ${result.code}\n${result.stderr}\n${result.stdout}`);
+  });
+}
+
+export function runCommandCapture(command, args, input, options = {}) {
   return new Promise((resolvePromise, reject) => {
     const { env, ...spawnOptions } = options;
     const child = spawn(command, args, {
@@ -22,15 +32,10 @@ export function runCommand(command, args, input, options = {}) {
 
     child.on('error', reject);
     child.on('close', (code) => {
-      if (code === 0) {
-        resolvePromise({ stdout, stderr });
-        return;
-      }
-
-      reject(new Error(`${command} ${args.join(' ')} failed with exit ${code}\n${stderr}\n${stdout}`));
+      resolvePromise({ code: code ?? 1, stdout, stderr });
     });
 
-    child.stdin.end(input);
+    child.stdin.end(input ?? '');
   });
 }
 

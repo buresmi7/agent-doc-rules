@@ -49,6 +49,7 @@
         "repos/**",
         "worktrees/**",
         "e2e/**/snapshot/**",
+        "e2e/docs-wording-command-fail/**",
         "e2e/plain-english-doc-review/**",
         "packages/agent-doc-rules-skill/references/writing-style.md"
       ],

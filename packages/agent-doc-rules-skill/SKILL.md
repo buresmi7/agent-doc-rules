@@ -73,6 +73,8 @@ For design influences and attribution, see
 - Keep always-loaded agent instructions concise and scannable.
 - If existing docs already satisfy the task, make no file changes. Do not
   rewrite compliant docs for style-only normalization.
+- Do not rewrite supported local skipped-check wording only to match this
+  skill's preferred phrasing.
 - Write repository docs in plain, concrete English unless the consuming
   repository sets a different language rule.
 - When creating or repairing `AGENTS.md`, include a short `Shared Rules` or

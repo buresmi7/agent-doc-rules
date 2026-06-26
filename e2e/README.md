@@ -1,8 +1,15 @@
-# Agent E2E Workspaces
+# E2E Workspaces
 
-Each scenario contains a standalone pnpm workspace project under `project/`.
-The project depends on the local `@agent-doc-rules/skill` workspace with
-`workspace:*`, then the runner installs that local skill into a temporary copy
+Each scenario contains a prepared project under `project/`. The suite supports
+two runner types:
+
+- Agent scenarios run an AI agent against a fixture project, then judge the
+  generated files against `criteria.md`.
+- Command scenarios run a deterministic command against a fixture project and
+  check the exit code, output, and expected file state from `scenario.json`.
+
+Agent scenario projects depend on the local `@agent-doc-rules/skill` workspace
+with `workspace:*`. The runner installs that local skill into a temporary copy
 with `npx skills add`.
 
 ```text
@@ -23,21 +30,43 @@ e2e/<scenario>/
     metadata.json
 ```
 
+Command scenarios use this smaller shape:
+
+```text
+e2e/<scenario>/
+  project/
+    package.json
+    README.md
+    agent-doc-rules.config.json
+  scenario.json
+```
+
 `prompt.md` is the short user instruction for the scenario. Keep it natural and
 avoid spelling out the expected skill behavior. Put project facts in
 `project/`, and put pass/fail expectations in `criteria.md`.
 
-`project/` is copied into a temporary project during the test. The agent returns
-the files it created or changed, the runner writes them into the temporary
-project, and the full generated file set is judged against `criteria.md`. A
-scenario may return an empty file list when the correct behavior is no change.
+`project/` is copied into a temporary project during each test. In an agent
+scenario, the agent returns the files it created or changed, the runner writes
+them into the temporary project, and the full generated file set is judged
+against `criteria.md`. A scenario may return an empty file list when the correct
+behavior is no change.
 
 The shared runner lives at `tools/run-agent-e2e-scenario.mjs`; each scenario
 project calls it through its local `test:agent` script.
 
+Command scenarios are discovered by `tools/run-command-e2e-all.mjs` when they
+contain `scenario.json`. The shared runner
+`tools/run-command-e2e-scenario.mjs` copies the fixture project, prepends the
+repository `node_modules/.bin` directory to `PATH`, runs the configured command,
+and checks the configured expectations. Run them with:
+
+```bash
+corepack pnpm run test:e2e-command
+```
+
 When a scenario fails, the runner leaves the temporary output directory in
-place and writes `failure-summary.json` at the output root. Read that summary
-first, then inspect `project/` inside the same directory. Use
+place. Agent scenarios also write `failure-summary.json` at the output root.
+Read that summary first, then inspect `project/` inside the same directory. Use
 [E2E Failure Triage](../docs/e2e-failure-triage.md) and
 [E2E Rule Matrix](../docs/e2e-rule-matrix.md) before changing rules or
 criteria.
@@ -58,8 +87,13 @@ UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
 For Codex runs, the runner reads `model` from `$CODEX_HOME/config.toml` when
-present and uses `medium` reasoning effort by default. Override them for a
-refresh with:
+present and uses `medium` reasoning effort by default. The Codex subprocess
+then runs with `--ephemeral`, `--ignore-rules`, read-only sandboxing, and a
+temporary `CODEX_HOME` that contains only generated test config and copied
+`auth.json` when one exists. This keeps maintainer-local Codex config and
+home-directory `AGENTS.md` files out of scenario behavior.
+
+Override the model and reasoning effort for a refresh with:
 
 ```bash
 CODEX_MODEL=gpt-5.5 CODEX_REASONING_EFFORT=medium UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent

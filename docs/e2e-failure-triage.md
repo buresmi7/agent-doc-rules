@@ -1,22 +1,23 @@
 # E2E Failure Triage
 
-Use this workflow when `corepack pnpm run test:agent` or a targeted E2E scenario
-fails.
+Use this workflow when `corepack pnpm run test:agent`,
+`corepack pnpm run test:e2e-command`, or a targeted E2E scenario fails.
 
 ## First Read
 
 Start with the runner output:
 
-- `score` shows the judge's confidence.
-- failed criteria name the acceptance rule that did not pass.
-- `fix:` lines summarize the judge's requested repair.
 - `output:` points to the temporary scenario output directory.
-- `summary:` points to `failure-summary.json` when the runner reached the judge.
+- Agent scenarios also print `score`, failed criteria, `fix:` lines, and
+  `summary:` when the runner reached the judge.
+- Command scenarios print the command, actual exit code, failed expectations,
+  stdout, and stderr.
 
-Open `failure-summary.json` first. It lists generated file paths, generator
-notes, judge notes, failed criteria, and the maintainer docs to use for triage.
-Then inspect `project/` inside the same output directory to see the generated
-repository state.
+For agent scenarios, open `failure-summary.json` first. It lists generated file
+paths, generator notes, judge notes, failed criteria, and the maintainer docs to
+use for triage. Then inspect `project/` inside the same output directory to see
+the generated repository state. For command scenarios, inspect `project/` and
+compare the runner output with `scenario.json`.
 
 ## Classify The Failure
 
@@ -48,6 +49,12 @@ Common classifications:
    corepack pnpm --filter './e2e/<scenario>/project' run test:agent
    ```
 
+   For command scenarios, run:
+
+   ```bash
+   SCENARIO_DIR=e2e/<scenario>/project node tools/run-command-e2e-scenario.mjs
+   ```
+
 3. If the scenario passed after a skill or reference change, run:
 
    ```bash
@@ -60,6 +67,7 @@ Common classifications:
    ```bash
    corepack pnpm test
    corepack pnpm run docs:check
+   corepack pnpm run test:e2e-command
    corepack pnpm run test:agent
    ```
 

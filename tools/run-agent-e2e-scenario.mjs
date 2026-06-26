@@ -81,6 +81,7 @@ const runtime = {
   codexReasoningEffort,
   codexModelSource,
   codexReasoningEffortSource,
+  codexConfigHome: codexConfig.home,
   keepOutput,
 };
 

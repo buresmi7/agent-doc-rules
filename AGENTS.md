@@ -52,6 +52,7 @@ Keep generated maintainer skill files and their source links documented in
 - Project cleanup checklist: `docs/project-cleanup.md`
 - Generated project-scoped maintainer skills: `.agents/skills/`
 - E2E workspace projects: `e2e/*/project/`
+- Command E2E scenario configs: `e2e/*/scenario.json`
 - Monorepo support scripts: `tools/`
 
 ## Rules
