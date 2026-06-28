@@ -1,14 +1,25 @@
 {
-  "name": "@agent-doc-rules/skill",
-  "version": "0.7.0",
-  "private": true,
+  "name": "@buresmi7/agent-doc-rules-skill",
+  "version": "0.8.0",
+  "private": false,
   "description": "Agent Skill for concise AGENTS.md, README, and repository documentation rules",
   "type": "module",
+  "license": "MIT",
+  "bin": {
+    "agent-doc-rules-skill": "./bin/install.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
   "files": [
     "README.md",
     "SKILL.md",
     "agents",
     "assets",
+    "bin",
     "docs",
     "references"
   ],

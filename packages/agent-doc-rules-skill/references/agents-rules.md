@@ -16,7 +16,10 @@ It is a navigation layer, not full documentation.
 - Use short sections with bullets and links.
 - Store detailed procedures in `rules/`, `references/`, skills, or component
   docs.
-- Do not copy shared rules into project `AGENTS.md`; link to the shared rule.
+- Do not copy shared rules into project `AGENTS.md`; link to the shared rule
+  from a dedicated top-level `Shared Rules` or `Skill Reference` section.
+- Do not put shared-rule links in `Source Of Truth`; that section is for
+  project-owned canonical docs.
 - When repairing a file that already copied shared rules, replace the copied
   block with a short `Shared Rules` section that links to the installed rule.
 - State local overrides explicitly.

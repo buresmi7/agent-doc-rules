@@ -8,9 +8,9 @@ two runner types:
 - Command scenarios run a deterministic command against a fixture project and
   check the exit code, output, and expected file state from `scenario.json`.
 
-Agent scenario projects depend on the local `@agent-doc-rules/skill` workspace
-with `workspace:*`. The runner installs that local skill into a temporary copy
-with `npx skills add`.
+Agent scenario projects depend on the local `@buresmi7/agent-doc-rules-skill`
+workspace with `workspace:*`. The runner installs that local skill into a
+temporary copy with `npx skills add`.
 
 ```text
 e2e/<scenario>/

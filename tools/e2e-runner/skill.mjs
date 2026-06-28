@@ -99,7 +99,7 @@ export async function readSkillReference(skillSource) {
   const chunks = [];
 
   for (const file of files) {
-    chunks.push(`--- @agent-doc-rules/skill/${file} ---\n${await readFile(join(skillSource, file), 'utf8')}`);
+    chunks.push(`--- @buresmi7/agent-doc-rules-skill/${file} ---\n${await readFile(join(skillSource, file), 'utf8')}`);
   }
 
   return chunks.join('\n\n');

@@ -5,10 +5,13 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const skillDir = join(repoRoot, 'packages/agent-doc-rules-skill');
 const expectedSkillName = 'agent-doc-rules';
+const expectedPackageName = '@buresmi7/agent-doc-rules-skill';
+const expectedBinName = 'agent-doc-rules-skill';
 const errors = [];
 
 await assertFile(join(skillDir, 'SKILL.md'));
 await assertFile(join(skillDir, 'README.md'));
+await assertFile(join(skillDir, 'bin/install.mjs'));
 
 await checkSkillFrontmatter();
 await checkPackageFiles();
@@ -94,14 +97,33 @@ async function checkSkillFrontmatter() {
     errors.push('SKILL.md must keep notes-triage rationale placement guidance always loaded.');
   }
 
-  if (!content.includes('instead of burying the') || !content.includes('Source Of Truth')) {
+  if (!content.includes('dedicated')
+    || !content.includes('top-level `Shared Rules` or `Skill Reference` section')
+    || !content.includes('do not bury the shared-rule link under')
+    || !content.includes('Source Of Truth')) {
     errors.push('SKILL.md must keep dedicated Shared Rules section guidance always loaded.');
   }
 }
 
 async function checkPackageFiles() {
   const packageJson = JSON.parse(await readFile(join(skillDir, 'package.json'), 'utf8'));
-  const requiredFiles = ['README.md', 'SKILL.md', 'agents', 'assets', 'docs', 'references'];
+  const requiredFiles = ['README.md', 'SKILL.md', 'agents', 'assets', 'bin', 'docs', 'references'];
+
+  if (packageJson.name !== expectedPackageName) {
+    errors.push(`package.json name must be ${expectedPackageName}.`);
+  }
+
+  if (packageJson.private !== false) {
+    errors.push('package.json private must be false for npm publication.');
+  }
+
+  if (packageJson.publishConfig?.access !== 'public') {
+    errors.push('package.json publishConfig.access must be public.');
+  }
+
+  if (packageJson.bin?.[expectedBinName] !== './bin/install.mjs') {
+    errors.push(`package.json bin.${expectedBinName} must point to ./bin/install.mjs.`);
+  }
 
   for (const file of requiredFiles) {
     if (!packageJson.files?.includes(file)) {
@@ -162,6 +184,7 @@ async function checkSkillReadmeFeatureGuide() {
     '[Documentation Placement](#documentation-placement)',
     '[Documentation Repair](#documentation-repair)',
     '[Factual Documentation Review](#factual-documentation-review)',
+    '[Documentation Security Review](#documentation-security-review)',
     '[Plain-English Cleanup](#plain-english-cleanup)',
     '[Validation Tools](#validation-tools)',
     '[Starter Templates](#starter-templates)',
@@ -181,6 +204,7 @@ async function checkSkillReadmeFeatureGuide() {
     'references/readme-rubric.md',
     'references/documentation-architecture.md',
     'references/factual-review.md',
+    'references/security-review.md',
     'references/writing-style.md',
     'references/validation.md',
     'assets/templates/',

@@ -12,6 +12,6 @@
     "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
   },
   "dependencies": {
-    "@agent-doc-rules/skill": "workspace:*"
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
   }
 }

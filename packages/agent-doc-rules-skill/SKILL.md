@@ -80,11 +80,11 @@ For design influences and attribution, see
   skill's preferred phrasing.
 - Write repository docs in plain, concrete English unless the consuming
   repository sets a different language rule.
-- When creating or repairing `AGENTS.md`, include a short `Shared Rules` or
-  `Skill Reference` section that links to
-  `.agents/skills/agent-doc-rules/references/agents-rules.md`; do not copy the
-  referenced rule text. Keep this as its own section instead of burying the
-  shared-rule link under `Source Of Truth`.
+- When creating or repairing `AGENTS.md`, put
+  `.agents/skills/agent-doc-rules/references/agents-rules.md` in a dedicated
+  top-level `Shared Rules` or `Skill Reference` section. Do not copy the
+  referenced rule text, and do not bury the shared-rule link under
+  `Source Of Truth`.
 - Root `AGENTS.md` files should start with a brief project orientation from the
   local README or manifest, not only generic section headings.
 - When creating a nested `AGENTS.md`, add a short root `AGENTS.md` pointer that

@@ -22,16 +22,27 @@ task-specific skill for agents.
 
 ## Install
 
-Install from a repository release:
+Install from npm into the current Codex project:
 
 ```bash
-npx skills add <owner>/<repo> --skill agent-doc-rules
+npx @buresmi7/agent-doc-rules-skill
 ```
 
-Install a tagged skill directory:
+Replace an existing project install:
 
 ```bash
-npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill
+npx @buresmi7/agent-doc-rules-skill install --force
+```
+
+The npm installer copies only the skill artifact into
+`.agents/skills/agent-doc-rules/`. It does not copy this monorepo's E2E
+fixtures, support scripts, generated maintainer skills, or root docs.
+
+Install a tagged skill directory with the `skills` CLI when a consuming project
+wants a `skills-lock.json` entry:
+
+```bash
+npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
 ```
 
 Install the local working tree for development:
@@ -41,7 +52,7 @@ npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules -a codex
 ```
 
 For project-scoped Codex installs, the skill is installed under
-`.agents/skills/agent-doc-rules/` and recorded in `skills-lock.json`.
+`.agents/skills/agent-doc-rules/`.
 
 Install optional documentation validation tools:
 

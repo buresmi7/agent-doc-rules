@@ -11,7 +11,21 @@ The goal is a small setup:
 
 ## Install The Skill
 
-Install a released skill directory:
+Install the published npm package from the repository root:
+
+```bash
+npx @buresmi7/agent-doc-rules-skill
+```
+
+The npm installer creates:
+
+- `.agents/skills/agent-doc-rules/`
+
+It copies only the public skill artifact, not this monorepo's E2E fixtures,
+support scripts, generated maintainer skills, or root docs.
+
+Use a tagged skill directory with the `skills` CLI when the consuming repository
+wants a `skills-lock.json` entry:
 
 ```bash
 npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
@@ -23,7 +37,7 @@ For local testing from this repository, install the working tree:
 npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
 ```
 
-The install should create:
+The `skills add` path should create:
 
 - `.agents/skills/agent-doc-rules/`
 - `skills-lock.json`
@@ -100,9 +114,15 @@ changes.
 
 ## Update The Skill
 
-Use the same install command with a newer tag when the project wants to update
-`agent-doc-rules`. Review the generated diff and lockfile change before
-committing.
+Use the same install command with a newer package version or tag when the
+project wants to update `agent-doc-rules`. For npm installs, run:
+
+```bash
+npx @buresmi7/agent-doc-rules-skill@latest --force
+```
+
+Review the generated diff before committing. If the project uses
+`skills-lock.json`, review the lockfile change as well.
 
 For repositories that use `skills-lock.json`, treat lockfile changes as a review
 point. The lockfile should change only when the project accepts the new skill
@@ -116,6 +136,7 @@ The published skill artifact contains:
 - `README.md`
 - `agents/`
 - `assets/`
+- `bin/`
 - `docs/`
 - `references/`
 

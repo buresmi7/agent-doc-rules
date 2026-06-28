@@ -36,7 +36,7 @@ const scenarioDir = dirname(projectFixtureDir);
 const scenarioName = process.env.SCENARIO_NAME ?? basename(scenarioDir);
 const snapshotDirName = readSnapshotDirName();
 const scenarioRequire = createRequire(join(projectFixtureDir, 'package.json'));
-const skillPackageJson = scenarioRequire.resolve('@agent-doc-rules/skill/package.json');
+const skillPackageJson = scenarioRequire.resolve('@buresmi7/agent-doc-rules-skill/package.json');
 const skillSource = dirname(skillPackageJson);
 const skillName = 'agent-doc-rules';
 const skillsCliVersion = process.env.SKILLS_CLI_VERSION ?? '1.5.12';
@@ -254,7 +254,7 @@ async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
       agent: agentMetadata,
       skillsCliVersion,
       skillPackage: {
-        name: '@agent-doc-rules/skill',
+        name: '@buresmi7/agent-doc-rules-skill',
         source: relative(repoRoot, skillSource),
       },
     }, null, 2)}\n`,

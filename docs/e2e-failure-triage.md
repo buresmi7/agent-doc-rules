@@ -9,7 +9,7 @@ Start with the runner output:
 
 - `output:` points to the temporary scenario output directory.
 - Agent scenarios also print `score`, failed criteria, `fix:` lines, and
-  `summary:` when the runner reached the judge.
+  `summary:` after the runner sends generated output to the judge.
 - Command scenarios print the command, actual exit code, failed expectations,
   stdout, and stderr.
 

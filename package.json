@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
@@ -19,7 +19,7 @@
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
     "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check",
-    "test:skill": "node tools/check-skill-artifact.mjs",
+    "test:skill": "node tools/check-skill-artifact.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-skill test && corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run",
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
     "test:security": "corepack pnpm run docs:security",
@@ -30,6 +30,6 @@
   "devDependencies": {
     "@agent-doc-rules/docs-duplicates": "workspace:*",
     "@agent-doc-rules/docs-validator": "workspace:*",
-    "@agent-doc-rules/skill": "workspace:*"
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
   }
 }

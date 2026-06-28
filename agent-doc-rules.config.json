@@ -147,6 +147,16 @@
           "reason": "The README summarizes the adoption guide."
         },
         {
+          "left": "^docs/development\\.md$",
+          "right": "^packages/agent-doc-rules-skill/README\\.md$",
+          "reason": "The development guide intentionally records the npm artifact boundary for maintainers while the README states it for users."
+        },
+        {
+          "left": "^e2e/README\\.md$",
+          "right": "^packages/agent-doc-rules-skill/docs/adoption\\.md$",
+          "reason": "Both workflows intentionally remind maintainers to review generated or refreshed diffs before committing."
+        },
+        {
           "left": "^README\\.md$",
           "right": "^docs/development\\.md$",
           "reason": "The root README is a short pointer to development docs."

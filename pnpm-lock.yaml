@@ -14,31 +14,31 @@ importers:
       '@agent-doc-rules/docs-validator':
         specifier: workspace:*
         version: link:packages/docs-validator
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:packages/agent-doc-rules-skill
 
   e2e/compliant-noop/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/context-placement/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/create-agent-skill-from-workflow/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/create-basic/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
@@ -56,7 +56,7 @@ importers:
 
   e2e/docs-validation-routing/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
     devDependencies:
@@ -81,55 +81,55 @@ importers:
 
   e2e/factual-change-rejection/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/human-runbook-not-skill/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/local-language-override/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/nested-agents-override/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/plain-english-doc-review/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/repair-bloated/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/sensitive-notes-redaction/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/split-bloated-readme/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
   e2e/stale-readme-commands/project:
     dependencies:
-      '@agent-doc-rules/skill':
+      '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 

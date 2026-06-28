@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v0.8.0 - 2026-06-28
+
+- Prepared the skill package for public npm publication as
+  `@buresmi7/agent-doc-rules-skill`.
+- Added the `agent-doc-rules-skill` binary installer for project-scoped Codex
+  installs under `.agents/skills/agent-doc-rules/`.
+- Added installer tests and package dry-run checks to the static skill
+  verification path.
+
 ## v0.7.0 - 2026-06-28
 
 - Added deterministic documentation security review to `agent-doc-rules-docs`,

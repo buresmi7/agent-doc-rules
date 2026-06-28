@@ -1,8 +1,8 @@
 # Monorepo Development
 
-Use this page for monorepo maintainer workflows, including dependency install,
-restoring project skills with `corepack pnpm run skills:sync`, validators, E2E
-fixtures, and release checks.
+Use this page when maintaining the monorepo: installing dependencies, restoring
+project skills with `corepack pnpm run skills:sync`, running validators,
+updating E2E fixtures, and preparing releases.
 
 For install commands, usage examples, the feature guide, and product docs, use
 [packages/agent-doc-rules-skill/README.md](../packages/agent-doc-rules-skill/README.md).
@@ -38,6 +38,10 @@ The installable skill lives in
 reference file to read, and its
 [package README](../packages/agent-doc-rules-skill/README.md) covers install
 and usage.
+
+The public npm package is `@buresmi7/agent-doc-rules-skill`. Its bin installer
+copies only the skill artifact into `.agents/skills/agent-doc-rules/`; it does
+not copy E2E fixtures, monorepo support scripts, or maintainer-only files.
 
 ### Factual Documentation Review
 
@@ -175,11 +179,15 @@ Before publishing, verify these items:
 - Run `corepack pnpm run test:skill`.
 - Run `corepack pnpm run test:install`.
 - Check that `npx skills add . --list` discovers `agent-doc-rules`.
+- Check that `corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run`
+  contains only the public skill artifact.
 - Review external maintainer skills if
   `packages/agent-doc-rules-skill/package.json` or `skills-lock.json` changed.
 - Update `CHANGELOG.md` for released skill or template behavior changes.
 - Check that reusable skill content contains no secrets, private environment
   details, or unsupported project-specific rules.
+- After the tag is pushed and npm auth is available, publish from
+  `packages/agent-doc-rules-skill/` with `npm publish --access public`.
 
 ## Maintainers
 

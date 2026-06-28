@@ -68,8 +68,8 @@ Keep generated maintainer skill files and their source links documented in
   Put other monorepo detail in `docs/`.
 - Do not add project-specific commands, issue workflows, cloud accounts, host
   names, secrets, or private environment notes.
-- The skill directory is a private pnpm workspace package so the root monorepo
-  and E2E scenarios can depend on it with `workspace:*`.
+- The skill directory is a public npm-compatible package that also remains a
+  pnpm workspace package for local monorepo and E2E `workspace:*` dependencies.
 - Keep npm-compatible project skill packages in the skill workspace
   `devDependencies` and list the installed skill names in
   `agentDocRules.projectSkills`.
