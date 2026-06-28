@@ -1,17 +1,18 @@
 # Monorepo Development
 
 Use this page for monorepo maintainer workflows, including dependency install,
-project skill sync, validators, E2E fixtures, and release checks.
+restoring project skills with `corepack pnpm run skills:sync`, validators, E2E
+fixtures, and release checks.
 
 For install commands, usage examples, the feature guide, and product docs, use
-the [main package README](../packages/agent-doc-rules-skill/README.md).
+[packages/agent-doc-rules-skill/README.md](../packages/agent-doc-rules-skill/README.md).
 
 ## Use This Repository When
 
 - You maintain the published `agent-doc-rules` skill.
 - You change reusable documentation rules, references, or starter templates.
 - You work on the Markdown/link validator or semantic duplicate checker.
-- You test documentation and agent-context behavior in E2E scenarios.
+- You test how agents read and apply documentation in E2E scenarios.
 - You prepare a release of the skill package.
 
 ## Quick Start
@@ -40,19 +41,18 @@ and usage.
 
 ### Factual Documentation Review
 
-Agents should reject documentation changes that project evidence does not
-support. Factual review compares claims against user constraints, local
-commands, manifests, source files, configs, tests, canonical docs, and official
-external sources when needed.
+Agents should reject documentation changes that lack supporting evidence.
+Evidence can include user constraints, local commands, manifests, source files,
+configs, tests, canonical docs, or official external sources.
 
 If a requested edit conflicts with local evidence, the agent should not edit the
 file. It should report the contradiction and name the evidence instead. The
 canonical rule lives in
 [factual-review.md](../packages/agent-doc-rules-skill/references/factual-review.md).
 The focused E2E scenario is
-[factual-change-rejection](../e2e/factual-change-rejection/criteria.md): it asks
+[factual-change-rejection](../e2e/factual-change-rejection/criteria.md). It asks
 the agent to add Node.js 24 to the README while `package.json` only supports
-`>=20 <24`, so the expected output is no file changes and a clear warning.
+`>=20 <24`. The expected output is no file changes and a clear warning.
 
 ### Documentation Validation Tools
 
@@ -66,16 +66,16 @@ Run `corepack pnpm run docs:check` for the configured documentation checks.
 
 ### Project Cleanup Checklist
 
-Open [docs/project-cleanup.md](project-cleanup.md) for the checklist that covers
-documentation placement, command evidence, setup behavior, implementation
-complexity, and test evidence across multi-file changes.
+Open [docs/project-cleanup.md](project-cleanup.md) before finishing changes that
+affect multiple files or behavior. It checks documentation placement, command
+evidence, setup changes, implementation complexity, and test evidence.
 
 ### E2E Scenarios
 
 The [e2e/](../e2e/) workspace runs tests against prepared fixture projects with
 either an AI agent or a command runner. Agent scenarios have a prompt, criteria,
-fixture project, and snapshot. Command scenarios have a fixture project and
-`scenario.json`.
+fixture project, and snapshot. Command scenarios have a fixture project,
+`scenario.json`, and optional output snapshots.
 See [e2e/README.md](../e2e/README.md) for runner configuration and snapshot
 refresh rules.
 
@@ -105,8 +105,9 @@ explains how maintainers review and restore them.
 | Check published skill metadata and package links | `corepack pnpm run test:skill` |
 | Run E2E runner utility tests | `corepack pnpm run test:e2e-tools` |
 | Run deterministic prose wording checks | `corepack pnpm run docs:wording` |
+| Run deterministic documentation security checks | `corepack pnpm run docs:security` |
 | Run AI sentence-level style review | `corepack pnpm run docs:style` |
-| Run static Markdown, link, and audit checks | `corepack pnpm test` |
+| Run static Markdown, security, link, and audit checks | `corepack pnpm test` |
 | Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
 | Create a starter docs-tool config in a consuming project | `agent-doc-rules-docs init` |
 | Run command E2E scenarios | `corepack pnpm run test:e2e-command` |
@@ -114,8 +115,8 @@ explains how maintainers review and restore them.
 | Run the full release verification gate | `corepack pnpm run verify:release` |
 | Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
 
-See [E2E Workspaces](../e2e/README.md) for runner configuration and snapshot
-metadata.
+See the [E2E workspace guide](../e2e/README.md) for runner configuration and
+snapshot metadata.
 
 ## Repository Map
 
@@ -139,9 +140,6 @@ metadata.
 | [`docs/project-cleanup.md`](project-cleanup.md) | Maintainer checklist for making cleanup part of development. |
 | [`tools/`](../tools/) | Monorepo support scripts and shared E2E runner. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
-
-Root scripts, E2E projects, generated maintainer skills, and monorepo docs are
-not part of the published skill artifact.
 
 ## Canonical Docs
 
@@ -175,8 +173,6 @@ Before publishing, verify these items:
 - Run `corepack pnpm run verify:release`.
 - Run `corepack pnpm test`.
 - Run `corepack pnpm run test:skill`.
-- Run `corepack pnpm run docs:check` when documentation validation behavior
-  changed.
 - Run `corepack pnpm run test:install`.
 - Check that `npx skills add . --list` discovers `agent-doc-rules`.
 - Review external maintainer skills if

@@ -60,7 +60,7 @@ maintainer note.
 
 ## What Not To Do
 
-- Do not rewrite compliant docs for style alone.
+- Treat style-only cleanup as out of scope unless a local check fails.
 - Do not move facts away from their narrow canonical home.
 - Do not add broad rules to `SKILL.md` when a loaded reference can carry the
   detail.

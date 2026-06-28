@@ -27,8 +27,8 @@ remaining risk.
 
 Keep deterministic validation separate from semantic review:
 
-- Markdown formatting and local link checks belong in a deterministic docs
-  validator.
+- Markdown formatting, local link checks, and high-signal security pattern
+  checks belong in a deterministic docs validator.
 - Semantic duplicate review belongs in a separate command because it can use an
   agent model, network access, and paid tokens.
 
@@ -45,6 +45,7 @@ Recommended scripts:
   "scripts": {
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:wording": "agent-doc-rules-docs wording",
+    "docs:security": "agent-doc-rules-docs security",
     "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
@@ -66,6 +67,12 @@ without writing files.
 Use wording validation for deterministic prose linting. The default checker uses
 `write-good` with a low-noise profile. Add project-specific forbidden terms only
 when a repository has a phrase that must fail.
+
+Use security validation as a deterministic first pass for agent-facing docs. It
+flags high-risk command snippets, secret disclosure instructions,
+prompt-injection wording, validation bypasses, backdoor-style guidance, remote
+images, tracking links, and encoded execution payloads. Keep allow patterns
+narrow and prefer rewriting examples that look like real instructions.
 
 Use AI style review when the check needs sentence-level judgment. Keep it
 bounded: send parsed Markdown sentence units, cap the number of units, and

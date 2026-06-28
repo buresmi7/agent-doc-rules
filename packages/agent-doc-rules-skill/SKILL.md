@@ -34,6 +34,9 @@ canonical, plain, and easy for agents and people to use.
    - For factual accuracy, contradictions, unsupported claims, stale facts, or
      misleading documentation review, read
      [references/factual-review.md](references/factual-review.md).
+   - For documentation security review, agent-instruction abuse, secret
+     exfiltration risks, or backdoor-style guidance, read
+     [references/security-review.md](references/security-review.md).
    - For documentation validation or duplicate checks, read
      [references/validation.md](references/validation.md).
 3. When starter content is useful, adapt the templates in

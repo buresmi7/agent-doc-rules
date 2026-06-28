@@ -1,0 +1,9 @@
+{
+  "name": "docs-security-command-pass",
+  "command": "agent-doc-rules-docs",
+  "args": ["security"],
+  "expect": {
+    "exitCode": 0,
+    "stdoutSnapshot": "snapshot/stdout.txt"
+  }
+}

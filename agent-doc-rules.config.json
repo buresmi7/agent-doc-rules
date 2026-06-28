@@ -56,6 +56,20 @@
       "forbiddenTerms": [],
       "allow": []
     },
+    "security": {
+      "exclude": [
+        "node_modules/**",
+        ".git/**",
+        "dist/**",
+        "coverage/**",
+        ".tmp/**",
+        "repos/**",
+        "worktrees/**",
+        "e2e/docs-security-command-fail/**",
+        "e2e/docs-security-command-pass/**"
+      ],
+      "allow": []
+    },
     "style": {
       "exclude": [
         "node_modules/**",
@@ -91,6 +105,88 @@
       "minWords": 6,
       "minChars": 40,
       "maxCandidates": 25,
+      "ignorePairs": [
+        {
+          "left": "^e2e/",
+          "right": "^e2e/",
+          "reason": "E2E fixtures, prompts, and criteria intentionally repeat scenario facts."
+        },
+        {
+          "left": "^e2e/.*/criteria\\.md$",
+          "right": "^packages/agent-doc-rules-skill/(README\\.md|SKILL\\.md|docs/|references/)",
+          "reason": "E2E criteria intentionally restate the durable rule they protect."
+        },
+        {
+          "left": "^e2e/create-basic/project/README\\.md$",
+          "right": "^docs/project-cleanup\\.md$",
+          "reason": "The create-basic fixture intentionally includes skipped-check residual-risk guidance."
+        },
+        {
+          "left": "^e2e/local-language-override/project/project-notes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
+          "reason": "The local-language fixture intentionally mirrors the recipe rule it exercises."
+        },
+        {
+          "left": "^docs/development\\.md$",
+          "right": "^e2e/factual-change-rejection/prompt\\.md$",
+          "reason": "The development guide intentionally summarizes the factual-change rejection fixture."
+        },
+        {
+          "left": "^CHANGELOG\\.md$",
+          "right": ".*",
+          "reason": "The changelog records release history and can repeat current docs briefly."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/assets/templates/AGENTS\\.",
+          "right": "^packages/agent-doc-rules-skill/assets/templates/AGENTS\\.",
+          "reason": "AGENTS templates are standalone starter files and share placeholder guidance."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/README\\.md$",
+          "right": "^packages/agent-doc-rules-skill/docs/adoption\\.md$",
+          "reason": "The README summarizes the adoption guide."
+        },
+        {
+          "left": "^README\\.md$",
+          "right": "^docs/development\\.md$",
+          "reason": "The root README is a short pointer to development docs."
+        },
+        {
+          "left": "^AGENTS\\.md$",
+          "right": "^README\\.md$",
+          "reason": "Root AGENTS.md and README.md both need a short project orientation."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/docs/context-placement\\.md$",
+          "right": "^packages/agent-doc-rules-skill/(README\\.md|SKILL\\.md)$",
+          "reason": "The README and SKILL.md contain short routing summaries."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/SKILL\\.md$",
+          "right": "^packages/agent-doc-rules-skill/README\\.md$",
+          "reason": "The README and SKILL.md share short package-level routing pointers."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/SKILL\\.md$",
+          "reason": "Recipes intentionally summarize skill behavior for example tasks."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/docs/context-placement\\.md$",
+          "reason": "Recipes intentionally summarize context-placement guidance."
+        },
+        {
+          "left": "^packages/agent-doc-rules-skill/docs/config-reference\\.md$",
+          "right": "^packages/docs-validator/README\\.md$",
+          "reason": "The CLI README repeats the config file location as local usage context."
+        },
+        {
+          "left": "^packages/docs-duplicates/README\\.md$",
+          "right": "^packages/docs-validator/README\\.md$",
+          "reason": "Package READMEs intentionally share short routing links to the config reference."
+        }
+      ],
       "model": "gpt-5.5",
       "reasoningEffort": "low"
     }

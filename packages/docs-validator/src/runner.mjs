@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import fastGlob from 'fast-glob';
 import writeGood from 'write-good';
+import { findSecurityIssues, normalizeSecurityAllow } from './security.mjs';
 
 const require = createRequire(import.meta.url);
 export const defaultWriteGoodOptions = {
@@ -134,12 +135,45 @@ export async function runWording(options, { logger = console } = {}) {
     : 0;
 }
 
+export async function runSecurity(options, { logger = console } = {}) {
+  const files = await resolveMarkdownFiles(options);
+  const allowPatterns = normalizeSecurityAllow(options.allow ?? []);
+  const findings = [];
+
+  for (const file of files) {
+    const content = await readFile(join(options.root, file), 'utf8');
+    findings.push(...findSecurityIssues(content, {
+      file,
+      allowPatterns,
+    }));
+  }
+
+  if (findings.length === 0) {
+    logger.log('Documentation security check passed.');
+    return 0;
+  }
+
+  logger.error('Documentation security check failed:');
+
+  for (const finding of findings) {
+    logger.error(`- ${finding.file}:${finding.line} ${finding.rule}: ${finding.message}`);
+
+    if (finding.text) {
+      logger.error(`  ${finding.text}`);
+    }
+  }
+
+  return 1;
+}
+
 export async function runCheck(options, deps = {}) {
   const runMarkdownCommand = deps.runMarkdown ?? runMarkdown;
   const runWordingCommand = deps.runWording ?? runWording;
+  const runSecurityCommand = deps.runSecurity ?? runSecurity;
   const runLinksCommand = deps.runLinks ?? runLinks;
   const markdownOptions = options.markdownOptions ?? options;
   const wordingOptions = options.wordingOptions ?? options;
+  const securityOptions = options.securityOptions ?? options;
   const linksOptions = options.linksOptions ?? options;
   const markdownCode = await runMarkdownCommand(markdownOptions, deps);
 
@@ -151,6 +185,12 @@ export async function runCheck(options, deps = {}) {
 
   if (wordingCode !== 0) {
     return wordingCode;
+  }
+
+  const securityCode = await runSecurityCommand(securityOptions, deps);
+
+  if (securityCode !== 0) {
+    return securityCode;
   }
 
   return runLinksCommand(linksOptions, deps);

@@ -15,6 +15,7 @@ pnpm add -D @agent-doc-rules/docs-validator
 agent-doc-rules-docs init
 agent-doc-rules-docs markdown
 agent-doc-rules-docs wording
+agent-doc-rules-docs security
 agent-doc-rules-docs links
 agent-doc-rules-docs check
 ```
@@ -22,11 +23,10 @@ agent-doc-rules-docs check
 `init` creates a starter `agent-doc-rules.config.json`. Use
 `agent-doc-rules-docs init --print` to preview the config without writing files.
 
-`markdown` runs bundled `markdownlint-cli2`. `wording` runs a low-noise
-`write-good` prose check and any optional project wording rules. `links` runs
-bundled `linkinator` with Markdown parsing and fragment checking enabled by
-default. `check` runs Markdown linting, wording validation, then link
-validation, and stops on the first failure.
+`markdown`, `wording`, `security`, and `links` run the corresponding
+deterministic phases. `check` runs them in that order and stops on the first
+failure. For security-review scope, see
+[`security-review.md`](../agent-doc-rules-skill/references/security-review.md).
 
 ## Config
 
@@ -53,6 +53,9 @@ override config values, and config values override built-in defaults.
       },
       "forbiddenTerms": [],
       "allow": ["intentional example"]
+    },
+    "security": {
+      "allow": ["intentional fixture"]
     }
   }
 }

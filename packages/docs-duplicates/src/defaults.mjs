@@ -23,6 +23,7 @@ export const defaultConfigFile = 'agent-doc-rules.config.json';
 export const duplicateDefaults = {
   includeReferences: false,
   includeSameFile: false,
+  ignorePairs: [],
   warnScore: 0.78,
   failScore: 0.92,
   minWords: 6,

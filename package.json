@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
@@ -14,6 +14,7 @@
     "test:e2e-command": "node tools/run-command-e2e-all.mjs",
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:wording": "agent-doc-rules-docs wording",
+    "docs:security": "agent-doc-rules-docs security",
     "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
@@ -21,8 +22,9 @@
     "test:skill": "node tools/check-skill-artifact.mjs",
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
+    "test:security": "corepack pnpm run docs:security",
     "skills:sync": "node tools/sync-project-skills.mjs",
-    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:e2e-tools && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:security && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:e2e-tools && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
     "verify:release": "corepack pnpm run skills:sync && corepack pnpm run test:install && corepack pnpm test && corepack pnpm run docs:check && corepack pnpm run test:agent"
   },
   "devDependencies": {

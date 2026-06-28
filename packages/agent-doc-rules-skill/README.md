@@ -14,6 +14,8 @@ task-specific skill for agents.
 - Separates long-lived docs from task-specific agent workflows.
 - Reviews repository docs for false, contradictory, unsupported, stale, or
   misleading claims.
+- Reviews agent-facing docs for data leaks, prompt-injection language,
+  validation bypasses, and backdoor-style guidance.
 - Applies plain-English writing rules to repository documentation.
 - Uses progressive disclosure so detailed rules live in references, not in the
   always-loaded skill entry point.
@@ -53,9 +55,12 @@ Recommended scripts:
 {
   "scripts": {
     "docs:markdown": "agent-doc-rules-docs markdown",
+    "docs:wording": "agent-doc-rules-docs wording",
+    "docs:security": "agent-doc-rules-docs security",
+    "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
-    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check"
+    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check"
   }
 }
 ```
@@ -94,6 +99,7 @@ Common tasks:
 - write or review a README,
 - decide whether information belongs in docs, `AGENTS.md`, or a skill,
 - add a project-specific documentation overlay,
+- review agent-facing docs for security risks,
 - review docs for factual accuracy, plain English, and duplicated rules.
 
 ## Adoption And Tools
@@ -114,6 +120,7 @@ Common tasks:
 - [Documentation Placement](#documentation-placement)
 - [Documentation Repair](#documentation-repair)
 - [Factual Documentation Review](#factual-documentation-review)
+- [Documentation Security Review](#documentation-security-review)
 - [Plain-English Cleanup](#plain-english-cleanup)
 - [Validation Tools](#validation-tools)
 - [Starter Templates](#starter-templates)
@@ -154,6 +161,14 @@ requested change conflicts with local manifests, source files, configs, tests,
 or canonical docs, the skill tells the agent to report the conflict instead of
 writing unsupported text. See
 [`references/factual-review.md`](references/factual-review.md).
+
+### Documentation Security Review
+
+Review agent-facing docs as instructions that can influence future edits. The
+security checklist covers data exfiltration, remote execution, credential
+handling, prompt-injection language, validation bypasses, backdoor-style
+guidance, remote tracking assets, and encoded payloads. See
+[`references/security-review.md`](references/security-review.md).
 
 ### Plain-English Cleanup
 

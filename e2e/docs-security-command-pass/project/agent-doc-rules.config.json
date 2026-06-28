@@ -1,0 +1,9 @@
+{
+  "include": ["README.md"],
+  "security": {
+    "allow": [
+      "Fixture allowed remote image",
+      "Fixture allowed tracking link"
+    ]
+  }
+}

@@ -1,7 +1,8 @@
 # Agent Doc Rules - AI Agent Instructions
 
-This monorepo publishes the reusable `agent-doc-rules` Agent Skill. Keep the
-repository generic; project-specific rules belong in consuming repositories.
+This maintainer workspace builds `agent-doc-rules`; see `README.md` for the
+project overview. Keep the repository generic; project-specific rules belong in
+consuming repositories.
 
 ## Repository Skill
 
@@ -89,8 +90,8 @@ Keep generated maintainer skill files and their source links documented in
 - Update `pnpm-lock.yaml` when workspace metadata or project skill package
   dependencies change.
 - Use `docs/project-cleanup.md` before finishing changes to docs, skills,
-  validation tools, E2E tests, install flows, or release workflows that affect
-  more than one file or behavior.
+  validation tools, E2E tests, installation documentation, release workflows, or
+  runtime behavior that affect more than one file.
 - Before finishing, run `corepack pnpm test`.
 - For documentation validation changes, also run `corepack pnpm run
   docs:check`.

@@ -1,0 +1,9 @@
+{
+  "name": "docs-security-command-fail",
+  "command": "agent-doc-rules-docs",
+  "args": ["security"],
+  "expect": {
+    "exitCode": 1,
+    "stderrSnapshot": "snapshot/stderr.txt"
+  }
+}

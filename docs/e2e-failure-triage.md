@@ -21,8 +21,9 @@ compare the runner output with `scenario.json`.
 
 ## Classify The Failure
 
-Use `docs/e2e-rule-matrix.md` to identify the behavior the scenario protects.
-Use `docs/rule-placement.md` to choose the fix.
+Use `docs/e2e-rule-matrix.md` to identify the behavior the scenario tests. Use
+`docs/rule-placement.md` to decide whether to change rules, docs, criteria,
+fixtures, or tooling.
 
 Common classifications:
 

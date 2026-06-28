@@ -1,9 +1,11 @@
 export function findCandidatePairs(units, {
   includeSameFile = false,
+  ignorePairs = [],
   warnScore = 0.78,
   maxCandidates = 50,
 } = {}) {
   const threshold = Math.min(warnScore, 0.72);
+  const pairIgnores = normalizeIgnorePairs(ignorePairs);
   const candidates = [];
 
   for (let leftIndex = 0; leftIndex < units.length; leftIndex += 1) {
@@ -12,6 +14,10 @@ export function findCandidatePairs(units, {
       const right = units[rightIndex];
 
       if (!includeSameFile && left.file === right.file) {
+        continue;
+      }
+
+      if (isIgnoredPair(left.file, right.file, pairIgnores)) {
         continue;
       }
 
@@ -36,6 +42,26 @@ export function findCandidatePairs(units, {
       ...candidate,
       id: `DUP-${index + 1}`,
     }));
+}
+
+export function normalizeIgnorePairs(ignorePairs = []) {
+  return ignorePairs.map((entry) => {
+    if (!entry?.left || !entry?.right) {
+      throw new Error('Duplicate ignore pairs must include left and right regex strings.');
+    }
+
+    return {
+      left: new RegExp(entry.left),
+      right: new RegExp(entry.right),
+    };
+  });
+}
+
+export function isIgnoredPair(leftFile, rightFile, ignorePairs = []) {
+  return ignorePairs.some((entry) => (
+    (entry.left.test(leftFile) && entry.right.test(rightFile))
+    || (entry.left.test(rightFile) && entry.right.test(leftFile))
+  ));
 }
 
 export function scorePair(left, right) {

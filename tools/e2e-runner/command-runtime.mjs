@@ -1,8 +1,14 @@
-import { access } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import { delimiter, join } from 'node:path';
 import { runCommandCapture } from './process.mjs';
 
-export async function runCommandScenario({ scenario, projectDir, repoRoot, env = process.env }) {
+export async function runCommandScenario({
+  scenario,
+  projectDir,
+  repoRoot,
+  scenarioDir = projectDir,
+  env = process.env,
+}) {
   validateScenario(scenario);
 
   const result = await runCommandCapture(
@@ -18,6 +24,7 @@ export async function runCommandScenario({ scenario, projectDir, repoRoot, env =
     result,
     expect: scenario.expect ?? {},
     projectDir,
+    scenarioDir,
   });
 
   return {
@@ -36,7 +43,12 @@ export function buildCommandScenarioEnv({ env, repoRoot }) {
   };
 }
 
-export async function evaluateCommandExpectations({ result, expect, projectDir }) {
+export async function evaluateCommandExpectations({
+  result,
+  expect,
+  projectDir,
+  scenarioDir = projectDir,
+}) {
   const failures = [];
   const expectedExitCode = expect.exitCode ?? 0;
 
@@ -48,6 +60,20 @@ export async function evaluateCommandExpectations({ result, expect, projectDir }
   collectIncludes(failures, 'stderr', result.stderr, expect.stderrIncludes ?? []);
   collectExcludes(failures, 'stdout', result.stdout, expect.stdoutExcludes ?? []);
   collectExcludes(failures, 'stderr', result.stderr, expect.stderrExcludes ?? []);
+  await collectSnapshotMatch({
+    failures,
+    streamName: 'stdout',
+    actual: result.stdout,
+    snapshotPath: expect.stdoutSnapshot,
+    scenarioDir,
+  });
+  await collectSnapshotMatch({
+    failures,
+    streamName: 'stderr',
+    actual: result.stderr,
+    snapshotPath: expect.stderrSnapshot,
+    scenarioDir,
+  });
 
   for (const file of expect.filesExist ?? []) {
     try {
@@ -102,5 +128,35 @@ function collectExcludes(failures, streamName, value, expectedValues) {
     if (value.includes(expected)) {
       failures.push(`Expected ${streamName} not to include ${JSON.stringify(expected)}.`);
     }
+  }
+}
+
+async function collectSnapshotMatch({
+  failures,
+  streamName,
+  actual,
+  snapshotPath,
+  scenarioDir,
+}) {
+  if (!snapshotPath) {
+    return;
+  }
+
+  const expected = await readFile(join(scenarioDir, snapshotPath), 'utf8')
+    .catch((error) => {
+      if (error.code === 'ENOENT') {
+        failures.push(`Expected ${streamName} snapshot ${snapshotPath} to exist.`);
+        return null;
+      }
+
+      throw error;
+    });
+
+  if (expected === null) {
+    return;
+  }
+
+  if (actual !== expected) {
+    failures.push(`Expected ${streamName} to match ${snapshotPath}.`);
   }
 }

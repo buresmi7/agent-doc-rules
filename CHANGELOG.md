@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## v0.7.0 - 2026-06-28
+
+- Added deterministic documentation security review to `agent-doc-rules-docs`,
+  including high-risk command, secret disclosure, prompt-injection,
+  validation-bypass, backdoor, remote image, tracking link, and encoded payload
+  checks.
+- Added documentation security guidance for reviewing `AGENTS.md`, skills,
+  README files, templates, and agent-routed docs.
+- Added command E2E security fixtures with stdout and stderr snapshot
+  expectations.
+- Added `docs.duplicates.ignorePairs` for narrow, documented duplicate-review
+  exceptions.
+- Tightened maintainer docs and repository instructions to keep expected
+  duplicate and style warnings out of the validation output.
+
 ## v0.6.0 - 2026-06-26
 
 - Added adoption, tool-map, config-reference, and recipe docs for consuming

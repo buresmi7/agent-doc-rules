@@ -3,7 +3,7 @@ import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import test from 'node:test';
-import { findCandidatePairs } from '../src/candidates.mjs';
+import { findCandidatePairs, isIgnoredPair, normalizeIgnorePairs } from '../src/candidates.mjs';
 import { checkDuplicates, normalizeReviews } from '../src/check.mjs';
 import { buildCodexPrompt, buildStylePrompt } from '../src/codex.mjs';
 import { resolveDuplicateOptions, resolveStyleOptions } from '../src/config.mjs';
@@ -103,6 +103,37 @@ test('deterministic prefilter finds exact and near duplicates', () => {
 
   assert.ok(candidates.some((candidate) => candidate.left.file === 'a.md' && candidate.right.file === 'b.md'));
   assert.ok(candidates.some((candidate) => candidate.left.file === 'a.md' && candidate.right.file === 'c.md'));
+});
+
+test('deterministic prefilter ignores configured file pairs', () => {
+  const units = [
+    unit('e2e/example/criteria.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
+    unit('packages/agent-doc-rules-skill/SKILL.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
+    unit('docs/guide.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
+  ];
+  const ignorePairs = [
+    {
+      left: '^e2e/.*/criteria\\.md$',
+      right: '^packages/agent-doc-rules-skill/',
+    },
+  ];
+
+  const candidates = findCandidatePairs(units, {
+    warnScore: 0.6,
+    maxCandidates: 10,
+    ignorePairs,
+  });
+
+  assert.equal(isIgnoredPair(
+    'packages/agent-doc-rules-skill/SKILL.md',
+    'e2e/example/criteria.md',
+    normalizeIgnorePairs(ignorePairs),
+  ), true);
+  assert.equal(candidates.some((candidate) => (
+    candidate.left.file === 'e2e/example/criteria.md'
+    && candidate.right.file === 'packages/agent-doc-rules-skill/SKILL.md'
+  )), false);
+  assert.equal(candidates.some((candidate) => candidate.right.file === 'docs/guide.md'), true);
 });
 
 test('Codex prompt contains only candidate pair text', () => {
@@ -211,6 +242,13 @@ test('CLI flags override config defaults', async () => {
       duplicates: {
         model: 'configured-model',
         warnScore: 0.5,
+        ignorePairs: [
+          {
+            left: '^e2e/',
+            right: '^packages/',
+            reason: 'E2E criteria repeat rules under test.',
+          },
+        ],
       },
     },
   }));
@@ -222,6 +260,13 @@ test('CLI flags override config defaults', async () => {
   assert.deepEqual(options.include, ['*.md']);
   assert.equal(options.model, 'flag-model');
   assert.equal(options.warnScore, 0.8);
+  assert.deepEqual(options.ignorePairs, [
+    {
+      left: '^e2e/',
+      right: '^packages/',
+      reason: 'E2E criteria repeat rules under test.',
+    },
+  ]);
 });
 
 test('style CLI flags override config defaults', async () => {

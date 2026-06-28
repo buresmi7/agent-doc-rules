@@ -38,6 +38,7 @@ export async function resolveDuplicateOptions(flags = {}) {
     exclude: chooseArray(flags.exclude, duplicateConfig.exclude, config.exclude, defaultExclude),
     includeReferences: flags.includeReferences ?? duplicateConfig.includeReferences ?? duplicateDefaults.includeReferences,
     includeSameFile: flags.includeSameFile ?? duplicateConfig.includeSameFile ?? duplicateDefaults.includeSameFile,
+    ignorePairs: chooseArray(duplicateConfig.ignorePairs, duplicateDefaults.ignorePairs),
     warnScore: chooseNumber(flags.warnScore, duplicateConfig.warnScore, duplicateDefaults.warnScore),
     failScore: chooseNumber(flags.failScore, duplicateConfig.failScore, duplicateDefaults.failScore),
     minWords: chooseNumber(flags.minWords, duplicateConfig.minWords, duplicateDefaults.minWords),

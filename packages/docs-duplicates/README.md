@@ -41,8 +41,9 @@ does not expose the default model.
 2. Skip code blocks, short noise, and `references/` directories by default.
 3. Build candidates with normalized exact matching, shingle overlap, word
    overlap, and string similarity.
-4. Send only candidate pairs to Codex.
-5. Map structured Codex JSON to `fail`, `warn`, and `ok`.
+4. Remove candidates that match configured `ignorePairs`.
+5. Send only candidate pairs to Codex.
+6. Map structured Codex JSON to `fail`, `warn`, and `ok`.
 
 `fail` returns a non-zero exit code. Warning-only results return zero.
 
@@ -66,6 +67,13 @@ Duplicate settings live under `docs.duplicates` in the root
   "docs": {
     "duplicates": {
       "includeReferences": false,
+      "ignorePairs": [
+        {
+          "left": "^e2e/",
+          "right": "^e2e/",
+          "reason": "E2E fixtures intentionally repeat scenario facts."
+        }
+      ],
       "warnScore": 0.78,
       "failScore": 0.92,
       "model": "gpt-5-nano",

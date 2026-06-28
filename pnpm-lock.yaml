@@ -42,6 +42,18 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
 
+  e2e/docs-security-command-fail/project:
+    devDependencies:
+      '@agent-doc-rules/docs-validator':
+        specifier: workspace:*
+        version: link:../../../packages/docs-validator
+
+  e2e/docs-security-command-pass/project:
+    devDependencies:
+      '@agent-doc-rules/docs-validator':
+        specifier: workspace:*
+        version: link:../../../packages/docs-validator
+
   e2e/docs-validation-routing/project:
     dependencies:
       '@agent-doc-rules/skill':

@@ -60,6 +60,7 @@ async function runScenario() {
   const scenario = JSON.parse(await readFile(join(scenarioDir, 'scenario.json'), 'utf8'));
   const result = await runCommandScenario({
     scenario,
+    scenarioDir,
     projectDir,
     repoRoot,
   });

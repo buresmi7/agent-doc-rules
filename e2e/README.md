@@ -39,7 +39,14 @@ e2e/<scenario>/
     README.md
     agent-doc-rules.config.json
   scenario.json
+  snapshot/
+    stdout.txt
+    stderr.txt
 ```
+
+Command snapshots are optional. Add `stdoutSnapshot` or `stderrSnapshot` under
+`expect` in `scenario.json` when the exact command output is part of the
+behavior under test.
 
 `prompt.md` is the short user instruction for the scenario. Keep it natural and
 avoid spelling out the expected skill behavior. Put project facts in
@@ -58,7 +65,7 @@ Command scenarios are discovered by `tools/run-command-e2e-all.mjs` when they
 contain `scenario.json`. The shared runner
 `tools/run-command-e2e-scenario.mjs` copies the fixture project, prepends the
 repository `node_modules/.bin` directory to `PATH`, runs the configured command,
-and checks the configured expectations. Run them with:
+and checks the configured expectations and output snapshots. Run them with:
 
 ```bash
 corepack pnpm run test:e2e-command

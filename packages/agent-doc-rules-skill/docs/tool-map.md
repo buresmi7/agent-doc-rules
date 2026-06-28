@@ -11,10 +11,11 @@ Use this page to choose the smallest `agent-doc-rules` surface for a task.
 | Decide where a fact belongs | [`docs/context-placement.md`](context-placement.md) | Separates README, docs, `AGENTS.md`, skills, references, and templates. |
 | Repair bloated docs | [`references/doc-audit.md`](../references/doc-audit.md) | Moves durable facts to canonical homes and removes duplicated leftovers. |
 | Check factual claims | [`references/factual-review.md`](../references/factual-review.md) | Compares docs against local evidence and rejects unsupported edits. |
+| Review documentation security risks | [`references/security-review.md`](../references/security-review.md) and `agent-doc-rules-docs security` | Finds agent-instruction abuse, data leaks, validation bypasses, and tracking assets. |
 | Tighten prose | [`references/writing-style.md`](../references/writing-style.md) | Removes vague or generic text without inventing workflows. |
 | Check deterministic prose wording | `agent-doc-rules-docs wording` | Runs `write-good` and optional project wording rules against Markdown prose. |
 | Review sentence style | `agent-doc-rules-docs-duplicates style` | Uses Codex to review Markdown sentence units for clarity and plain language. |
-| Validate Markdown and links | `agent-doc-rules-docs` | Runs deterministic Markdown and local-link checks. |
+| Validate Markdown, security, and links | `agent-doc-rules-docs` | Runs deterministic Markdown, security, and local-link checks. |
 | Find likely duplicate docs | `agent-doc-rules-docs-duplicates` | Uses deterministic candidates before asking Codex to classify overlap. |
 
 ## Command Split

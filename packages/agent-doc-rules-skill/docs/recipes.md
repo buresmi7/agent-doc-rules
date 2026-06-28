@@ -29,7 +29,7 @@ Use $agent-doc-rules to review this repository's docs and repair problems.
 
 Expected result:
 
-- no file changes when the docs already satisfy the rules,
+- no repository diff when the docs are already acceptable,
 - a short note naming the checks or evidence used.
 
 This protects repositories from style-only churn.
@@ -61,7 +61,7 @@ Expected result:
 - human orientation moves to README,
 - rationale moves to an explanation or architecture doc,
 - agent-only routing moves to `AGENTS.md`,
-- repeated agent workflows become task-specific skills,
+- agent-only workflow detail moves out of the note inbox,
 - the note inbox no longer carries duplicated durable facts.
 
 ## Reject Unsupported Documentation Changes
@@ -102,7 +102,7 @@ Use $agent-doc-rules to rewrite these docs in the repository's required language
 
 Expected result:
 
-- persisted docs use the language required by the repository,
+- prose follows the repository language rule,
 - file paths, commands, package names, and code identifiers stay unchanged,
 - the rewrite does not add generic setup or deploy steps.
 

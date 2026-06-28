@@ -1,8 +1,8 @@
 import { resolveDocsOptions } from './config.mjs';
 import { runInit } from './init.mjs';
-import { runCheck, runLinks, runMarkdown, runWording } from './runner.mjs';
+import { runCheck, runLinks, runMarkdown, runSecurity, runWording } from './runner.mjs';
 
-const commands = new Set(['init', 'markdown', 'wording', 'links', 'check']);
+const commands = new Set(['init', 'markdown', 'wording', 'security', 'links', 'check']);
 
 export async function main(argv = process.argv.slice(2)) {
   const parsed = parseArgs(argv);
@@ -18,6 +18,7 @@ export async function main(argv = process.argv.slice(2)) {
     ? {
         markdownOptions: await resolveDocsOptions({ ...parsed, command: 'markdown' }),
         wordingOptions: await resolveDocsOptions({ ...parsed, command: 'wording' }),
+        securityOptions: await resolveDocsOptions({ ...parsed, command: 'security' }),
         linksOptions: await resolveDocsOptions({ ...parsed, command: 'links' }),
       }
     : await resolveDocsOptions(parsed);
@@ -43,6 +44,10 @@ export async function runCommand(command, options, deps = {}) {
 
   if (command === 'links') {
     return runLinks(options, deps);
+  }
+
+  if (command === 'security') {
+    return runSecurity(options, deps);
   }
 
   if (command === 'check') {
@@ -125,8 +130,9 @@ Commands:
   init          Write a starter agent-doc-rules.config.json.
   markdown      Run Markdown linting.
   wording       Run deterministic prose wording checks.
+  security      Run deterministic documentation security checks.
   links         Run Markdown link validation.
-  check         Run Markdown linting, wording validation, then link validation.
+  check         Run Markdown linting, wording, security, then link validation.
 
 Options:
   --root <dir>          Repository root. Defaults to the current directory.
@@ -135,7 +141,7 @@ Options:
   --config <path>       Config file. Defaults to agent-doc-rules.config.json.
   --skip <regex>        Linkinator skip pattern. Repeatable.
   --forbid <term>       Project-specific term that should fail. Repeatable.
-  --allow <regex>       Wording-check allow pattern for matching lines. Repeatable.
+  --allow <regex>       Wording or security allow pattern for matching lines. Repeatable.
   --no-fragments        Do not ask Linkinator to check fragments.
   --print               Print the starter config without writing files.
   --force               Overwrite an existing config during init.`;

@@ -1,7 +1,7 @@
 {
   "name": "@agent-doc-rules/docs-validator",
   "version": "0.1.0",
-  "description": "Markdown and link validation CLI for agent-doc-rules projects",
+  "description": "Markdown, security, and link validation CLI for agent-doc-rules projects",
   "type": "module",
   "bin": {
     "agent-doc-rules-docs": "bin/agent-doc-rules-docs.mjs"

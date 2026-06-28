@@ -52,8 +52,8 @@ A good root `AGENTS.md` should include:
 
 ## Add Documentation Checks
 
-Install the deterministic validator when the project wants Markdown and local
-link checks:
+Install the deterministic validator when the project wants Markdown, security,
+and local link checks:
 
 ```bash
 pnpm add -D @agent-doc-rules/docs-validator
@@ -73,6 +73,7 @@ Add scripts like these:
   "scripts": {
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:wording": "agent-doc-rules-docs wording",
+    "docs:security": "agent-doc-rules-docs security",
     "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",

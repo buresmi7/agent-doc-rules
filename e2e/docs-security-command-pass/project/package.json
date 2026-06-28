@@ -1,0 +1,12 @@
+{
+  "name": "docs-security-command-pass-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:command": "node ../../../tools/run-command-e2e-scenario.mjs"
+  },
+  "devDependencies": {
+    "@agent-doc-rules/docs-validator": "workspace:*"
+  }
+}

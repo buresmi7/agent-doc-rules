@@ -5,6 +5,7 @@ import { defaultConfigFile, defaultExclude, defaultInclude } from './defaults.mj
 export const recommendedScripts = {
   'docs:markdown': 'agent-doc-rules-docs markdown',
   'docs:wording': 'agent-doc-rules-docs wording',
+  'docs:security': 'agent-doc-rules-docs security',
   'docs:style': 'agent-doc-rules-docs-duplicates style',
   'docs:links': 'agent-doc-rules-docs links',
   'docs:duplicates': 'agent-doc-rules-docs-duplicates check',
@@ -33,6 +34,9 @@ export function buildStarterConfig() {
         forbiddenTerms: [],
         allow: [],
       },
+      security: {
+        allow: [],
+      },
       style: {
         includeReferences: false,
         minWords: 6,
@@ -49,6 +53,7 @@ export function buildStarterConfig() {
         minWords: 6,
         minChars: 40,
         maxCandidates: 50,
+        ignorePairs: [],
         model: 'gpt-5-nano',
         reasoningEffort: 'low',
       },

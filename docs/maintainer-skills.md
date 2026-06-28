@@ -1,11 +1,8 @@
 # Maintainer Skill Sync
 
-This repository publishes one reusable skill: `agent-doc-rules`.
-
-It also installs a project-scoped maintainer skill set into `.agents/skills/`
-so agents working in this monorepo can use the same workflow as consuming
-projects. Those maintainer skills are local development tools. They are not
-part of the published `agent-doc-rules` artifact.
+This repository installs a project-scoped maintainer skill set into
+`.agents/skills/` so agents working in this monorepo can use the same workflow
+as consuming projects. Those skills are local development tools.
 
 ## Sources
 
@@ -16,8 +13,8 @@ part of the published `agent-doc-rules` artifact.
 | GitHub skills | `skills-lock.json` | `skills add <source> --skill <name>` |
 
 Generated copies under `.agents/skills/` are ignored by Git, except for the
-`agent-doc-rules` symlink. Commit the manifests and lockfiles, not generated
-external skill directories.
+`agent-doc-rules` symlink. See the root `AGENTS.md` maintenance rules for the
+commit boundary.
 
 ## Installed Maintainer Skills
 

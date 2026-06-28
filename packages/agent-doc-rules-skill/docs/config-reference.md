@@ -27,6 +27,9 @@ The file may contain a top-level `docs` object:
       "forbiddenTerms": [],
       "allow": ["intentional example"]
     },
+    "security": {
+      "allow": ["intentional fixture"]
+    },
     "style": {
       "includeReferences": false,
       "maxUnits": 80,
@@ -41,6 +44,7 @@ The file may contain a top-level `docs` object:
       "minWords": 6,
       "minChars": 40,
       "maxCandidates": 50,
+      "ignorePairs": [],
       "model": "gpt-5-nano",
       "reasoningEffort": "low"
     }
@@ -122,14 +126,29 @@ The default `write-good` profile disables noisy checks for passive voice,
 adverbs, weasel words, wordy phrases, lexical illusions, and E-Prime. Projects
 can enable any supported `write-good` check in `docs.wording.writeGood`.
 
+## Security Keys
+
+`docs.security` configures `agent-doc-rules-docs security` and the security
+phase of `agent-doc-rules-docs check`.
+
+The validator scans Markdown text and code blocks for high-risk instructions:
+remote code execution, secret disclosure, prompt-injection language, validation
+bypasses, backdoor-style guidance, remote images, tracking links, and encoded
+execution payloads.
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `docs.security.include` | string array | Optional include override for security validation. |
+| `docs.security.exclude` | string array | Optional exclude override for security validation. |
+| `docs.security.allow` | string array | Regexes for matching lines that should be ignored. |
+
+Use `docs.security.allow` only for intentional fixture content or safety docs
+that need to show a risky pattern. Prefer rewriting examples so they do not look
+like instructions an agent should execute.
+
 ## AI Style Keys
 
 `docs.style` configures `agent-doc-rules-docs-duplicates style`.
-
-AI style review parses Markdown into sentence units, sends only those units to
-Codex, and asks for structured findings. Use it when a review needs judgment
-about sentence clarity, vague wording, passive phrasing, or workflow names that
-do not explain the task.
 
 | Key | Type | Description |
 | --- | --- | --- |
@@ -157,11 +176,16 @@ do not explain the task.
 | `docs.duplicates.minWords` | number | Minimum words in a prose unit. |
 | `docs.duplicates.minChars` | number | Minimum characters in a prose unit. |
 | `docs.duplicates.maxCandidates` | number | Maximum candidate pairs sent to Codex. |
+| `docs.duplicates.ignorePairs` | object array | File-pair regexes that should be ignored before AI review. |
 | `docs.duplicates.model` | string | Codex model for classification. |
 | `docs.duplicates.reasoningEffort` | string | Codex reasoning effort. |
 
 The duplicate checker skips code blocks and short noise before it builds
 candidates. It sends only candidate pairs to Codex.
+
+Use `ignorePairs` for expected overlaps such as E2E criteria repeating the rule
+under test or standalone templates sharing boilerplate. Each entry uses `left`
+and `right` regex strings matched against file paths; matching is symmetric.
 
 ## Init Command
 

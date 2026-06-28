@@ -57,6 +57,83 @@ test('runCommandScenario reports stdout and file expectation failures', async ()
   ]);
 });
 
+test('runCommandScenario compares stdout and stderr snapshots', async () => {
+  const scenarioDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-scenario-'));
+  const projectDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-project-'));
+
+  await mkdir(join(scenarioDir, 'snapshot'), { recursive: true });
+  await writeFile(join(scenarioDir, 'snapshot/stdout.txt'), 'actual output\n');
+  await writeFile(join(scenarioDir, 'snapshot/stderr.txt'), 'actual error\n');
+
+  const result = await runCommandScenario({
+    scenarioDir,
+    projectDir,
+    repoRoot: projectDir,
+    env: { PATH: process.env.PATH },
+    scenario: {
+      command: process.execPath,
+      args: ['-e', 'console.log("actual output"); console.error("actual error");'],
+      expect: {
+        stdoutSnapshot: 'snapshot/stdout.txt',
+        stderrSnapshot: 'snapshot/stderr.txt',
+      },
+    },
+  });
+
+  assert.equal(result.pass, true);
+});
+
+test('runCommandScenario reports snapshot mismatches', async () => {
+  const scenarioDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-scenario-'));
+  const projectDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-project-'));
+
+  await mkdir(join(scenarioDir, 'snapshot'), { recursive: true });
+  await writeFile(join(scenarioDir, 'snapshot/stdout.txt'), 'expected output\n');
+
+  const result = await runCommandScenario({
+    scenarioDir,
+    projectDir,
+    repoRoot: projectDir,
+    env: { PATH: process.env.PATH },
+    scenario: {
+      command: process.execPath,
+      args: ['-e', 'console.log("actual output");'],
+      expect: {
+        stdoutSnapshot: 'snapshot/stdout.txt',
+      },
+    },
+  });
+
+  assert.equal(result.pass, false);
+  assert.deepEqual(result.failures, [
+    'Expected stdout to match snapshot/stdout.txt.',
+  ]);
+});
+
+test('runCommandScenario reports missing snapshots', async () => {
+  const scenarioDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-scenario-'));
+  const projectDir = await mkdtemp(join(tmpdir(), 'agent-e2e-command-project-'));
+
+  const result = await runCommandScenario({
+    scenarioDir,
+    projectDir,
+    repoRoot: projectDir,
+    env: { PATH: process.env.PATH },
+    scenario: {
+      command: process.execPath,
+      args: ['-e', 'console.log("actual output");'],
+      expect: {
+        stdoutSnapshot: 'snapshot/stdout.txt',
+      },
+    },
+  });
+
+  assert.equal(result.pass, false);
+  assert.deepEqual(result.failures, [
+    'Expected stdout snapshot snapshot/stdout.txt to exist.',
+  ]);
+});
+
 test('buildCommandScenarioEnv prepends repo bins to PATH', () => {
   const env = buildCommandScenarioEnv({
     repoRoot: '/repo',
