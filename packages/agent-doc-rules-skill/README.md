@@ -178,9 +178,11 @@ padding, avoids generic AI phrasing, and keeps the reader's task first. See
 
 ### Validation Tools
 
-Use the optional CLIs to check Markdown, deterministic prose wording, AI
-sentence style, local links, and likely duplicate documentation passages. The
-validation guidance lives in
+Use the optional CLIs to check Markdown, deterministic prose wording,
+deterministic security patterns, AI sentence style, local links, and likely
+duplicate documentation passages. Duplicate review supports
+`docs.duplicates.ignorePairs` for narrow, documented overlaps such as E2E
+criteria repeating the rule under test. The validation guidance lives in
 [`references/validation.md`](references/validation.md).
 
 ### Starter Templates
