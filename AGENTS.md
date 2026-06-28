@@ -9,8 +9,8 @@ consuming repositories.
 Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, skill
 references, templates, E2E documentation scenarios, and documentation
 architecture. The root package depends on the local skill workspace. Run
-`corepack pnpm run skills:sync` to install it into `.agents/skills/` with the
-project-scoped maintainer skills.
+`corepack pnpm run skills:sync` to install the local skill workspace into
+`.agents/skills/` with the project-scoped maintainer skills.
 
 ## Project Skills
 

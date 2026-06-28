@@ -35,7 +35,7 @@ Keep deterministic validation separate from semantic review:
 The `agent-doc-rules` tool packages follow this split:
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-validator @agent-doc-rules/docs-duplicates
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator @buresmi7/agent-doc-rules-docs-duplicates
 ```
 
 Recommended scripts:

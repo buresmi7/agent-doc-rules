@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v0.8.2 - 2026-06-28
+
+- Prepared the documentation validator and semantic duplicate checker for
+  public npm publication under `@buresmi7`.
+- Updated skill documentation and E2E fixtures to use the public tool package
+  names.
+- Added tool package artifact checks and pack dry-runs to the static release
+  gate.
+
 ## v0.8.1 - 2026-06-28
 
 - Normalized the published npm binary path so `npm publish --dry-run` does not

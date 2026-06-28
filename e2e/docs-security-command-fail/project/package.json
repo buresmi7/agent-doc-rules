@@ -7,6 +7,6 @@
     "test:command": "node ../../../tools/run-command-e2e-scenario.mjs"
   },
   "devDependencies": {
-    "@agent-doc-rules/docs-validator": "workspace:*"
+    "@buresmi7/agent-doc-rules-docs-validator": "workspace:*"
   }
 }

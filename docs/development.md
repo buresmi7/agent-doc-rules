@@ -1,8 +1,7 @@
 # Monorepo Development
 
-Use this page when maintaining the monorepo: installing dependencies, restoring
-project skills with `corepack pnpm run skills:sync`, running validators,
-updating E2E fixtures, and preparing releases.
+Use this page when maintaining the monorepo. It covers dependency setup,
+restoring project skills, validators, E2E fixtures, and releases.
 
 For install commands, usage examples, the feature guide, and product docs, use
 [packages/agent-doc-rules-skill/README.md](../packages/agent-doc-rules-skill/README.md).
@@ -62,8 +61,11 @@ the agent to add Node.js 24 to the README while `package.json` only supports
 
 The monorepo ships two optional CLIs:
 
-- [docs-validator](../packages/docs-validator/) checks Markdown and local links.
-- [docs-duplicates](../packages/docs-duplicates/) finds likely semantic
+- [docs-validator](../packages/docs-validator/) is published as
+  `@buresmi7/agent-doc-rules-docs-validator` and checks Markdown, wording,
+  security patterns, and local links.
+- [docs-duplicates](../packages/docs-duplicates/) is published as
+  `@buresmi7/agent-doc-rules-docs-duplicates` and finds likely semantic
   duplicate documentation passages.
 
 Run `corepack pnpm run docs:check` for the configured documentation checks.
@@ -107,6 +109,7 @@ explains how maintainers review and restore them.
 | Sync local and project-scoped skills | `corepack pnpm run skills:sync` |
 | Verify local skill installation wiring | `corepack pnpm run test:install` |
 | Check published skill metadata and package links | `corepack pnpm run test:skill` |
+| Check tool package metadata and pack output | `corepack pnpm run test:packages` |
 | Run E2E runner utility tests | `corepack pnpm run test:e2e-tools` |
 | Run deterministic prose wording checks | `corepack pnpm run docs:wording` |
 | Run deterministic documentation security checks | `corepack pnpm run docs:security` |
@@ -166,7 +169,8 @@ snapshot metadata.
 When docs conflict, use the document that is the canonical source for that
 detail.
 Keep the root README focused on repository purpose, the first command to run,
-and where to start. Put long procedures in the linked docs.
+the main package README, and the monorepo development guide. Put long
+procedures in the linked docs.
 
 ## Release Checklist
 
@@ -177,17 +181,23 @@ Before publishing, verify these items:
 - Run `corepack pnpm run verify:release`.
 - Run `corepack pnpm test`.
 - Run `corepack pnpm run test:skill`.
+- Run `corepack pnpm run test:packages`.
 - Run `corepack pnpm run test:install`.
 - Check that `npx skills add . --list` discovers `agent-doc-rules`.
 - Check that `corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run`
   contains only the public skill artifact.
+- Check that `corepack pnpm --dir packages/docs-validator pack --dry-run`
+  contains only the public validator package files.
+- Check that `corepack pnpm --dir packages/docs-duplicates pack --dry-run`
+  contains only the public duplicate-checker package files.
 - Review external maintainer skills if
   `packages/agent-doc-rules-skill/package.json` or `skills-lock.json` changed.
 - Update `CHANGELOG.md` for released skill or template behavior changes.
 - Check that reusable skill content contains no secrets, private environment
   details, or unsupported project-specific rules.
 - After the tag is pushed and npm auth is available, publish from
-  `packages/agent-doc-rules-skill/` with `npm publish --access public`.
+  `packages/agent-doc-rules-skill/`, `packages/docs-validator/`, and
+  `packages/docs-duplicates/` with `npm publish --access public`.
 
 ## Maintainers
 

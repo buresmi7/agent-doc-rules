@@ -1,13 +1,13 @@
 # Docs AI Review
 
-`@agent-doc-rules/docs-duplicates` provides Codex-backed documentation review.
+`@buresmi7/agent-doc-rules-docs-duplicates` provides Codex-backed documentation review.
 It checks likely semantic duplicates and can review Markdown sentences for
 style issues.
 
 ## Install
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-duplicates
+pnpm add -D @buresmi7/agent-doc-rules-docs-duplicates
 ```
 
 ## Command

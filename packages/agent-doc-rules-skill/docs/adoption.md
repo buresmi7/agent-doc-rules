@@ -70,14 +70,14 @@ Install the deterministic validator when the project wants Markdown, security,
 and local link checks:
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator
 ```
 
 Install the duplicate checker when the project also wants semantic overlap
 review:
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-duplicates
+pnpm add -D @buresmi7/agent-doc-rules-docs-duplicates
 ```
 
 Add scripts like these:

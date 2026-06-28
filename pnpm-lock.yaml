@@ -8,10 +8,10 @@ importers:
 
   .:
     devDependencies:
-      '@agent-doc-rules/docs-duplicates':
+      '@buresmi7/agent-doc-rules-docs-duplicates':
         specifier: workspace:*
         version: link:packages/docs-duplicates
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:packages/docs-validator
       '@buresmi7/agent-doc-rules-skill':
@@ -44,13 +44,13 @@ importers:
 
   e2e/docs-security-command-fail/project:
     devDependencies:
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
   e2e/docs-security-command-pass/project:
     devDependencies:
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
@@ -60,22 +60,22 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
     devDependencies:
-      '@agent-doc-rules/docs-duplicates':
+      '@buresmi7/agent-doc-rules-docs-duplicates':
         specifier: workspace:*
         version: link:../../../packages/docs-duplicates
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
   e2e/docs-wording-command-fail/project:
     devDependencies:
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 
   e2e/docs-wording-command-pass/project:
     devDependencies:
-      '@agent-doc-rules/docs-validator':
+      '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../packages/docs-validator
 

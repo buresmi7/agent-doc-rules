@@ -1,12 +1,12 @@
 # Docs Validator
 
-`@agent-doc-rules/docs-validator` provides deterministic Markdown validation
+`@buresmi7/agent-doc-rules-docs-validator` provides deterministic Markdown validation
 for repositories that use the `agent-doc-rules` skill.
 
 ## Install
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator
 ```
 
 ## Commands
@@ -67,7 +67,7 @@ when fragment validation is too strict for a specific repository. Use
 `docs.wording.forbiddenTerms` only for project-specific phrases that must fail.
 
 AI sentence-level style review lives in
-`@agent-doc-rules/docs-duplicates` as
+`@buresmi7/agent-doc-rules-docs-duplicates` as
 `agent-doc-rules-docs-duplicates style`.
 
 See the skill package [Config Reference](../agent-doc-rules-skill/docs/config-reference.md)

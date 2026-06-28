@@ -57,7 +57,7 @@ For project-scoped Codex installs, the skill is installed under
 Install optional documentation validation tools:
 
 ```bash
-pnpm add -D @agent-doc-rules/docs-validator @agent-doc-rules/docs-duplicates
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator @buresmi7/agent-doc-rules-docs-duplicates
 ```
 
 Recommended scripts:

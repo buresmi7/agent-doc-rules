@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
@@ -20,16 +20,17 @@
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
     "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check",
     "test:skill": "node tools/check-skill-artifact.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-skill test && corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run",
+    "test:packages": "node tools/check-package-artifacts.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-validator test && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-duplicates test && corepack pnpm --dir packages/docs-validator pack --dry-run && corepack pnpm --dir packages/docs-duplicates pack --dry-run",
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
     "test:security": "corepack pnpm run docs:security",
     "skills:sync": "node tools/sync-project-skills.mjs",
-    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:security && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:e2e-tools && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:security && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:packages && corepack pnpm run test:e2e-tools && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
     "verify:release": "corepack pnpm run skills:sync && corepack pnpm run test:install && corepack pnpm test && corepack pnpm run docs:check && corepack pnpm run test:agent"
   },
   "devDependencies": {
-    "@agent-doc-rules/docs-duplicates": "workspace:*",
-    "@agent-doc-rules/docs-validator": "workspace:*",
+    "@buresmi7/agent-doc-rules-docs-duplicates": "workspace:*",
+    "@buresmi7/agent-doc-rules-docs-validator": "workspace:*",
     "@buresmi7/agent-doc-rules-skill": "workspace:*"
   }
 }

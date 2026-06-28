@@ -15,7 +15,7 @@
     "@buresmi7/agent-doc-rules-skill": "workspace:*"
   },
   "devDependencies": {
-    "@agent-doc-rules/docs-duplicates": "workspace:*",
-    "@agent-doc-rules/docs-validator": "workspace:*"
+    "@buresmi7/agent-doc-rules-docs-duplicates": "workspace:*",
+    "@buresmi7/agent-doc-rules-docs-validator": "workspace:*"
   }
 }
