@@ -97,10 +97,12 @@ For design influences and attribution, see
 - Move ordinary human runbooks to `docs/` and link to them; do not turn them
   into task-specific skills unless they are repeated agent workflows.
 - For documentation placement tasks, put rationale and trade-off explanations in
-  durable `docs/` explanation or architecture files, not in schema, importer,
-  command, or API reference pages. Put fixture failure or repair steps in
-  `docs/` how-to or troubleshooting files. Keep `README.md`, reference docs,
-  and `AGENTS.md` to short pointers for those details.
+  durable `docs/` explanation or architecture files, not only in `README.md` and
+  not in schema, importer, command, or API reference pages. Even a one-sentence
+  reason needs a `docs/` owner; `README.md` may summarize and link. Put fixture
+  failure or repair steps in `docs/` how-to or troubleshooting files. Keep
+  `README.md`, reference docs, and `AGENTS.md` to short pointers for those
+  details.
 - During notes triage, treat facts introduced as a reason, rationale, why, or
   trade-off as explanation content. Create or update a `docs/` explanation or
   architecture page for that content instead of leaving the README as the only

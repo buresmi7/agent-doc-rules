@@ -121,8 +121,8 @@ async function checkPackageFiles() {
     errors.push('package.json publishConfig.access must be public.');
   }
 
-  if (packageJson.bin?.[expectedBinName] !== './bin/install.mjs') {
-    errors.push(`package.json bin.${expectedBinName} must point to ./bin/install.mjs.`);
+  if (packageJson.bin?.[expectedBinName] !== 'bin/install.mjs') {
+    errors.push(`package.json bin.${expectedBinName} must point to bin/install.mjs.`);
   }
 
   for (const file of requiredFiles) {

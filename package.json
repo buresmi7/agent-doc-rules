@@ -1,6 +1,6 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",

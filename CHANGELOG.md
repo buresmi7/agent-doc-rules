@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## v0.8.1 - 2026-06-28
+
+- Normalized the published npm binary path so `npm publish --dry-run` does not
+  need to auto-correct package metadata.
+
 ## v0.8.0 - 2026-06-28
 
 - Prepared the skill package for public npm publication as
