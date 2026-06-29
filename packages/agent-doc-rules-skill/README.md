@@ -38,22 +38,6 @@ The npm installer copies only the skill artifact into
 `.agents/skills/agent-doc-rules/`. It does not copy this monorepo's E2E
 fixtures, support scripts, generated maintainer skills, or root docs.
 
-Install a tagged skill directory with the `skills` CLI when a consuming project
-wants a `skills-lock.json` entry:
-
-```bash
-npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
-```
-
-Install the local working tree for development:
-
-```bash
-npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules -a codex -y --copy
-```
-
-For project-scoped Codex installs, the skill is installed under
-`.agents/skills/agent-doc-rules/`.
-
 Install optional documentation validation tools:
 
 ```bash
