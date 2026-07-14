@@ -113,6 +113,7 @@ Common tasks:
 - [Agent Instructions](#agent-instructions)
 - [README Shaping](#readme-shaping)
 - [Documentation Placement](#documentation-placement)
+- [Decision Records](#decision-records)
 - [Documentation Repair](#documentation-repair)
 - [Factual Documentation Review](#factual-documentation-review)
 - [Documentation Security Review](#documentation-security-review)
@@ -142,6 +143,14 @@ Decide whether a fact belongs in `README.md`, `docs/`, `AGENTS.md`, a skill,
 or a skill reference. The compact rule set is
 [`references/documentation-architecture.md`](references/documentation-architecture.md);
 the fuller guide is [`docs/context-placement.md`](docs/context-placement.md).
+
+### Decision Records
+
+Record lasting accepted trade-offs, rule exceptions, and user-approved
+shortcuts. Future maintainers should find the reason near the affected work.
+The rule lives in [`references/decision-records.md`](references/decision-records.md),
+and the starter format lives in
+[`assets/templates/decision-record.md`](assets/templates/decision-record.md).
 
 ### Documentation Repair
 
@@ -203,6 +212,8 @@ Use:
 
 - `README.md` for human orientation and first useful commands,
 - `docs/` for long-lived explanations, how-to guides, references, and runbooks,
+- `docs/decisions/` or an existing decision log for lasting accepted
+  trade-offs that are linked from affected surfaces,
 - `AGENTS.md` for short always-loaded agent routing and local invariants,
 - `.agents/skills/<name>/` for repeated task workflows that agents should load
   only when relevant,

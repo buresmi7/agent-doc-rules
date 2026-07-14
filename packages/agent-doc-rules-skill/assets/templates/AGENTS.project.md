@@ -18,6 +18,8 @@ mind before making changes.
 
 - Link to the canonical project specification, architecture docs, decision log,
   or README.
+- Link to active decision records from the affected code, docs, config, or
+  agent rules. A decision index alone is not enough.
 - State which document wins when local docs conflict.
 
 ## Project Constraints

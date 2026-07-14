@@ -1,0 +1,10 @@
+{
+  "scenario": "decision-records",
+  "runner": "codex",
+  "pass": true,
+  "score": 1,
+  "failedCriteria": [],
+  "requiredFixes": [],
+  "generatorNotes": "Added a durable decision record and linked the export format doc to it.",
+  "judgeNotes": "The generated documentation creates a durable decision record, includes the required decision metadata and revisit framing, links it from an affected export-format surface, preserves supported project facts, and does not invent unsupported workflows or blame the team."
+}

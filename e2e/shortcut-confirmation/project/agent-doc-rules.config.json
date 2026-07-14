@@ -1,0 +1,17 @@
+{
+  "docs": {
+    "include": [
+      "README.md",
+      "docs/**/*.md"
+    ],
+    "duplicates": {
+      "ignorePairs": [
+        {
+          "left": "^docs/review-status\\.md$",
+          "right": "^docs/setup\\.md$",
+          "reason": "The review-status fixture repeats setup-review context."
+        }
+      ]
+    }
+  }
+}

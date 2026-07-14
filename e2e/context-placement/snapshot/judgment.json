@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Organized inbox facts into README, AGENTS.md, schema reference, design rationale, and fixture troubleshooting docs.",
-  "judgeNotes": "Generated documentation satisfies all critical context-placement requirements: README is the human entry point, AGENTS.md stays concise, durable facts moved into appropriate docs, notes.md is reduced to a pointer, no skill was created, and no unsupported project facts or workflows were introduced."
+  "generatorNotes": "Organized the inbox into durable homes: README for orientation, docs for input/schema/rationale/troubleshooting, and AGENTS.md for agent-facing verification and privacy rules. I did not run checks because this response returns the file contents rather than editing the working tree. The visible manifest has `npm test` but no documentation check script.",
+  "judgeNotes": "Generated documentation satisfies all critical placement requirements: README is the human entry with purpose, verified command, and doc links; AGENTS.md stays concise with routing, privacy, and skipped-check rules; durable facts moved into docs; notes.md is reduced to pointers; no unsupported skill or invented workflow appears."
 }

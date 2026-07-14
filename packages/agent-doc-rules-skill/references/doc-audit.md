@@ -39,8 +39,12 @@ asked for an audit report.
 
 - Keep human orientation and first useful commands in `README.md`.
 - Move long setup, release, repair, and troubleshooting procedures to `docs/`.
-- Keep always-needed agent routing, local invariants, and verification rules in
-  `AGENTS.md`.
+- Keep always-needed agent routing, local invariants, privacy or safety bans,
+  and verification rules in `AGENTS.md`.
+- Preserve "do not mention", "do not include", "do not store", and
+  "do not commit" instructions as short `AGENTS.md` safety rules when they
+  affect public docs, committed examples, secrets, private names, customer data,
+  or other sensitive content.
 - Move repeated agent workflows with steps, inputs, outputs, or review rules to a
   task-specific skill.
 - Reduce inbox files such as `notes.md` to a short pointer after durable facts

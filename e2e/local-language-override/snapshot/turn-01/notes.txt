@@ -1,0 +1,1 @@
+Created concise Czech README and AGENTS.md from the supplied package and project notes.

@@ -10,7 +10,9 @@ import {
   validateAgentRuntime,
 } from './e2e-runner/agent-runtime.mjs';
 import {
+  collectFinalGeneratedFiles,
   formatGeneratedFiles,
+  formatGeneratedTurns,
   normalizeGeneratedFiles,
   readProjectFiles,
   writeGeneratedFiles,
@@ -21,11 +23,17 @@ import {
   judgeSchema,
   render,
 } from './e2e-runner/prompts.mjs';
+import { writeSnapshotTurns } from './e2e-runner/snapshots.mjs';
 import {
   installSkill,
   readSkillReference,
   readSkillUsePrompt,
 } from './e2e-runner/skill.mjs';
+import {
+  buildTurnPrompt,
+  formatTurnNotes,
+  readScenarioTurns,
+} from './e2e-runner/scenario-turns.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const e2eRoot = join(repoRoot, 'e2e');
@@ -162,22 +170,44 @@ async function runScenario() {
     keepOutput,
   });
 
-  const scenarioPrompt = await readFile(join(scenarioDir, 'prompt.md'), 'utf8');
+  const scenarioTurns = await readScenarioTurns(scenarioDir);
   const projectFilesBefore = await readProjectFiles(projectDir);
-  const prompt = buildGeneratePrompt({
-    scenarioPrompt,
-    projectFiles: projectFilesBefore,
-    skillContext: ollamaSkillContext,
-  });
-  const generated = await agentGenerate(runtime, {
-    role: `${scenarioName}-generator`,
-    prompt,
-    schema: generateSchema,
-    cwd: projectDir,
-  });
-  const generatedFiles = normalizeGeneratedFiles(generated.files);
+  const generatedTurns = [];
 
-  await writeGeneratedFiles(projectDir, generatedFiles);
+  for (const [index, scenarioTurn] of scenarioTurns.entries()) {
+    const projectFiles = await readProjectFiles(projectDir);
+    const prompt = buildGeneratePrompt({
+      scenarioPrompt: buildTurnPrompt({
+        currentTurn: scenarioTurn,
+        previousTurns: generatedTurns,
+      }),
+      projectFiles,
+      skillContext: ollamaSkillContext,
+    });
+    const generated = await agentGenerate(runtime, {
+      role: scenarioTurns.length === 1
+        ? `${scenarioName}-generator`
+        : `${scenarioName}-generator-turn-${index + 1}`,
+      prompt,
+      schema: generateSchema,
+      cwd: projectDir,
+    });
+    const generatedFiles = normalizeGeneratedFiles(generated.files);
+
+    await writeGeneratedFiles(projectDir, generatedFiles);
+    generatedTurns.push({
+      ...scenarioTurn,
+      generatedFiles,
+      notes: generated.notes,
+    });
+  }
+
+  const generatedFiles = collectFinalGeneratedFiles(generatedTurns);
+  const generated = {
+    notes: scenarioTurns.length === 1
+      ? generatedTurns[0].notes
+      : formatTurnNotes(generatedTurns),
+  };
 
   const criteria = await readFile(join(scenarioDir, 'criteria.md'), 'utf8');
   const projectFilesAfter = await readProjectFiles(projectDir);
@@ -186,7 +216,9 @@ async function runScenario() {
     skillReference,
     originalProjectFiles: projectFilesBefore,
     projectFiles: projectFilesAfter,
-    generatedFiles: formatGeneratedFiles(generatedFiles),
+    generatedFiles: scenarioTurns.length === 1
+      ? formatGeneratedFiles(generatedFiles)
+      : formatGeneratedTurns(generatedTurns),
     generatorNotes: generated.notes,
   });
   const judgment = await agentGenerate(runtime, {
@@ -199,7 +231,7 @@ async function runScenario() {
   const failureSummaryPath = join(tempDir, 'failure-summary.json');
 
   if (pass && updateAgentSnapshots) {
-    await writeScenarioSnapshot({ generatedFiles, generated, judgment });
+    await writeScenarioSnapshot({ generatedFiles, generated, generatedTurns, judgment });
   }
 
   if (!pass) {
@@ -208,6 +240,7 @@ async function runScenario() {
       projectDir,
       generatedFiles,
       generated,
+      generatedTurns,
       judgment,
     });
   }
@@ -227,25 +260,16 @@ async function runScenario() {
   };
 }
 
-async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
+async function writeScenarioSnapshot({ generatedFiles, generated, generatedTurns, judgment }) {
   const snapshotDir = join(scenarioDir, snapshotDirName);
-  const filesDir = join(snapshotDir, 'files');
 
   await mkdir(snapshotDir, { recursive: true });
-  await rm(filesDir, { recursive: true, force: true });
-  await mkdir(filesDir, { recursive: true });
-
-  for (const file of generatedFiles) {
-    const target = join(filesDir, file.path);
-
-    await mkdir(dirname(target), { recursive: true });
-    await writeFile(target, file.content);
-  }
-
+  await rm(join(snapshotDir, 'files'), { recursive: true, force: true });
   await writeFile(
     join(snapshotDir, 'generated-files.json'),
     `${JSON.stringify(generatedFiles, null, 2)}\n`,
   );
+  await writeSnapshotTurns(snapshotDir, generatedTurns);
   await writeFile(
     join(snapshotDir, 'metadata.json'),
     `${JSON.stringify({
@@ -274,7 +298,7 @@ async function writeScenarioSnapshot({ generatedFiles, generated, judgment }) {
   );
 }
 
-async function writeFailureSummary({ tempDir, projectDir, generatedFiles, generated, judgment }) {
+async function writeFailureSummary({ tempDir, projectDir, generatedFiles, generated, generatedTurns, judgment }) {
   const summary = {
     scenario: scenarioName,
     runner,
@@ -284,6 +308,11 @@ async function writeFailureSummary({ tempDir, projectDir, generatedFiles, genera
     requiredFixes: judgment.requiredFixes ?? [],
     generatorNotes: generated.notes ?? '',
     judgeNotes: judgment.notes ?? '',
+    turns: generatedTurns.map((turn) => ({
+      source: turn.source,
+      generatedFiles: turn.generatedFiles.map((file) => file.path),
+      notes: turn.notes,
+    })),
     generatedFiles: generatedFiles.map((file) => ({
       path: file.path,
       projectPath: join('project', file.path).replaceAll('\\', '/'),
@@ -296,7 +325,7 @@ async function writeFailureSummary({ tempDir, projectDir, generatedFiles, genera
       ruleMatrix: 'docs/e2e-rule-matrix.md',
       rulePlacement: 'docs/rule-placement.md',
       criteria: relative(repoRoot, join(scenarioDir, 'criteria.md')),
-      prompt: relative(repoRoot, join(scenarioDir, 'prompt.md')),
+      prompts: generatedTurns.map((turn) => relative(repoRoot, join(scenarioDir, turn.source))),
     },
   };
 

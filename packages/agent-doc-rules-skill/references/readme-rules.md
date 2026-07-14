@@ -80,8 +80,9 @@ When the repository has multiple docs, add a compact index:
 | `docs/architecture.md` | Architecture decisions and boundaries |
 ```
 
-State which document wins when docs conflict. If another document is canonical
-for a detail, link to it instead of copying its content.
+When docs overlap or readers could reasonably question which file owns a
+detail, state which document wins. If another document is canonical for a
+detail, link to it instead of copying its content.
 
 ## Commands
 
@@ -96,6 +97,10 @@ Command sections should be evidence-oriented:
 - Do not add generic install or setup steps just because a README has a test
   command. A setup step needs evidence from the existing docs, the user request,
   or a local manifest.
+- A manifest script is evidence for that exact command only. For example,
+  `npm test` supports documenting the test command; it does not prove that
+  contributors should install dependencies first or that a workspace package
+  manager workflow exists.
 - When a manifest such as `package.json` exists, treat its scripts as the
   command source of truth. Do not preserve stale README commands that are absent
   from the manifest unless the documentation clearly labels them as unverified

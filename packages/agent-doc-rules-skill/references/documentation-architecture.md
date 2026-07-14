@@ -22,6 +22,8 @@ lowest shared document and link to it from the others.
 - `.agents/skills/<name>/`: repeated task-specific agent workflows.
 - Skill `references/`: detail loaded after a skill triggers.
 - Templates: reusable output material, not policy prose.
+- Decision records: durable explanations for accepted trade-offs, rule
+  exceptions, and lasting user-approved compromises.
 
 ## Placement Rules
 
@@ -32,6 +34,9 @@ lowest shared document and link to it from the others.
   README. Prefer a dedicated explanation or architecture page such as
   `docs/architecture.md` or `docs/output-format.md`; do not make a schema,
   importer, command, or API reference the canonical home for rationale.
+- Put lasting accepted trade-offs, rule exceptions, and user-approved shortcuts
+  in decision records. Active records must be linked from the affected code,
+  configuration, documentation, or agent rule; an index-only link is not enough.
 - When triaging notes, any fact framed as a reason, rationale, why, or trade-off
   should move to that explanation or architecture page. README may link to it,
   but should not be the only home.
@@ -40,8 +45,8 @@ lowest shared document and link to it from the others.
   detailed doc or skill reference, not in always-loaded docs or the root README.
 - Put README quality rules in `references/readme-rules.md`; do not copy them into
   project README files.
-- Put "why this rule exists" near the canonical rule. Use a short decision note
-  when the trade-off matters.
+- Put "why this rule exists" near the canonical rule. Use a short decision
+  record when the trade-off has lasting maintenance cost.
 - Move detail out when an always-loaded section grows past roughly ten lines.
 - Prefer links over copied text.
 

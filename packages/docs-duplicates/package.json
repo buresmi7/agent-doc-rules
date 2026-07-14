@@ -1,6 +1,6 @@
 {
   "name": "@buresmi7/agent-doc-rules-docs-duplicates",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "private": false,
   "description": "Semantic documentation duplicate checker powered by Codex",
   "type": "module",

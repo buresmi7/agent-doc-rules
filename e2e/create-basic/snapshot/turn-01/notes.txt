@@ -1,0 +1,1 @@
+Created a short root AGENTS.md from the repository README and package manifest facts. Verification: `npm test` passed with Node's test runner and reported 0 tests.

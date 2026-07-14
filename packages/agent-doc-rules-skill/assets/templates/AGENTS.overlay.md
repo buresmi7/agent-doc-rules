@@ -29,6 +29,8 @@ states a narrower local override.
 ## Project Sources Of Truth
 
 - Add canonical docs, specifications, decision logs, or issue templates.
+- Link active decision records from the affected code, docs, config, or agent
+  rules. A decision index alone is not enough.
 
 ## Project Verification
 

@@ -52,11 +52,7 @@ export function buildGeneratePrompt({ scenarioPrompt, projectFiles, skillContext
     ? `\n# Skill Context For Non-Skill Runner\n\n${skillContext}\n`
     : '';
 
-  return `# Scenario Prompt
-
-Use $agent-doc-rules for this task.
-
-${scenarioPrompt.trim()}
+  return `${scenarioPrompt.trim()}
 
 # Harness Instructions
 
@@ -70,7 +66,7 @@ Return JSON only with this shape:
       "content": "complete file content"
     }
   ],
-  "notes": "short implementation note"
+  "notes": "complete user-facing note for this turn"
 }
 \`\`\`
 
@@ -82,9 +78,9 @@ Rules:
 - Do not use absolute paths or parent-directory traversal.
 - Wrap Markdown prose and bullets so lines stay under 100 characters.
 - Format Markdown tables with spaces around each pipe separator.
-- The target project has installed \`agent-doc-rules\` at
-  \`.agents/skills/agent-doc-rules/\`.
 - Preserve facts from the project files. Do not invent repository details.
+- Do not omit required warnings, trade-offs, risks, repair paths, or questions
+  from \`notes\` just to keep the response short.
 ${optionalSkillContext}
 Project files:
 

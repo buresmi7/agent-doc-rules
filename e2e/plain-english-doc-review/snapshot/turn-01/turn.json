@@ -1,0 +1,12 @@
+{
+  "source": "prompt.md",
+  "snapshotDir": "turn-01",
+  "prompt": "# Prompt\n\nImprove the README so it is easier for a new contributor to understand.",
+  "generatedFiles": [
+    {
+      "path": "README.md",
+      "content": "# Signal Cache\n\nSignal Cache stores recent event signals in memory and exposes a lookup helper\nused by tests. This repository is a small private Node.js package for that cache\nbehavior.\n\n## Repository Role\n\nThe project is not a cloud cache service. It does not include deployment code,\ncloud-cache integration, or runtime infrastructure scripts.\n\nUse this repository to understand, change, and test the in-memory signal cache\nlogic that exists in the source files.\n\n## Verification\n\nRun the test suite with:\n\n```bash\nnpm test\n```\n\nThe `test` script is defined in `package.json` as `node --test`.\n\n## Project Notes\n\nDo not document deployment steps or cloud-cache behavior unless the repository\nadds those features first. Keep new contributor instructions tied to commands and\nbehavior that are present in the project files.\n"
+    }
+  ],
+  "notes": "Rewrote the README in plain English, removed broad marketing language, and kept the contributor guidance limited to facts supported by the provided README and package.json. I did not add install, setup, deployment, or cloud-cache steps because the project files do not support those details. Verification documented: `npm test`."
+}

@@ -115,8 +115,10 @@ test('deterministic prefilter ignores configured file pairs', () => {
     {
       left: '^e2e/.*/criteria\\.md$',
       right: '^packages/agent-doc-rules-skill/',
+      reason: 'Criteria repeat the rule they evaluate.',
     },
   ];
+  const normalizedIgnores = normalizeIgnorePairs(ignorePairs);
 
   const candidates = findCandidatePairs(units, {
     warnScore: 0.6,
@@ -127,13 +129,21 @@ test('deterministic prefilter ignores configured file pairs', () => {
   assert.equal(isIgnoredPair(
     'packages/agent-doc-rules-skill/SKILL.md',
     'e2e/example/criteria.md',
-    normalizeIgnorePairs(ignorePairs),
+    normalizedIgnores,
   ), true);
+  assert.equal(normalizedIgnores[0].reason, 'Criteria repeat the rule they evaluate.');
   assert.equal(candidates.some((candidate) => (
     candidate.left.file === 'e2e/example/criteria.md'
     && candidate.right.file === 'packages/agent-doc-rules-skill/SKILL.md'
   )), false);
   assert.equal(candidates.some((candidate) => candidate.right.file === 'docs/guide.md'), true);
+});
+
+test('deterministic prefilter validates ignore pair reasons', () => {
+  assert.throws(
+    () => normalizeIgnorePairs([{ left: '^a\\.md$', right: '^b\\.md$', reason: false }]),
+    /reason must be a string/,
+  );
 });
 
 test('Codex prompt contains only candidate pair text', () => {

@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Rewrote README.md in plain contributor-focused language and kept documented commands to the verified package script.",
-  "judgeNotes": "The README preserves the supported facts, replaces marketing phrasing with direct repository details, keeps the content concise, documents only the verified npm test command, and does not add unsupported docs, services, workflows, or agent files."
+  "generatorNotes": "Rewrote the README in plain English, removed broad marketing language, and kept the contributor guidance limited to facts supported by the provided README and package.json. I did not add install, setup, deployment, or cloud-cache steps because the project files do not support those details. Verification documented: `npm test`.",
+  "judgeNotes": "The generated README preserves the supported project facts, removes generic marketing phrasing, documents only the supported npm test command, avoids invented setup/deploy/cloud details, and stays concise without creating unrelated files."
 }

@@ -1,0 +1,38 @@
+[
+  {
+    "source": "prompt.md",
+    "snapshotDir": "turn-01",
+    "prompt": "# Prompt\n\nOrganize the project notes into durable documentation.",
+    "generatedFiles": [
+      {
+        "path": "AGENTS.md",
+        "content": "# Habitat Importer Agent Instructions\n\nHabitat Importer reads field-team CSV exports and writes normalized species\nobservations as JSON files.\n\n## Shared Rules\n\nFollow the shared repository documentation rules in\n[agent-doc-rules](.agents/skills/agent-doc-rules/references/agents-rules.md).\n\n## Local Rules\n\n- Read [docs/schema.md](docs/schema.md) before changing parser output.\n- Run `npm test` before changing parser behavior.\n- If a required check is skipped, record the blocker and what remains\n  unverified.\n- Keep generated JSON examples out of commits when they include real site names.\n- Do not mention private site names in public docs.\n\n## Troubleshooting\n\nUse [docs/troubleshooting.md](docs/troubleshooting.md) when fixture tests fail.\n"
+      },
+      {
+        "path": "docs/importer.md",
+        "content": "# Importer Input\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n| Column | Meaning |\n| --- | --- |\n| `species` | Species name for the observation. |\n| `site` | Field site for the observation. |\n| `observed_at` | Observation timestamp from the source CSV. |\n| `count` | Observation count from the source CSV. |\n\nRows with empty `species` values are dropped. The importer records the dropped\nrow number in the import report.\n"
+      },
+      {
+        "path": "docs/output-format.md",
+        "content": "# Output Format\n\nHabitat Importer writes normalized observations as JSON because downstream\nreview tools do not agree on a CSV dialect.\n"
+      },
+      {
+        "path": "docs/schema.md",
+        "content": "# Observation Schema\n\nObservation JSON contains `species`, `site`, `observedAt`, and `count`.\n\nThe importer reads `observed_at` from source CSV files and writes it as\n`observedAt` in normalized JSON observations.\n"
+      },
+      {
+        "path": "docs/troubleshooting.md",
+        "content": "# Troubleshooting\n\n## Fixture Failures\n\nIf a fixture fails, run `npm test` and inspect the failing row number before\nchanging schema docs.\n"
+      },
+      {
+        "path": "notes.md",
+        "content": "# Documentation Inbox\n\nDurable notes have moved to:\n\n- [README.md](README.md) for project orientation and documentation links.\n- [AGENTS.md](AGENTS.md) for agent routing, verification, and privacy rules.\n- [docs/importer.md](docs/importer.md) for CSV input and skipped row behavior.\n- [docs/schema.md](docs/schema.md) for observation JSON fields.\n- [docs/output-format.md](docs/output-format.md) for JSON output rationale.\n- [docs/troubleshooting.md](docs/troubleshooting.md) for fixture failures.\n"
+      },
+      {
+        "path": "README.md",
+        "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\n## Documentation\n\n- [Importer input](docs/importer.md) describes accepted CSV columns and skipped\n  rows.\n- [Observation schema](docs/schema.md) describes the JSON observation shape.\n- [Output format](docs/output-format.md) explains why the importer writes JSON.\n- [Troubleshooting](docs/troubleshooting.md) covers fixture failure checks.\n\n## Verification\n\nRun `npm test` before changing parser behavior.\n"
+      }
+    ],
+    "notes": "Organized the inbox into durable homes: README for orientation, docs for input/schema/rationale/troubleshooting, and AGENTS.md for agent-facing verification and privacy rules. I did not run checks because this response returns the file contents rather than editing the working tree. The visible manifest has `npm test` but no documentation check script."
+  }
+]

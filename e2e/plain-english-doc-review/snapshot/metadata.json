@@ -10,7 +10,7 @@
       "reasoningEffort": "medium",
       "label": "gpt-5.5 medium",
       "source": {
-        "name": "CODEX_MODEL",
+        "name": "~/.codex/config.toml",
         "reasoningEffort": "agent-doc-rules default"
       }
     }

@@ -1,13 +1,13 @@
 {
   "name": "agent-doc-rules",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "private": true,
   "description": "Reusable documentation and AGENTS.md rules for AI-assisted repositories",
   "type": "module",
   "packageManager": "pnpm@11.8.0",
   "scripts": {
     "test": "corepack pnpm run test:static",
-    "test:agent": "corepack pnpm -r --filter './e2e/*/project' run test:agent",
+    "test:agent": "corepack pnpm -r --workspace-concurrency=1 --filter './e2e/*/project' run test:agent",
     "test:audit": "node scripts/check-audit.mjs",
     "test:install": "node tools/check-skill-install.mjs",
     "test:e2e-tools": "node --test tools/e2e-runner/*.test.mjs",

@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Replaced copied shared guidance and unsupported workflow recommendations with concise local rules preserved from the project files.",
-  "judgeNotes": "The generated AGENTS.md is concise, preserves the README-specific constraints and source-of-truth guidance, links to the installed agent-doc-rules reference instead of copying shared prose, keeps Markdown verification guidance with skipped-check risk, and removes unsupported Notion, tm, optional skill, worktree, and lifecycle instructions."
+  "generatorNotes": "Repaired the root `AGENTS.md` by keeping the Ledger Notes orientation, English-language rule, documentation-only scope, financial-data safety rule, source-of-truth pointers, and Markdown verification guidance. Removed generic or unsupported workflow text about Notion, Codex skills, `tm`, private worktrees, and vague test guidance because those are not supported by the provided project files.",
+  "judgeNotes": "The generated AGENTS.md is concise, preserves the README-backed project facts, links to the installed shared AGENTS.md rules instead of copying them, keeps source-of-truth and Markdown verification guidance, and removes the unsupported copied architecture prose and invented workflows/tools."
 }

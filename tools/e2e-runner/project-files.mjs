@@ -1,6 +1,28 @@
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, relative } from 'node:path';
 
+const skippedProjectDirectories = new Set([
+  '.cache',
+  '.git',
+  '.next',
+  '.output',
+  '.turbo',
+  'build',
+  'coverage',
+  'dist',
+  'node_modules',
+]);
+
+const javascriptEvidencePrefixes = [
+  'bin/',
+  'lib/',
+  'scripts/',
+  'src/',
+  'test/',
+  'tests/',
+  'tools/',
+];
+
 export async function readProjectFiles(projectDir) {
   const files = await collectFiles(projectDir);
   const chunks = [];
@@ -68,6 +90,38 @@ export function formatGeneratedFiles(files) {
   }).join('\n\n');
 }
 
+export function collectFinalGeneratedFiles(turns) {
+  const latest = new Map();
+
+  for (const turn of turns) {
+    for (const file of turn.generatedFiles) {
+      latest.set(file.path, file);
+    }
+  }
+
+  return [...latest.values()].sort((a, b) => a.path.localeCompare(b.path));
+}
+
+export function formatGeneratedTurns(turns) {
+  return turns.map((turn, index) => {
+    const generatedFiles = formatGeneratedFiles(turn.generatedFiles) || '(none)';
+
+    return `## Turn ${index + 1}: ${turn.source}
+
+User request:
+
+${turn.prompt}
+
+Agent notes:
+
+${turn.notes}
+
+Generated files:
+
+${generatedFiles}`;
+  }).join('\n\n');
+}
+
 export async function assertFile(path) {
   const info = await stat(path).catch(() => undefined);
 
@@ -96,27 +150,42 @@ async function readProjectFileForPrompt(file, rel) {
   return `${JSON.stringify(packageJson, null, 2)}\n`;
 }
 
-async function collectFiles(dir) {
+async function collectFiles(dir, root = dir) {
   const entries = await readdir(dir);
   const files = [];
 
   for (const entry of entries) {
-    if (['node_modules', '.git'].includes(entry)) {
-      continue;
-    }
-
     const path = join(dir, entry);
     const info = await stat(path);
 
     if (info.isDirectory()) {
-      files.push(...await collectFiles(path));
+      if (skippedProjectDirectories.has(entry)) {
+        continue;
+      }
+
+      files.push(...await collectFiles(path, root));
       continue;
     }
 
-    if (path.endsWith('.md') || path.endsWith('VERSION') || entry === 'package.json') {
+    const rel = relative(root, path).replaceAll('\\', '/');
+
+    if (isProjectEvidenceFile(rel, entry)) {
       files.push(path);
     }
   }
 
   return files.sort();
+}
+
+function isProjectEvidenceFile(rel, entry) {
+  return rel.endsWith('.md')
+    || isJavascriptEvidenceFile(rel)
+    || rel.endsWith('VERSION')
+    || entry === 'package.json'
+    || entry === 'agent-doc-rules.config.json';
+}
+
+function isJavascriptEvidenceFile(rel) {
+  return rel.endsWith('.js')
+    && javascriptEvidencePrefixes.some((prefix) => rel.startsWith(prefix));
 }

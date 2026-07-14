@@ -1,0 +1,10 @@
+[
+  {
+    "path": "AGENTS.md",
+    "content": "# AGENTS.md\n\n## Project Context\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Commands\n\nUse the scripts defined in `package.json`:\n\n```bash\nnpm test\nnpm run docs:check\n```\n\nThere is no documented production hosting for this project yet.\n\n## Shared Rules\n\nFollow `.agents/skills/agent-doc-rules/references/agents-rules.md` for general\n`AGENTS.md` guidance.\n\nIf a relevant check is skipped, include the reason and residual risk in the\nfinal note.\n"
+  },
+  {
+    "path": "README.md",
+    "content": "# Metric Cards\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Commands\n\nInstall dependencies:\n\n```bash\nnpm install\n```\n\nRun tests:\n\n```bash\nnpm test\n```\n\nCheck documentation:\n\n```bash\nnpm run docs:check\n```\n\nThe project does not have production hosting yet.\n"
+  }
+]

@@ -89,9 +89,10 @@ Duplicate settings live under `docs.duplicates` in the root
 }
 ```
 
+See the skill package [Config Reference](../agent-doc-rules-skill/docs/config-reference.md)
+for `ignorePairs` fields and shared include, exclude, wording, and AI style
+settings.
+
 The duplicate-review workflow is derived from the earlier `meta-work`
 documentation maintenance workflow, where deterministic duplicate candidates
 were reviewed separately from Markdown and link checks.
-
-See the skill package [Config Reference](../agent-doc-rules-skill/docs/config-reference.md)
-for shared include, exclude, wording, and AI style settings.

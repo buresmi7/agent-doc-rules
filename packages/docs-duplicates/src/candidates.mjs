@@ -50,10 +50,20 @@ export function normalizeIgnorePairs(ignorePairs = []) {
       throw new Error('Duplicate ignore pairs must include left and right regex strings.');
     }
 
-    return {
+    if (entry.reason !== undefined && typeof entry.reason !== 'string') {
+      throw new Error('Duplicate ignore pair reason must be a string when provided.');
+    }
+
+    const normalized = {
       left: new RegExp(entry.left),
       right: new RegExp(entry.right),
     };
+
+    if (entry.reason !== undefined) {
+      normalized.reason = entry.reason;
+    }
+
+    return normalized;
   });
 }
 

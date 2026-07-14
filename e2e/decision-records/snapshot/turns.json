@@ -1,0 +1,18 @@
+[
+  {
+    "source": "prompt.md",
+    "snapshotDir": "turn-01",
+    "prompt": "# Prompt\n\nWe accepted the in-memory CSV exporter for the pilot even though a streaming\nexporter would be cleaner long term. Please update the repo so future\nmaintainers do not mistake that choice for an accident.",
+    "generatedFiles": [
+      {
+        "path": "docs/decisions/in-memory-csv-exporter.md",
+        "content": "# In-Memory CSV Exporter\n\nStatus: Accepted\n\nDate: 2026-07-14\n\n## Context\n\nInvoice Exporter converts invoice JSON files into CSV files for the finance\nteam. The exporter writes one CSV row per invoice with `id`, `customer`, and\n`total` columns.\n\nA streaming exporter would be cleaner long term, but the first internal release\nuses the simpler in-memory implementation. The team accepted that choice because\ninvoices are small in the current pilot dataset.\n\n## Decision\n\nKeep the in-memory CSV exporter for the pilot instead of replacing it with a\nstreaming exporter now.\n\n## Trade-Off And Consequences\n\nThe in-memory exporter is simpler to maintain during the pilot and matches the\ncurrent dataset size.\n\nThe trade-off is that export memory use grows with the number of invoices. A\nlarger dataset may make the exporter slower or less reliable than a streaming\nimplementation.\n\n## Affected Surfaces\n\n- `src/exporter.js`\n- `docs/export-format.md`\n\n## Backlinks\n\n`docs/export-format.md` links to this record from the export format notes.\n\n## Revisit Conditions\n\nRevisit this decision before expanding beyond the pilot dataset or when invoice\nexports become large enough that memory use is a practical concern.\n\nRun `npm test` before changing export behavior.\n"
+      },
+      {
+        "path": "docs/export-format.md",
+        "content": "# Export Format\n\nThe exporter writes one CSV row per invoice with `id`, `customer`, and `total`\ncolumns.\n\nThe streaming exporter was deferred for the first internal release. The team\naccepted the simpler in-memory implementation for now because invoices are\nsmall in the current pilot dataset. See\n[`decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md) for\nthe accepted trade-off and revisit conditions.\n"
+      }
+    ],
+    "notes": "Added a durable decision record and linked the export format doc to it."
+  }
+]

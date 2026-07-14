@@ -14,10 +14,10 @@ Start with the runner output:
   stdout, and stderr.
 
 For agent scenarios, open `failure-summary.json` first. It lists generated file
-paths, generator notes, judge notes, failed criteria, and the maintainer docs to
-use for triage. Then inspect `project/` inside the same output directory to see
-the generated repository state. For command scenarios, inspect `project/` and
-compare the runner output with `scenario.json`.
+paths, generator notes, judge notes, failed criteria, turn summaries, and the
+maintainer docs to use for triage. Then inspect `project/` inside the same
+output directory to see the generated repository state. For command scenarios,
+inspect `project/` and compare the runner output with `scenario.json`.
 
 ## Classify The Failure
 
@@ -35,8 +35,9 @@ Common classifications:
   `project/`.
 - Criteria ambiguity: the behavior is correct, but the judge lacks a crisp
   pass/fail statement.
-- Prompt leakage: `prompt.md` tells the agent too much about the expected
-  implementation.
+- Prompt leakage: `prompt.md` or `turns/*.md` tells the agent too much about the
+  expected implementation, such as naming the skill, target file, loaded
+  reference, or exact artifact to create, or mirroring criteria wording.
 - Harness issue: generated JSON, file normalization, snapshot handling, or judge
   input is wrong.
 

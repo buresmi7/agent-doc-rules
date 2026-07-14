@@ -1,0 +1,1 @@
+Organized the inbox into durable homes: README for orientation, docs for input/schema/rationale/troubleshooting, and AGENTS.md for agent-facing verification and privacy rules. I did not run checks because this response returns the file contents rather than editing the working tree. The visible manifest has `npm test` but no documentation check script.

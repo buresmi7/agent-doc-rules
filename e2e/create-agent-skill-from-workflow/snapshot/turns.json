@@ -1,0 +1,22 @@
+[
+  {
+    "source": "prompt.md",
+    "snapshotDir": "turn-01",
+    "prompt": "# Prompt\n\nClean up the release documentation.",
+    "generatedFiles": [
+      {
+        "path": ".agents/skills/release-notes/SKILL.md",
+        "content": "---\nname: release-notes\ndescription: Draft Atlas CLI release notes from the changelog and release input.\n---\n\n# Release Notes\n\nUse this skill when drafting `docs/releases/<version>.md` for the Atlas CLI.\n\n## Workflow\n\n1. Read `CHANGELOG.md`.\n2. Read merged pull request titles from `docs/release-input.md`.\n3. Group changes into Added, Changed, Fixed, and Removed.\n4. Keep customer names and private issue links out of release notes.\n5. Write `docs/releases/<version>.md`.\n6. If the release input is incomplete, write a short residual-risk note instead\n   of inventing missing changes.\n\n## Verification\n\nRun the repository test suite before publishing release documentation changes:\n\n```sh\nnpm test\n```\n\nIf the check is skipped, state the reason and residual risk in the final note.\n"
+      },
+      {
+        "path": "AGENTS.md",
+        "content": "# Agent Instructions\n\n## Skill Reference\n\n- Follow `.agents/skills/agent-doc-rules/references/agents-rules.md` for shared\n  agent documentation rules.\n- Use `.agents/skills/release-notes/SKILL.md` when drafting Atlas release notes.\n\n## Verification\n\nRun this check before publishing release documentation changes:\n\n```sh\nnpm test\n```\n\nIf the check is skipped, state the reason and residual risk in the final note.\n"
+      },
+      {
+        "path": "README.md",
+        "content": "# Atlas Release Notes\n\nAtlas Release Notes keeps release summaries for the Atlas CLI.\n\n## Canonical Docs\n\n| Document | Content |\n| --- | --- |\n| `CHANGELOG.md` | Source changes for release note drafting |\n| `docs/release-input.md` | Merged pull request title input for the next release |\n| `.agents/skills/release-notes/SKILL.md` | Agent workflow for drafting release notes |\n| `AGENTS.md` | Repository-specific agent routing and checks |\n\n## Verification\n\nRun the test suite before publishing release documentation changes:\n\n```sh\nnpm test\n```\n"
+      }
+    ],
+    "notes": "Moved the repeated release workflow from README into a project skill and added AGENTS routing. No checks were run because the harness is read-only."
+  }
+]

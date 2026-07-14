@@ -85,6 +85,7 @@ export async function readSkillReference(skillSource) {
     'SKILL.md',
     'references/agents-rules.md',
     'references/agents-rubric.md',
+    'references/decision-records.md',
     'references/doc-audit.md',
     'references/readme-rules.md',
     'references/documentation-architecture.md',
@@ -93,8 +94,10 @@ export async function readSkillReference(skillSource) {
     'references/validation.md',
     'references/writing-style.md',
     'docs/context-placement.md',
+    'docs/config-reference.md',
     'assets/templates/AGENTS.project.md',
     'assets/templates/AGENTS.overlay.md',
+    'assets/templates/decision-record.md',
   ];
   const chunks = [];
 

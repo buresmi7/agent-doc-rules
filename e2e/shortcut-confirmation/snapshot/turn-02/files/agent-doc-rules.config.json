@@ -1,0 +1,22 @@
+{
+  "docs": {
+    "include": [
+      "README.md",
+      "docs/**/*.md"
+    ],
+    "duplicates": {
+      "ignorePairs": [
+        {
+          "left": "^docs/review-status\\.md$",
+          "right": "^docs/setup\\.md$",
+          "reason": "The review-status fixture repeats setup-review context."
+        },
+        {
+          "left": "^README\\.md$",
+          "right": "^docs/setup\\.md$",
+          "reason": "Temporary pilot-review exception; see docs/decisions/temporary-setup-duplicate-ignore.md."
+        }
+      ]
+    }
+  }
+}

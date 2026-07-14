@@ -22,6 +22,7 @@ agent workflow, put it in a skill.
 | `.agents/skills/<name>/` | Agent on matching task | Repeatable workflows, specialized judgment, bundled templates or scripts | One-off notes, facts humans need first, secrets |
 | `references/` in a skill | Agent after skill triggers | Detailed rules, rubrics, examples, background | Always-needed instructions |
 | `assets/` in a skill | Agent after skill triggers | Templates, examples, reusable output material | Policy prose that should be in references |
+| `docs/decisions/` or existing decision log | Human maintainer and future agents | Accepted trade-offs, rule exceptions, user-approved shortcuts, and skipped-check decisions with lasting effect | Ordinary implementation choices, blame notes, records with no affected-surface link |
 
 ## README
 
@@ -60,6 +61,7 @@ Use `docs/` for durable human-facing material.
 Good `docs/` content includes:
 
 - architecture decisions,
+- decision records for lasting compromises,
 - rationale for format or architecture choices,
 - setup details,
 - release procedures,
@@ -80,6 +82,33 @@ summarize and link to those pages, but should not be their canonical home.
 
 Use this placement even for one-sentence rationale notes. A short reason still
 needs a stable explanation home when the user asks to organize durable notes.
+
+## Decision Records
+
+Use decision records for confirmed choices that future maintainers may question
+without context.
+
+Create or update a decision record when a user explicitly accepts a lasting
+trade-off, rule exception, skipped expected check, or simpler path that creates
+debt. The record should name the context, decision, trade-off, consequences,
+affected surfaces, and revisit conditions.
+
+Active decision records must be discoverable from the thing they explain. Link
+the record from affected code, configuration, documentation, or agent
+instructions. A link from a decision index alone is not enough.
+
+For code, avoid noisy comments. Add an inline link only when the code would look
+wrong or arbitrary without the decision. Otherwise, link from the nearest stable
+architecture, API, configuration, or maintenance document that describes the
+code.
+
+If no affected surface should link to a record anymore, mark it as
+`Superseded` or `Archived`. Treat orphaned active records as historical context,
+not as current project constraints.
+
+See [Decision Records](../references/decision-records.md) for the full rule and
+[`decision-record.md`](../assets/templates/decision-record.md) for a starter
+template.
 
 ## AGENTS.md
 

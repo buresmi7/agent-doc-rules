@@ -18,6 +18,8 @@ It is a navigation layer, not full documentation.
   docs.
 - Do not copy shared rules into project `AGENTS.md`; link to the shared rule
   from a dedicated top-level `Shared Rules` or `Skill Reference` section.
+- A root `AGENTS.md` edited under this skill is incomplete without that
+  dedicated shared-rule link.
 - Do not put shared-rule links in `Source Of Truth`; that section is for
   project-owned canonical docs.
 - When repairing a file that already copied shared rules, replace the copied

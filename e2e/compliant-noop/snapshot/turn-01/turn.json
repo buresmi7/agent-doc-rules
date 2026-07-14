@@ -1,0 +1,7 @@
+{
+  "source": "prompt.md",
+  "snapshotDir": "turn-01",
+  "prompt": "# Prompt\n\nReview the repository docs and make only necessary changes.",
+  "generatedFiles": [],
+  "notes": "Reviewed AGENTS.md, README.md, docs/style.md, and package.json against the repository rules and manifests. No documentation changes are necessary: the docs are short, factual, linked to the right canonical sources, and the documented docs:check command exists. Verification passed with npm run docs:check."
+}

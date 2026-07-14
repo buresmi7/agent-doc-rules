@@ -52,7 +52,7 @@ If a requested edit conflicts with local evidence, the agent should not edit the
 file. It should report the contradiction and name the evidence instead. The
 canonical rule lives in
 [factual-review.md](../packages/agent-doc-rules-skill/references/factual-review.md).
-The focused E2E scenario is
+The E2E scenario for this rule is
 [factual-change-rejection](../e2e/factual-change-rejection/criteria.md). It asks
 the agent to add Node.js 24 to the README while `package.json` only supports
 `>=20 <24`. The expected output is no file changes and a clear warning.
@@ -73,15 +73,16 @@ Run `corepack pnpm run docs:check` for the configured documentation checks.
 ### Project Cleanup Checklist
 
 Open [docs/project-cleanup.md](project-cleanup.md) before finishing changes that
-affect multiple files or behavior. It checks documentation placement, command
-evidence, setup changes, implementation complexity, and test evidence.
+affect multiple files or behavior. The checklist covers documentation
+placement, command evidence, setup changes, implementation complexity, and test
+evidence.
 
 ### E2E Scenarios
 
 The [e2e/](../e2e/) workspace runs tests against prepared fixture projects with
-either an AI agent or a command runner. Agent scenarios have a prompt, criteria,
-fixture project, and snapshot. Command scenarios have a fixture project,
-`scenario.json`, and optional output snapshots.
+either an AI agent or a command runner. Agent scenarios have `prompt.md` or
+`turns/*.md`, criteria, a fixture project, and a snapshot. Command scenarios
+have a fixture project, `scenario.json`, and optional output snapshots.
 See [e2e/README.md](../e2e/README.md) for runner configuration and snapshot
 refresh rules.
 
@@ -92,8 +93,8 @@ Related references: `docs/e2e-failure-triage.md` for failed runs and
 
 Use `docs/rule-placement.md` when an E2E failure or code review finding raises
 uncertainty about where to document or enforce a rule. It explains when to
-change always-loaded `SKILL.md`, a loaded reference, maintainer docs, test
-criteria, fixtures, or deterministic tooling.
+change always-loaded `SKILL.md`, required skill references, maintainer docs,
+test criteria, fixtures, or deterministic tooling.
 
 ### Maintainer Skill Sync
 
@@ -185,7 +186,7 @@ Before publishing, verify these items:
 - Run `corepack pnpm run test:install`.
 - Check that `npx skills add . --list` discovers `agent-doc-rules`.
 - Check that `corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run`
-  contains only the public skill artifact.
+  contains only files needed to install the public skill.
 - Check that `corepack pnpm --dir packages/docs-validator pack --dry-run`
   contains only the public validator package files.
 - Check that `corepack pnpm --dir packages/docs-duplicates pack --dry-run`

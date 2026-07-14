@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+## v0.9.0 - 2026-07-14
+
+- Added decision-record guidance and a starter template for accepted
+  trade-offs, rule exceptions, user-approved shortcuts, and lasting validation
+  suppressions.
+- Required active decision records to be linked from affected code,
+  configuration, documentation, or agent instructions.
+- Added a shortcut quality gate that requires agents to explain the trade-off,
+  consequence, remaining risk, and repair path before applying a faster path
+  that knowingly leaves debt.
+- Added multi-turn agent E2E scenarios with per-turn snapshots, including a
+  shortcut-confirmation flow that tests explicit user confirmation before a
+  temporary validation workaround is applied.
+- Removed explicit skill-selection hints from agent E2E prompts so Codex
+  scenarios exercise natural skill discovery.
+- Updated agent E2E snapshots to use `snapshot/turn-XX/` directories and removed
+  the old top-level `snapshot/files/` layout.
+- Made the full `test:agent` script run scenario projects serially to reduce
+  model-backed runner noise.
+- Added optional `ignorePairs.reason` support to the semantic duplicate checker
+  for linking durable exceptions to decision records.
+- Tightened root `AGENTS.md`, no-op review, notes-triage, and README conflict
+  guidance based on E2E failures.
+
 ## v0.8.2 - 2026-06-28
 
 - Prepared the documentation validator and semantic duplicate checker for

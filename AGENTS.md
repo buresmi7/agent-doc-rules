@@ -89,9 +89,9 @@ Keep generated maintainer skill files and their source links documented in
   lockfile, not generated external skill copies.
 - Update `pnpm-lock.yaml` when workspace metadata or project skill package
   dependencies change.
-- Use `docs/project-cleanup.md` before finishing changes to docs, skills,
-  validation tools, E2E tests, installation documentation, release workflows, or
-  runtime behavior that affect more than one file.
+- Use `docs/project-cleanup.md` before finishing changes that affect more than
+  one file, including docs, skills, validators, E2E tests, installation docs,
+  release workflows, or runtime behavior.
 - Before finishing, run `corepack pnpm test`.
 - For documentation validation changes, also run `corepack pnpm run
   docs:check`.

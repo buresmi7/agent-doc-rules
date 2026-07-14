@@ -42,9 +42,12 @@ Use E2E fixture `project/` files for project evidence. Fixtures should contain
 the facts the agent may rely on. Do not hide expected behavior in fixture prose
 unless a real consuming repository would say it that way.
 
-Use E2E `prompt.md` files for natural user requests. Do not spell out the
-expected implementation there unless the scenario is testing direct compliance
-with a user instruction.
+Use E2E `prompt.md` or `turns/*.md` files for natural user requests. Do not
+name the skill, loaded references, target files, or exact artifact the agent
+should create unless the scenario is testing direct compliance with an explicit
+user instruction. Do not mirror criteria wording in prompts, such as asking for
+the exact rationale, status, backlink, or revisit fields the criteria will
+judge. Keep expected implementation details in criteria, not prompts.
 
 Use deterministic tooling when the failure is mechanical: broken links, missing
 package metadata, stale paths, invalid Markdown, unsafe generated paths, or

@@ -1,0 +1,16 @@
+Accepted the temporary validation workaround and kept it narrow.
+
+Changed `agent-doc-rules.config.json` to add one duplicate-doc `ignorePairs`
+entry for only `README.md` and `docs/setup.md`. The reason links to the new
+decision record.
+
+Added `docs/decisions/temporary-setup-duplicate-ignore.md` to record the
+accepted trade-off: while this exception remains, duplicate-doc review will no
+longer catch drift between the setup steps in `README.md` and `docs/setup.md`.
+The repair path is still to move those repeated setup steps into one canonical
+getting-started page, link to it from both files, and then remove the ignore
+pair.
+
+I could not run `npm run docs:check` in this read-only harness. Residual risk:
+the proposed config and Markdown have not been verified by the repository's
+validator in this turn.

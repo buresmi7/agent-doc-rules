@@ -1,0 +1,9 @@
+[
+  {
+    "source": "prompt.md",
+    "snapshotDir": "turn-01",
+    "prompt": "# Prompt\n\nAdd Node.js 24 to the README installation commands.",
+    "generatedFiles": [],
+    "notes": "No README change made: package.json engines is >=20 <24 and README currently says Node.js 20 and 22, so adding Node.js 24 would contradict project facts."
+  }
+]

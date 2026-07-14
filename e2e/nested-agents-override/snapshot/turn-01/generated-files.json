@@ -1,0 +1,10 @@
+[
+  {
+    "path": "AGENTS.md",
+    "content": "# Beacon Workspace - AI Agent Instructions\n\nBeacon Workspace contains a small API package and a CSV importer package.\n\n## Shared Rules\n\n- Follow the installed [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).\n\n## Local Rules\n\n- Keep package-specific rules near the package they govern.\n- Before changing `packages/importer/`, read `packages/importer/AGENTS.md`.\n- Preserve existing package README facts; do not invent hidden services or workflows.\n\n## Source Of Truth\n\n- `README.md` lists workspace packages and root verification.\n- `packages/api/README.md` describes the API notes package.\n- `packages/importer/README.md` describes importer behavior.\n- `packages/importer/docs/schema.md` defines importer input and output fields.\n\n## Verification\n\n- Run `npm test` from the workspace root for general changes.\n- If a check cannot run, document the reason and remaining risk before finishing.\n"
+  },
+  {
+    "path": "packages/importer/AGENTS.md",
+    "content": "# Beacon Importer - AI Agent Instructions\n\nBeacon Importer converts partner CSV files into normalized JSON records.\n\n## Local Rules\n\n- Read `packages/importer/docs/schema.md` before changing parser output.\n- Keep sample rows anonymous.\n- Keep importer-specific guidance in this directory or its docs.\n\n## Verification\n\n- Run `npm run test:importer` before finishing importer behavior changes.\n- If the importer check cannot run, document the reason and remaining risk.\n"
+  }
+]

@@ -9,6 +9,7 @@ Use this page to choose the smallest `agent-doc-rules` surface for a task.
 | Shape a README | `$agent-doc-rules` plus [`references/readme-rules.md`](../references/readme-rules.md) | Keeps the README as a human entry point. |
 | Review a README | `$agent-doc-rules` plus [`references/readme-rubric.md`](../references/readme-rubric.md) | Finds stale commands, missing orientation, placeholders, and overlong sections. |
 | Decide where a fact belongs | [`docs/context-placement.md`](context-placement.md) | Separates README, docs, `AGENTS.md`, skills, references, and templates. |
+| Record an accepted trade-off | [`references/decision-records.md`](../references/decision-records.md) and [`assets/templates/decision-record.md`](../assets/templates/decision-record.md) | Keeps lasting compromises visible from the affected code or docs. |
 | Repair bloated docs | [`references/doc-audit.md`](../references/doc-audit.md) | Moves durable facts to canonical homes and removes duplicated leftovers. |
 | Check factual claims | [`references/factual-review.md`](../references/factual-review.md) | Compares docs against local evidence and rejects unsupported edits. |
 | Review documentation security risks | [`references/security-review.md`](../references/security-review.md) and `agent-doc-rules-docs security` | Finds agent-instruction abuse, data leaks, validation bypasses, and tracking assets. |
@@ -56,6 +57,12 @@ Place facts from notes:
 
 ```text
 Use $agent-doc-rules to move durable facts from notes.md into README, docs, AGENTS, or a project skill.
+```
+
+Record a compromise:
+
+```text
+Use $agent-doc-rules to record the accepted shortcut and link it from the affected docs.
 ```
 
 Run factual review:

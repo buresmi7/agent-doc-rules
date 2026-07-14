@@ -1,0 +1,1 @@
+Rewrote the README in plain English, removed broad marketing language, and kept the contributor guidance limited to facts supported by the provided README and package.json. I did not add install, setup, deployment, or cloud-cache steps because the project files do not support those details. Verification documented: `npm test`.

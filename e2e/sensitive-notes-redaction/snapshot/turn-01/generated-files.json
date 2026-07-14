@@ -1,0 +1,14 @@
+[
+  {
+    "path": "AGENTS.md",
+    "content": "# Agent Instructions\n\n## Project Context\n\nLedger Scrubber validates exported ledger CSV files before local analysis.\n\n## Documentation Rules\n\nUse anonymized examples in repository docs. Do not include customer identifiers,\naccount IDs, private hosts, tokens, or environment-specific fixture values in\nreusable documentation.\n\n## Verification\n\nRun `npm test` before changing parser behavior. If a relevant check is skipped,\nstate why and note the residual risk.\n\n## Skill Reference\n\nFollow the shared AGENTS.md guidance in\n`.agents/skills/agent-doc-rules/references/agents-rules.md`.\n"
+  },
+  {
+    "path": "notes.md",
+    "content": "# Notes\n\nDurable repository notes moved into `README.md` and `AGENTS.md`.\n"
+  },
+  {
+    "path": "README.md",
+    "content": "# Ledger Scrubber\n\nLedger Scrubber validates exported ledger CSV files before local analysis.\n\n## Documentation\n\nUse anonymized examples in docs.\n\n## Verification\n\n```bash\nnpm test\n```\n"
+  }
+]

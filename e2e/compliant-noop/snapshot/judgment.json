@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "No documentation changes were necessary. Verified with npm run docs:check.",
-  "judgeNotes": "No generated files were returned, so the compliant repository was left unchanged. This satisfies the noop requirement and avoids adding duplicate docs, invented workflows, or style-only rewrites."
+  "generatorNotes": "Reviewed AGENTS.md, README.md, docs/style.md, and package.json against the repository rules and manifests. No documentation changes are necessary: the docs are short, factual, linked to the right canonical sources, and the documented docs:check command exists. Verification passed with npm run docs:check.",
+  "judgeNotes": "The generator made no repository file changes, added no extra docs or workflows, preserved the existing compliant README and AGENTS.md, and did not invent unsupported facts. The verification note is supported by package.json's docs:check script."
 }
