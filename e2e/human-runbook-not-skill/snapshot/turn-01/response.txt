@@ -1,0 +1,7 @@
+Cleaned up the docs:
+
+- [README.md](<project>/README.md) now has a short project overview, canonical docs table, and verified docs check.
+- Added [docs/restore-staging-backup.md](<project>/docs/restore-staging-backup.md) as the human restore runbook.
+- Added [AGENTS.md](<project>/AGENTS.md) with concise agent guidance, safety rules, source-of-truth links, and the required shared-rule reference.
+
+Verification passed: `npm run docs:check`.

@@ -1,0 +1,112 @@
+[
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "file_change",
+    "status": "completed",
+    "changes": [
+      {
+        "path": "AGENTS.md",
+        "kind": "add"
+      },
+      {
+        "path": "packages/importer/AGENTS.md",
+        "kind": "add"
+      }
+    ]
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "npm test",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "npm run test:importer",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 1,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 128,
+    "status": "failed"
+  }
+]

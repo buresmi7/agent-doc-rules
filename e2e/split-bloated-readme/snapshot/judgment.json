@@ -2,9 +2,9 @@
   "scenario": "split-bloated-readme",
   "runner": "codex",
   "pass": true,
-  "score": 0.96,
+  "score": 0.95,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Split the bloated README into a short entry point, agent rules, architecture, and operations docs. Named `npm test`; no `docs:check` script is declared.",
-  "judgeNotes": "The generated docs split the bloated README into a concise entry point, route architecture and operations detail into docs, preserve npm test as the only README command, keep AGENTS.md short with local rules, link to the installed AGENTS.md reference, and avoid duplicated contracts or invented sensitive details. Minor residual concern: operations still mentions the replay dry run from the original context, but it clearly notes that package.json does not currently declare that script."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Make the repository documentation easier to maintain.\nFiles: AGENTS.md, docs/operations.md, README.md\nAgent: Updated the repo docs to separate stable concerns:\n\n- [README.md](<project>/README.md) is now a short entry point with a canonical docs index, quick test command, and project overview.\n- [AGENTS.md](<project>/AGENTS.md) now holds the agent rules, safety boundaries, source-of-truth links, and verification notes.\n- [docs/operations.md](<project>/docs/operations.md) now owns release checks and troubleshooting notes.\n\nI removed unsupported actionable steps for `npm run replay` and changelog updates because `package.json` only exposes `npm test`, and no changelog file exists in this checkout.\n\nVerification:\n- `npm test` passed, reporting zero tests.\n- Manual relative-link checks passed.\n- No `docs:check` script exists.",
+  "judgeNotes": "The final state satisfies the critical criteria: README is concise, keeps only npm test as the supported command, routes durable operations material to docs/operations.md, creates a short AGENTS.md with local rules and links to shared references, preserves the billing contract as source of truth, avoids raw payloads/customer data/invented infrastructure, and uses plain documentation. Minor residual risk: README still contains a short architecture summary, but it is brief entry-point context rather than duplicated durable docs."
 }

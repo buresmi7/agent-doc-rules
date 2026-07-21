@@ -1,0 +1,9 @@
+{
+  "name": "busy-friday",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@agent-e2e-example/todo-cleaner": "file:../../../skills/todo-cleaner"
+  }
+}

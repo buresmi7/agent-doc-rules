@@ -1,0 +1,10 @@
+Organized the notes into durable docs:
+
+- Added [AGENTS.md](<project>/AGENTS.md) for agent routing, local safety rules, and verification.
+- Expanded [docs/schema.md](<project>/docs/schema.md) with CSV input, JSON output, and dropped-row behavior.
+- Added [docs/architecture.md](<project>/docs/architecture.md) for the JSON rationale.
+- Added [docs/troubleshooting.md](<project>/docs/troubleshooting.md) for fixture failure checks.
+- Updated [README.md](<project>/README.md) with a compact docs index.
+- Reduced [notes.md](<project>/notes.md) to pointers so it no longer duplicates the durable facts.
+
+Verification: `npm test` passed. The suite currently contains zero tests, so this confirms the test runner starts cleanly. I also checked the local doc links target existing files.

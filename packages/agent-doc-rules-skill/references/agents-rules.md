@@ -24,6 +24,10 @@ It is a navigation layer, not full documentation.
   project-owned canonical docs.
 - When repairing a file that already copied shared rules, replace the copied
   block with a short `Shared Rules` section that links to the installed rule.
+- Before repairing a root file, compare it with the local README's project
+  constraints, source-of-truth links, and verification guidance. Preserve
+  supported local invariants and project-owned canonical links; brevity does
+  not justify dropping them.
 - State local overrides explicitly.
 - Prefer nested `AGENTS.md` files for directory-specific rules.
 - When adding a nested `AGENTS.md`, keep the root file short but point agents to

@@ -1,0 +1,13 @@
+Created concise agent instructions:
+
+- [AGENTS.md](<project>/AGENTS.md): root workspace orientation, shared rule link, source-of-truth routing, broad verification.
+- [packages/importer/AGENTS.md](<project>/packages/importer/AGENTS.md): importer-specific schema, anonymity, safety, and test rules.
+
+Verification passed:
+
+```bash
+npm test
+npm run test:importer
+```
+
+Note: `git status` was not available because this workspace path is not currently inside a Git repository.

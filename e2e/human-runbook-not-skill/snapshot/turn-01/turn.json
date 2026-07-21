@@ -1,20 +1,146 @@
 {
-  "source": "prompt.md",
+  "id": "request",
+  "source": "scenario.json#/turns/0",
   "snapshotDir": "turn-01",
-  "prompt": "# Prompt\n\nClean up the README and add concise agent guidance for this repository.",
-  "generatedFiles": [
+  "prompt": "Clean up the README and add concise agent guidance for this repository.",
+  "activity": [
     {
-      "path": "AGENTS.md",
-      "content": "# Harbor Backup Notes - AI Agent Instructions\n\nHarbor Backup Notes is documentation-only. It records human maintainer notes for\nstaging SQLite backup restores used during local documentation checks.\n\n## Skill Reference\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)\n\n## Local Rules\n\n- Keep the human restore runbook in `docs/staging-sqlite-restore.md`.\n- Do not copy the full restore procedure into `AGENTS.md` or generated agent\n  guidance.\n- Do not paste real customer data into examples or generated documentation.\n\n## Source Of Truth\n\n| Document | Content |\n| --- | --- |\n| `README.md` | Project overview and canonical docs index |\n| `docs/staging-sqlite-restore.md` | Human staging SQLite restore runbook |\n| `package.json` | Available npm scripts |\n\n## Verification\n\nFor documentation changes, run:\n\n```bash\nnpm run docs:check\n```\n\nIf a check cannot run, state the blocker and the remaining risk.\n"
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
     },
     {
-      "path": "docs/staging-sqlite-restore.md",
-      "content": "# Staging SQLite Restore\n\nThis runbook is for human maintainers who restore a staging SQLite backup for\nlocal documentation checks.\n\n## Safety Boundaries\n\n- Confirm that the backup file was exported from the staging system, not\n  production.\n- Put the backup file in `tmp/restore/` and keep it out of Git.\n- Never paste real customer data into examples or generated documentation.\n\n## Procedure\n\n1. Put the staging SQLite backup file in `tmp/restore/`.\n2. Open the local admin screen.\n3. Choose the staging environment.\n4. Import the SQLite file.\n5. Run the smoke query.\n6. Delete the temporary backup file.\n"
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 128,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "pwd",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "find",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "ls",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "mkdir",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "file_change",
+      "status": "completed",
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "kind": "add"
+        },
+        {
+          "path": "README.md",
+          "kind": "update"
+        },
+        {
+          "path": "docs/restore-staging-backup.md",
+          "kind": "add"
+        }
+      ]
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "npm run docs:check",
+      "exitCode": 0,
+      "status": "completed"
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "content": "# Harbor Backup Notes - AI Agent Instructions\n\nHarbor Backup Notes is a documentation-only repository for staging SQLite\nbackup restore notes used during local documentation checks.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n\n## Local Rules\n\n- Keep the staging restore procedure in `docs/restore-staging-backup.md`; do not\n  copy the full runbook into agent instructions.\n- Do not commit backup files, customer data, production data, private host names,\n  tokens, or environment-specific values.\n- Do not paste real customer data into examples or generated documentation.\n\n## Source Of Truth\n\n| Document | Purpose |\n| --- | --- |\n| `README.md` | Project overview and verification command |\n| `docs/restore-staging-backup.md` | Human staging restore procedure |\n\n## Verification\n\nRun the documentation check before finishing doc changes:\n\n```bash\nnpm run docs:check\n```\n\nIf a check cannot run, report the blocker and what remains unverified.\n"
+    },
+    {
+      "path": "docs/restore-staging-backup.md",
+      "status": "created",
+      "content": "# Restore A Staging Backup\n\nThis procedure is for human maintainers who need to restore a staging SQLite\nbackup for local documentation checks.\n\n## Safety Rules\n\n- Confirm the backup file was exported from staging, not production.\n- Keep the backup file in `tmp/restore/`.\n- Do not commit backup files.\n- Do not paste real customer data into examples or generated documentation.\n\n## Procedure\n\n1. Put the staging SQLite backup file in `tmp/restore/`.\n2. Open the local admin screen.\n3. Choose the staging environment.\n4. Import the SQLite file.\n5. Run the smoke query.\n6. Delete the temporary backup file.\n"
     },
     {
       "path": "README.md",
-      "content": "# Harbor Backup Notes\n\nHarbor Backup Notes is a documentation-only repository for human maintainer\nnotes about restoring a staging SQLite backup for local documentation checks.\n\n## Canonical Docs\n\n| Document | Content |\n| --- | --- |\n| `README.md` | Project overview and first verification command |\n| `AGENTS.md` | Agent routing, local rules, and verification guidance |\n| `docs/staging-sqlite-restore.md` | Human staging SQLite restore runbook |\n\n## Verification\n\nRun the documentation check before publishing documentation changes:\n\n```bash\nnpm run docs:check\n```\n\n## Project Notes\n\nThe staging restore procedure is for human maintainers. It is not an agent\ndrafting workflow, and agents should not copy the full procedure into\n`AGENTS.md`.\n\nNever paste real customer data into examples or generated documentation.\n"
+      "status": "modified",
+      "content": "# Harbor Backup Notes\n\nHarbor Backup Notes is a documentation-only repository for staging SQLite\nbackup restore notes used during local documentation checks.\n\n## Canonical Docs\n\n| Document | Purpose |\n| --- | --- |\n| `README.md` | Project overview and verification command |\n| `docs/restore-staging-backup.md` | Human staging restore procedure |\n| `AGENTS.md` | Agent routing, local rules, and verification guidance |\n\n## Verification\n\nRun the repository documentation check before publishing doc changes:\n\n```bash\nnpm run docs:check\n```\n\n## Project Notes\n\n- The restore procedure is for human maintainers, not an agent drafting\n  workflow.\n- Keep backup files, customer data, and environment-specific values out of Git\n  and generated documentation.\n"
     }
   ],
-  "notes": "Cleaned the README, added concise AGENTS.md guidance, moved the human restore procedure to docs, and verified with `npm run docs:check`."
+  "response": "Cleaned up the docs:\n\n- [README.md](<project>/README.md) now has a short project overview, canonical docs table, and verified docs check.\n- Added [docs/restore-staging-backup.md](<project>/docs/restore-staging-backup.md) as the human restore runbook.\n- Added [AGENTS.md](<project>/AGENTS.md) with concise agent guidance, safety rules, source-of-truth links, and the required shared-rule reference.\n\nVerification passed: `npm run docs:check`."
 }

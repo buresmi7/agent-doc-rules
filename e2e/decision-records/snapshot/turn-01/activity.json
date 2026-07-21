@@ -1,0 +1,130 @@
+[
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "pwd",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "cat",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "file_change",
+    "status": "completed",
+    "changes": [
+      {
+        "path": "docs/decisions/in-memory-csv-exporter.md",
+        "kind": "add"
+      },
+      {
+        "path": "docs/export-format.md",
+        "kind": "update"
+      }
+    ]
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 1,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "npm test",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 128,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 1,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "ls",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 128,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 1,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "nl",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "nl",
+    "exitCode": 0,
+    "status": "completed"
+  }
+]

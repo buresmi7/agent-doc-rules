@@ -151,12 +151,18 @@ A good skill contains:
 - templates or scripts when they reduce repeated work.
 
 When creating a skill from an existing README or doc, move the workflow into
-`.agents/skills/<name>/SKILL.md` and leave only a short link from human docs or
-`AGENTS.md`.
+`.agents/skills/<name>/SKILL.md` and replace the workflow at its original
+location with a short link to the skill. This preserves discoverability without
+keeping two copies of the instructions.
 
 When a project gets a new local skill, create or update `AGENTS.md` so agents
 can route to it from always-loaded context. Keep the `AGENTS.md` entry to one or
 two bullets and link to the skill instead of copying the workflow.
+
+Treat workflow extraction as relocation, not execution. Do not run the new
+skill or create the workflow's output unless the user also requested that
+outcome. Repository metadata or a placeholder package version does not identify
+a release, deployment, migration, or other workflow target by itself.
 
 Do not create a skill for facts that should be visible to humans first. Do not
 create a skill for one-off project notes or ordinary human runbooks.

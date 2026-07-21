@@ -5,7 +5,7 @@ creates a daily Markdown summary for operators.
 
 ## Shared Rules
 
-- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).
 
 ## Local Rules
 
@@ -17,8 +17,8 @@ creates a daily Markdown summary for operators.
 ## Source Of Truth
 
 - Product behavior lives in [README.md](README.md).
-- Operational procedures live in [docs/runbooks/](docs/runbooks/).
-- Architecture decisions live in [docs/decisions/](docs/decisions/).
+- Operational procedures live in `docs/runbooks/`.
+- Architecture decisions live in `docs/decisions/`.
 
 ## Verification
 

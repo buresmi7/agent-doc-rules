@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "docs:check": "echo docs ok",
-    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+    "test:agent": "agent-e2e-runner agent --config ../../../agent-e2e.config.mjs --repo-root ../../.. --scenario .. --project . --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
+  },
+  "devDependencies": {
+    "@buresmi7/agent-e2e-runner": "workspace:*"
   },
   "dependencies": {
     "@buresmi7/agent-doc-rules-skill": "workspace:*"

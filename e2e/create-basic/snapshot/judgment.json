@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Created a short root AGENTS.md from the repository README and package manifest facts. Verification: `npm test` passed with Node's test runner and reported 0 tests.",
-  "judgeNotes": "The generated AGENTS.md is concise, complete, links to the installed shared AGENTS rules, preserves all local README rules and source-of-truth guidance, includes verification expectations, and does not introduce unsupported workflows or copied shared-rule text."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Create a short root `AGENTS.md` for this repository.\nFiles: AGENTS.md\nAgent: Created [AGENTS.md](<project>/AGENTS.md) at the repo root.\n\nIt includes the project orientation, required `Shared Rules` link, local rules, source-of-truth pointers, and verification guidance.\n\nVerification: `npm test` passed, with Node reporting 0 tests.",
+  "judgeNotes": "The created root AGENTS.md is concise, links to the installed shared rules path, includes all README-derived local rules, source-of-truth guidance, and verification guidance, and does not copy shared rules or invent unsupported workflows."
 }

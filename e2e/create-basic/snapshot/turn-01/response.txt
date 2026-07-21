@@ -1,0 +1,5 @@
+Created [AGENTS.md](<project>/AGENTS.md) at the repo root.
+
+It includes the project orientation, required `Shared Rules` link, local rules, source-of-truth pointers, and verification guidance.
+
+Verification: `npm test` passed, with Node reporting 0 tests.

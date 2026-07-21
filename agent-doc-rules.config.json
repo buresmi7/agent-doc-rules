@@ -109,12 +109,7 @@
         {
           "left": "^e2e/",
           "right": "^e2e/",
-          "reason": "E2E fixtures, prompts, and criteria intentionally repeat scenario facts."
-        },
-        {
-          "left": "^e2e/.*/criteria\\.md$",
-          "right": "^packages/agent-doc-rules-skill/(README\\.md|SKILL\\.md|docs/|references/)",
-          "reason": "E2E criteria intentionally restate the durable rule they protect."
+          "reason": "E2E fixture documents intentionally repeat scenario facts."
         },
         {
           "left": "^e2e/create-basic/project/README\\.md$",
@@ -125,11 +120,6 @@
           "left": "^e2e/local-language-override/project/project-notes\\.md$",
           "right": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
           "reason": "The local-language fixture intentionally mirrors the recipe rule it exercises."
-        },
-        {
-          "left": "^docs/development\\.md$",
-          "right": "^e2e/factual-change-rejection/prompt\\.md$",
-          "reason": "The development guide intentionally summarizes the factual-change rejection fixture."
         },
         {
           "left": "^CHANGELOG\\.md$",

@@ -53,7 +53,7 @@ file. It should report the contradiction and name the evidence instead. The
 canonical rule lives in
 [factual-review.md](../packages/agent-doc-rules-skill/references/factual-review.md).
 The E2E scenario for this rule is
-[factual-change-rejection](../e2e/factual-change-rejection/criteria.md). It asks
+[factual-change-rejection](../e2e/factual-change-rejection/scenario.json). It asks
 the agent to add Node.js 24 to the README while `package.json` only supports
 `>=20 <24`. The expected output is no file changes and a clear warning.
 
@@ -74,15 +74,16 @@ Run `corepack pnpm run docs:check` for the configured documentation checks.
 
 Open [docs/project-cleanup.md](project-cleanup.md) before finishing changes that
 affect multiple files or behavior. The checklist covers documentation
-placement, command evidence, setup changes, implementation complexity, and test
-evidence.
+placement, command evidence, setup changes, whether nearby code should be
+simplified or split, and test evidence.
 
 ### E2E Scenarios
 
 The [e2e/](../e2e/) workspace runs tests against prepared fixture projects with
-either an AI agent or a command runner. Agent scenarios have `prompt.md` or
-`turns/*.md`, criteria, a fixture project, and a snapshot. Command scenarios
-have a fixture project, `scenario.json`, and optional output snapshots.
+either an AI agent or a command runner. Both use `scenario.json`: agent
+scenarios define ordered prompts and named criteria, while command scenarios
+define a command and deterministic expectations. Each scenario also has a
+fixture project and may have snapshots.
 See [e2e/README.md](../e2e/README.md) for runner configuration and snapshot
 refresh rules.
 
@@ -141,12 +142,13 @@ snapshot metadata.
 | [`packages/agent-doc-rules-skill/assets/templates/`](../packages/agent-doc-rules-skill/assets/templates/) | Starter templates shipped with the skill. |
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
+| [`packages/agent-e2e-runner/`](../packages/agent-e2e-runner/) | Reusable CLI and library for agent and command E2E scenarios. |
 | [`e2e/`](../e2e/) | Agent and command E2E scenarios for documentation and context placement behavior. |
 | [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | Maintainer workflow for diagnosing failed agent E2E scenarios. |
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |
 | [`docs/rule-placement.md`](rule-placement.md) | Rubric for deciding whether a behavior belongs in `SKILL.md`, references, docs, criteria, fixtures, or tooling. |
 | [`docs/project-cleanup.md`](project-cleanup.md) | Maintainer checklist for making cleanup part of development. |
-| [`tools/`](../tools/) | Monorepo support scripts and shared E2E runner. |
+| [`tools/`](../tools/) | Monorepo support scripts and E2E wrappers for this repository. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
 ## Canonical Docs
@@ -191,14 +193,19 @@ Before publishing, verify these items:
   contains only the public validator package files.
 - Check that `corepack pnpm --dir packages/docs-duplicates pack --dry-run`
   contains only the public duplicate-checker package files.
+- Check that `corepack pnpm --dir packages/agent-e2e-runner pack --dry-run`
+  contains only the public E2E runner package files.
+- Check that the E2E runner README install command and dependency example use
+  the npm version being published rather than `workspace:*`.
 - Review external maintainer skills if
   `packages/agent-doc-rules-skill/package.json` or `skills-lock.json` changed.
 - Update `CHANGELOG.md` for released skill or template behavior changes.
 - Check that reusable skill content contains no secrets, private environment
   details, or unsupported project-specific rules.
 - After the tag is pushed and npm auth is available, publish from
-  `packages/agent-doc-rules-skill/`, `packages/docs-validator/`, and
-  `packages/docs-duplicates/` with `npm publish --access public`.
+  `packages/agent-doc-rules-skill/`, `packages/docs-validator/`,
+  `packages/docs-duplicates/`, and `packages/agent-e2e-runner/` with
+  `npm publish --access public`.
 
 ## Maintainers
 

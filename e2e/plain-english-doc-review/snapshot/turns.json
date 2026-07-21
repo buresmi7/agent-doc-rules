@@ -1,14 +1,82 @@
 [
   {
-    "source": "prompt.md",
+    "id": "request",
+    "source": "scenario.json#/turns/0",
     "snapshotDir": "turn-01",
-    "prompt": "# Prompt\n\nImprove the README so it is easier for a new contributor to understand.",
-    "generatedFiles": [
+    "prompt": "Improve the README so it is easier for a new contributor to understand.",
+    "activity": [
       {
-        "path": "README.md",
-        "content": "# Signal Cache\n\nSignal Cache stores recent event signals in memory and exposes a lookup helper\nused by tests. This repository is a small private Node.js package for that cache\nbehavior.\n\n## Repository Role\n\nThe project is not a cloud cache service. It does not include deployment code,\ncloud-cache integration, or runtime infrastructure scripts.\n\nUse this repository to understand, change, and test the in-memory signal cache\nlogic that exists in the source files.\n\n## Verification\n\nRun the test suite with:\n\n```bash\nnpm test\n```\n\nThe `test` script is defined in `package.json` as `node --test`.\n\n## Project Notes\n\nDo not document deployment steps or cloud-cache behavior unless the repository\nadds those features first. Keep new contributor instructions tied to commands and\nbehavior that are present in the project files.\n"
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "pwd",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "find",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "file_change",
+        "status": "completed",
+        "changes": [
+          {
+            "path": "README.md",
+            "kind": "update"
+          }
+        ]
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm test",
+        "exitCode": 0,
+        "status": "completed"
       }
     ],
-    "notes": "Rewrote the README in plain English, removed broad marketing language, and kept the contributor guidance limited to facts supported by the provided README and package.json. I did not add install, setup, deployment, or cloud-cache steps because the project files do not support those details. Verification documented: `npm test`."
+    "changes": [
+      {
+        "path": "README.md",
+        "status": "modified",
+        "content": "# Signal Cache\n\nSignal Cache is a small in-memory cache for recent event signals. The project\ncurrently exposes a lookup helper used by tests.\n\n## Repository Scope\n\nThis repository does not include deployment code or a cloud cache integration.\nDo not document those workflows unless the repository adds them first.\n\n## Verification\n\nRun the test script from the repository root:\n\n```bash\nnpm test\n```\n"
+      }
+    ],
+    "response": "Updated [README.md](<project>/README.md) to explain the project plainly, clarify the repository scope, and keep only the supported verification command.\n\nVerified with `npm test`; it passes, though the current test suite contains 0 tests."
   }
 ]

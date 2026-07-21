@@ -1,0 +1,6 @@
+Created [AGENTS.md](<project>/AGENTS.md) with a concise project orientation, shared-rules link, local rules, source-of-truth pointers, and verification guidance.
+
+Verification:
+- `npm test` passed.
+- `npm run docs:check` failed on pre-existing line-length errors in `.agents/skills/agent-doc-rules/...`; the new `AGENTS.md` was not reported in the failures.
+- A direct `npx markdownlint-cli2 AGENTS.md` check could not run because `markdownlint-cli2` is not exposed as a local binary.

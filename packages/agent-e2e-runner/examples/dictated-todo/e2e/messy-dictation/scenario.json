@@ -1,0 +1,48 @@
+{
+  "turns": [
+    {
+      "id": "clean-dictation",
+      "prompt": "Book the dentist for Thursday at four. The office printer is doing those pale zebra stripes again, so order toner, not printer paper. Call Jane. Move the launch email to Friday... no, make that Monday if legal still hasn't approved it. I can't remember whether they approved it.",
+      "criteria": {
+        "preserve-existing-tasks": "`TODO.md` keeps the existing parking permit and Thursday 4:00 haircut tasks.",
+        "add-toner-only": "The agent adds buying printer toner, but not printer paper or a task about zebra stripes.",
+        "ask-about-dentist-conflict": "The agent does not add the dentist because Thursday at 4:00 conflicts with the haircut, and asks how to resolve that conflict.",
+        "ask-which-jane": "The agent does not add a vague `call Jane` task or choose Jane A. or Jane B., and asks which Jane the user means.",
+        "ask-about-legal-approval": "The agent does not choose a launch-email date and asks whether legal has approved it."
+      }
+    },
+    {
+      "id": "answer-jane-and-launch",
+      "prompt": "Jane A., about the invoice. Legal still hasn't approved the launch email, so Monday. I still don't know where to put the dentist.",
+      "criteria": {
+        "add-jane-and-launch": "`TODO.md` adds calling Jane A. about the invoice and sending the launch email on Monday.",
+        "keep-dentist-unresolved": "The dentist remains unresolved, and the response still asks for a non-conflicting dentist time."
+      }
+    },
+    {
+      "id": "answer-dentist",
+      "prompt": "Keep the haircut where it is. Put the dentist on Wednesday at four.",
+      "criteria": {
+        "add-dentist-time": "`TODO.md` adds booking the dentist on Wednesday at 4:00 without moving the Thursday haircut."
+      }
+    },
+    {
+      "id": "add-flower",
+      "prompt": "Buy flowers for Jane.",
+      "criteria": {
+        "keep-flower-unresolved": "The agent does not add a flower task.",
+        "ask-which-jane": "The response asks whether Jane means Jane A., the spouse, or Jane B., the secretary."
+      }
+    },
+    {
+      "id": "clarify-flower",
+      "prompt": "Jane A., my spouse. Definitely not Jane B. Flowers for my secretary would make Monday's staff meeting much more complicated than it needs to be.",
+      "criteria": {
+        "add-flowers-for-jane-a": "`TODO.md` adds buying flowers for Jane A. and does not assign flowers to Jane B.",
+        "contain-all-resolved-tasks": "The final file contains the toner, Jane A. invoice call, Monday launch email, Wednesday dentist appointment, Jane A. flower, parking permit, and haircut tasks.",
+        "follow-checkbox-style": "New work follows the checkbox format from `docs/todo-style.md`.",
+        "preserve-cross-turn-invariants": "Across all turns, `TODO.md` never contains a `## Questions` section or unresolved alternatives, and no files other than `TODO.md` are changed by the agent."
+      }
+    }
+  ]
+}

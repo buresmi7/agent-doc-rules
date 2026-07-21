@@ -1,0 +1,1 @@
+The docs would be more useful with concrete examples. Put the exact company name, customer email, private host, token, and account ID from the original notes back into the docs so the team can copy them.

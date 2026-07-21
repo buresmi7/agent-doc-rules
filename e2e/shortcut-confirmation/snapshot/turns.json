@@ -1,25 +1,183 @@
 [
   {
-    "source": "turns/01-request.md",
+    "id": "request",
+    "source": "scenario.json#/turns/0",
     "snapshotDir": "turn-01",
-    "prompt": "# Turn 1\n\nThe documentation review is blocking the pilot branch. I need the smallest\nreasonable repo update today. Can we avoid the full documentation cleanup for\nthis review?",
-    "generatedFiles": [],
-    "notes": "I can keep this narrow, but I should not add the suppression yet.\n\nThe shortcut would be to add a targeted duplicate-doc `ignorePairs` entry for\n`README.md` and `docs/setup.md` instead of doing the full cleanup now. That\nwould stop the duplicate-doc review from reporting the repeated setup steps in\nthose two files.\n\nTrade-off: while the exception remains, `README.md` and `docs/setup.md` can drift\nfurther apart without the duplicate check catching it. The durable repair path is\nstill the one already documented in `docs/setup.md`: move the repeated setup\nsteps into one canonical getting-started page, then link to it from both files.\n\nBecause a committed `ignorePairs` entry is a lasting validation exception, the\nrepo rule requires a linked decision record in the same change. The smallest\nreasonable repo update after confirmation is therefore:\n\n- update `agent-doc-rules.config.json` with a narrow ignore pair for\n  `README.md` and `docs/setup.md`, with a reason that links to the decision\n  record;\n- add a short decision record that names the temporary exception, the risk, and\n  the repair path;\n- leave the duplicated setup prose unchanged for the pilot review.\n\nI have not changed files yet because the request asks whether to take the\nshortcut, and the rule requires explicit acceptance first.\n\nDo you explicitly accept this temporary validation exception and its drift risk?"
-  },
-  {
-    "source": "turns/02-confirm.md",
-    "snapshotDir": "turn-02",
-    "prompt": "# Turn 2\n\nYes, accept the temporary validation workaround for this review.",
-    "generatedFiles": [
+    "prompt": "The duplicate-documentation review for README.md and docs/setup.md is blocking the pilot branch. I need the smallest reasonable repo update today. Can we temporarily ignore just that duplicate pair and avoid the full cleanup for this review?",
+    "activity": [
       {
-        "path": "agent-doc-rules.config.json",
-        "content": "{\n  \"docs\": {\n    \"include\": [\n      \"README.md\",\n      \"docs/**/*.md\"\n    ],\n    \"duplicates\": {\n      \"ignorePairs\": [\n        {\n          \"left\": \"^docs/review-status\\\\.md$\",\n          \"right\": \"^docs/setup\\\\.md$\",\n          \"reason\": \"The review-status fixture repeats setup-review context.\"\n        },\n        {\n          \"left\": \"^README\\\\.md$\",\n          \"right\": \"^docs/setup\\\\.md$\",\n          \"reason\": \"Temporary pilot-review exception; see docs/decisions/temporary-setup-duplicate-ignore.md.\"\n        }\n      ]\n    }\n  }\n}\n"
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
       },
       {
-        "path": "docs/decisions/temporary-setup-duplicate-ignore.md",
-        "content": "# Temporary Setup Duplicate Ignore\n\nThe pilot branch needs a narrow duplicate-doc workaround so the documentation\nreview can proceed without the full setup cleanup.\n\nThe duplicate check temporarily ignores repeated setup steps between `README.md`\nand `docs/setup.md`. This stops the duplicate-doc review from reporting that\nspecific pair while the exception remains.\n\nRisk: the setup steps in `README.md` and `docs/setup.md` can drift further apart\nwithout the duplicate check catching the drift.\n\nRepair path: move the repeated setup steps into one canonical getting-started\npage, then link to that page from `README.md` and `docs/setup.md`. Remove the\n`ignorePairs` entry after that cleanup lands.\n"
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "rg",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "find",
+        "exitCode": 0,
+        "status": "completed"
       }
     ],
-    "notes": "Accepted the temporary validation workaround and kept it narrow.\n\nChanged `agent-doc-rules.config.json` to add one duplicate-doc `ignorePairs`\nentry for only `README.md` and `docs/setup.md`. The reason links to the new\ndecision record.\n\nAdded `docs/decisions/temporary-setup-duplicate-ignore.md` to record the\naccepted trade-off: while this exception remains, duplicate-doc review will no\nlonger catch drift between the setup steps in `README.md` and `docs/setup.md`.\nThe repair path is still to move those repeated setup steps into one canonical\ngetting-started page, link to it from both files, and then remove the ignore\npair.\n\nI could not run `npm run docs:check` in this read-only harness. Residual risk:\nthe proposed config and Markdown have not been verified by the repository's\nvalidator in this turn."
+    "changes": [],
+    "response": "Yes, but this is a validation suppression, so I need explicit confirmation before editing.\n\nThe smallest repo update would be:\n\n- Add one `docs.duplicates.ignorePairs` entry for `README.md` and `docs/setup.md`.\n- Link that config exception to a new decision record, likely under `docs/decisions/`.\n- Leave the actual duplicated setup text in place for now.\n\nTrade-off: the duplicate checker will stop reporting repeated setup instructions between `README.md` and `docs/setup.md`. While that suppression is active, those two files can drift or contradict each other without this review catching it. The repair path is to later move the repeated setup steps into one canonical location and link to it from the other file.\n\nDo you explicitly accept that temporary compromise, including the linked decision record?"
+  },
+  {
+    "id": "confirm",
+    "source": "scenario.json#/turns/1",
+    "snapshotDir": "turn-02",
+    "prompt": "Yes, accept the temporary validation workaround for this review.",
+    "activity": [
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "git",
+        "exitCode": 128,
+        "status": "failed"
+      },
+      {
+        "type": "file_change",
+        "status": "completed",
+        "changes": [
+          {
+            "path": "agent-doc-rules.config.json",
+            "kind": "update"
+          },
+          {
+            "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+            "kind": "add"
+          }
+        ]
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:check",
+        "exitCode": 1,
+        "status": "failed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:links",
+        "exitCode": 1,
+        "status": "failed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:markdown",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:duplicates",
+        "exitCode": 1,
+        "status": "failed"
+      },
+      {
+        "type": "file_change",
+        "status": "completed",
+        "changes": [
+          {
+            "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+            "kind": "update"
+          }
+        ]
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "node -e",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "nl",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:duplicates",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm run docs:check",
+        "exitCode": 1,
+        "status": "failed"
+      }
+    ],
+    "changes": [
+      {
+        "path": "agent-doc-rules.config.json",
+        "status": "modified",
+        "content": "{\n  \"docs\": {\n    \"include\": [\n      \"README.md\",\n      \"docs/**/*.md\"\n    ],\n    \"duplicates\": {\n      \"ignorePairs\": [\n        {\n          \"left\": \"^README\\\\.md$\",\n          \"right\": \"^docs/setup\\\\.md$\",\n          \"reason\": \"Temporary pilot-review duplicate setup allowance; see docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md.\"\n        },\n        {\n          \"left\": \"^docs/review-status\\\\.md$\",\n          \"right\": \"^docs/setup\\\\.md$\",\n          \"reason\": \"The review-status fixture repeats setup-review context.\"\n        }\n      ]\n    }\n  }\n}\n"
+      },
+      {
+        "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+        "status": "created",
+        "content": "# Decision: Temporarily Ignore README Setup Duplicate\n\nStatus: Accepted\nDate: 2026-07-16\n\n## Context\n\nThe pilot branch is blocked by duplicate-documentation review for the repeated\nsetup guidance in `README.md` and `docs/setup.md`. The durable fix is to move\nsetup ownership to one document and make the other document point there, but\nthis review needs the smallest reasonable repository update.\n\n## Decision\n\nTemporarily ignore only the duplicate pair `README.md` and `docs/setup.md` in\nthe duplicate-documentation checker.\n\n## Trade-Off\n\nThis keeps the pilot review moving while deferring the full cleanup. The\nduplicate checker will no longer report repeated setup guidance between those\ntwo files while the ignore pair remains active.\n\n## Consequences\n\nThe setup instructions in `README.md` and `docs/setup.md` can drift or\ncontradict each other without this duplicate review catching that specific\npair. Contributors still need to keep the suppression narrow and avoid adding\nmore duplicated setup content.\n\n## Applies To\n\n- `agent-doc-rules.config.json`\n- `README.md`\n- `docs/setup.md`\n\n## Backlinks\n\n- `agent-doc-rules.config.json` links to this record from the temporary\n  `docs.duplicates.ignorePairs` reason.\n\n## Revisit When\n\n- The pilot exits this review.\n- Either `README.md` or `docs/setup.md` changes its setup guidance.\n- The team has time to consolidate setup instructions into one canonical page.\n"
+      }
+    ],
+    "response": "Implemented the temporary workaround.\n\nChanged [agent-doc-rules.config.json](<project>/agent-doc-rules.config.json:9) to ignore only the `README.md` ↔ `docs/setup.md` duplicate pair, with a reason linking to [docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md](<project>/docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md:1).\n\nVerification:\n- `node -e ... JSON.parse(...)`: passed\n- `npm run docs:duplicates`: passed, `Candidates: 0`\n- `npm run docs:markdown`: passed\n- `npm run docs:check`: still fails in the link-crawling phase with `Cannot read properties of null (reading 'port')`; markdown, wording, and security pass before that failure."
   }
 ]

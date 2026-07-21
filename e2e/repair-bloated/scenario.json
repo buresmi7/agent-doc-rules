@@ -1,0 +1,19 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Repair the existing root `AGENTS.md`. Keep the useful project-specific rules, remove copied or invented workflow text, and make it concise.",
+      "criteria": {
+        "r1": "Rewrites the existing root `AGENTS.md` into a concise navigation layer.",
+        "r2": "Preserves project-specific facts from the README: English documentation and commit messages, documentation-only scope, and financial-data secrecy.",
+        "r3": "Points to installed `agent-doc-rules` guidance, including `.agents/skills/agent-doc-rules/references/agents-rules.md`, instead of copying the shared rules into the project `AGENTS.md`.",
+        "r4": "Preserves source-of-truth guidance for `README.md` and `docs/decisions/`.",
+        "r5": "Preserves verification guidance for Markdown checks.",
+        "r6": "Removes the copied shared documentation architecture prose.",
+        "r7": "Removes Notion, optional skill recommendations, `tm` commands, and worktree/task lifecycle instructions.",
+        "r8": "Does not invent tools, cloud providers, package managers, or issue workflows.",
+        "r9": "Is shorter and clearer than the original `AGENTS.md`."
+      }
+    }
+  ]
+}

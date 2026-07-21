@@ -9,7 +9,7 @@
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
     "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check",
     "test": "node --test",
-    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
   },
   "dependencies": {
     "@buresmi7/agent-doc-rules-skill": "workspace:*"

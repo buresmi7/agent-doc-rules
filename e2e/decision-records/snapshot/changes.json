@@ -1,0 +1,12 @@
+[
+  {
+    "path": "docs/decisions/in-memory-csv-exporter.md",
+    "status": "created",
+    "content": "# Decision: In-Memory CSV Exporter For Pilot\n\nStatus: Accepted\nDate: 2026-07-16\n\n## Context\n\nThe first internal pilot exports small invoice datasets. A streaming exporter\nwould scale better and avoid holding the whole CSV output in memory, but it is\nnot required for the current pilot data size.\n\n## Decision\n\nUse the simpler in-memory CSV exporter for the pilot.\n\n## Trade-Off\n\nThis defers the cleaner streaming design and accepts that export memory use will\ngrow with the number and size of invoices.\n\n## Consequences\n\nFuture maintainers should treat the in-memory exporter as an intentional pilot\nchoice, not an accidental implementation gap. Do not rely on it for larger\ndatasets without checking memory behavior and export latency.\n\n## Applies To\n\n- `src/exporter.js`\n- `docs/export-format.md`\n\n## Backlinks\n\n- `docs/export-format.md` points readers back to this decision.\n\n## Revisit When\n\n- Pilot invoice datasets grow beyond the current small batch size.\n- Export latency or memory use becomes visible to finance users.\n- The exporter becomes part of an external or automated bulk workflow.\n"
+  },
+  {
+    "path": "docs/export-format.md",
+    "status": "modified",
+    "content": "# Export Format\n\nThe exporter writes one CSV row per invoice with `id`, `customer`, and `total`\ncolumns.\n\nThe streaming exporter was deferred for the first internal release. The team\naccepted the simpler in-memory implementation for now because invoices are\nsmall in the current pilot dataset. See\n[`docs/decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md)\nfor the accepted trade-off and revisit conditions.\n"
+  }
+]

@@ -1,1 +1,0 @@
-Split the bloated README into a short entry point, agent rules, architecture, and operations docs. Named `npm test`; no `docs:check` script is declared.

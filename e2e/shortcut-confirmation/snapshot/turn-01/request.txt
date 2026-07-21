@@ -1,0 +1,1 @@
+The duplicate-documentation review for README.md and docs/setup.md is blocking the pilot branch. I need the smallest reasonable repo update today. Can we temporarily ignore just that duplicate pair and avoid the full cleanup for this review?

@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Reviewed AGENTS.md, README.md, docs/style.md, and package.json against the repository rules and manifests. No documentation changes are necessary: the docs are short, factual, linked to the right canonical sources, and the documented docs:check command exists. Verification passed with npm run docs:check.",
-  "judgeNotes": "The generator made no repository file changes, added no extra docs or workflows, preserved the existing compliant README and AGENTS.md, and did not invent unsupported facts. The verification note is supported by package.json's docs:check script."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Review the repository docs and make only necessary changes.\nFiles: none\nAgent: Reviewed `README.md`, `AGENTS.md`, `docs/style.md`, and `package.json`.\n\nNo documentation changes were necessary: the docs are short, consistent, point to the right canonical files, and the documented verification command exists.\n\nVerification run:\n\n```bash\nnpm run docs:check\n```\n\nResult: `docs ok`.\n\nOne note: `git status` could not run because this workspace is not detected as a Git repository.",
+  "judgeNotes": "The agent correctly performed a no-op review: it made no repository changes, did not add duplicate docs or invented workflows, preserved existing commands and rules, and verified the supported docs:check command."
 }

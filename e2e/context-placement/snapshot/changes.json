@@ -1,0 +1,32 @@
+[
+  {
+    "path": "AGENTS.md",
+    "status": "created",
+    "content": "# Habitat Importer - AI Agent Instructions\n\nHabitat Importer reads field-team CSV exports and writes normalized species\nobservations as JSON.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)\n\n## Local Rules\n\n- Read [docs/schema.md](docs/schema.md) before changing parser output.\n- Do not mention private site names in public docs.\n- Keep generated JSON examples out of commits when they include real site names.\n\n## Source Of Truth\n\n- [README.md](README.md) is the human entry point.\n- [docs/schema.md](docs/schema.md) owns parser input, output, and import report\n  behavior.\n- [docs/architecture.md](docs/architecture.md) owns output-format rationale.\n- [docs/troubleshooting.md](docs/troubleshooting.md) owns fixture failure\n  checks.\n\n## Verification\n\n- Run `npm test` before changing parser behavior.\n- If a check cannot run, state the blocker and what remains unverified.\n"
+  },
+  {
+    "path": "docs/architecture.md",
+    "status": "created",
+    "content": "# Architecture\n\nHabitat Importer writes normalized observations as JSON because downstream\nreview tools do not agree on a CSV dialect.\n\nFor the input and output contract, see [Observation schema](schema.md).\n"
+  },
+  {
+    "path": "docs/schema.md",
+    "status": "modified",
+    "content": "# Observation Schema\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n- `species`\n- `site`\n- `observed_at`\n- `count`\n\nObservation JSON contains:\n\n- `species`\n- `site`\n- `observedAt`\n- `count`\n\nRows with empty `species` values are dropped. The importer records the dropped\nrow number in the import report.\n"
+  },
+  {
+    "path": "docs/troubleshooting.md",
+    "status": "created",
+    "content": "# Troubleshooting\n\n## Fixture Failures\n\nIf a fixture fails, run:\n\n```sh\nnpm test\n```\n\nInspect the failing row number before changing schema docs.\n"
+  },
+  {
+    "path": "notes.md",
+    "status": "modified",
+    "content": "# Documentation Inbox\n\nThe durable notes now live in:\n\n- [README.md](README.md)\n- [AGENTS.md](AGENTS.md)\n- [docs/schema.md](docs/schema.md)\n- [docs/architecture.md](docs/architecture.md)\n- [docs/troubleshooting.md](docs/troubleshooting.md)\n"
+  },
+  {
+    "path": "README.md",
+    "status": "modified",
+    "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\nRun `npm test` before changing parser behavior.\n\n## Documentation\n\n- [Observation schema](docs/schema.md) describes the accepted CSV columns,\n  normalized JSON output, and import report behavior.\n- [Architecture](docs/architecture.md) explains why the importer writes JSON.\n- [Troubleshooting](docs/troubleshooting.md) covers fixture failure checks.\n"
+  }
+]

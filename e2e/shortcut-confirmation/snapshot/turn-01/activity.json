@@ -1,0 +1,62 @@
+[
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "rg",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  }
+]

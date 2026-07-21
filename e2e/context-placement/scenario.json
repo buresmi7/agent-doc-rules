@@ -1,0 +1,18 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Organize the project notes into durable documentation.",
+      "criteria": {
+        "c1": "Updates or creates `README.md` as the human entry point with project purpose, first useful command, and links to canonical docs.",
+        "c2": "Creates or updates `AGENTS.md` with short agent instructions for reading schema docs, keeping private site names out of public docs, and documenting residual risk when checks cannot run.",
+        "c3": "Places schema details in `docs/schema.md` or another clear docs file, not in `AGENTS.md`.",
+        "c4": "Places the JSON-output rationale in a durable explanation or architecture doc under `docs/`.",
+        "c5": "Places fixture troubleshooting guidance in a how-to or troubleshooting doc under `docs/`.",
+        "c6": "Removes or supersedes `notes.md` content by moving each durable fact to a better home, or leaves `notes.md` only as a short pointer.",
+        "c7": "Does not create an agent skill when static documentation is sufficient.",
+        "c8": "Does not invent commands, data columns, downstream tools, private site names, cloud providers, or issue workflows."
+      }
+    }
+  ]
+}

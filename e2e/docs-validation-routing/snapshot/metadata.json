@@ -4,14 +4,25 @@
   "agent": {
     "name": "codex",
     "command": "codex",
-    "cliVersion": "codex-cli 0.135.0",
+    "cliVersion": "codex-cli 0.144.5",
     "model": {
-      "name": "gpt-5.5",
-      "reasoningEffort": "medium",
-      "label": "gpt-5.5 medium",
-      "source": {
-        "name": "CODEX_MODEL",
-        "reasoningEffort": "agent-doc-rules default"
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
       }
     }
   },

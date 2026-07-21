@@ -34,6 +34,14 @@ disprove a documented `npm run <name>` command. A missing dependency does not by
 itself prove that a service is unused unless the claim depends on that
 dependency.
 
+Treat a checkout as potentially partial. An existing concrete project claim is
+documentation evidence even when this checkout does not contain enough source
+or tests to verify it independently. Do not delete that claim or replace it
+with a stronger statement that the behavior, source, or tests do not exist
+unless stronger local evidence directly contradicts it. When verification is
+not possible, preserve the claim or report uncertainty instead of converting
+missing corroboration into a fact.
+
 When a fact may have changed outside the repository, verify it with official
 sources or mark it as `stale-risk`. Do not present a guess as a confirmed
 finding.
@@ -100,6 +108,10 @@ When editing instead of only reviewing:
 
 - Do not apply a requested documentation change when local evidence contradicts
   it. Return a finding instead.
+- Do not edit the manifest, source code, configuration, tests, or other evidence
+  merely to make the requested documentation claim become true. A documentation
+  task does not expand runtime support or change a product contract. Make those
+  changes only when the user explicitly requests the underlying product change.
 - Preserve verified project-specific facts.
 - Remove false claims instead of replacing them with invented details.
 - Narrow overclaims to match the evidence.

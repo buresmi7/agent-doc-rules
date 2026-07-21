@@ -1,45 +1,40 @@
-# In-Memory CSV Exporter
+# Decision: In-Memory CSV Exporter For Pilot
 
 Status: Accepted
-
-Date: 2026-07-14
+Date: 2026-07-16
 
 ## Context
 
-Invoice Exporter converts invoice JSON files into CSV files for the finance
-team. The exporter writes one CSV row per invoice with `id`, `customer`, and
-`total` columns.
-
-A streaming exporter would be cleaner long term, but the first internal release
-uses the simpler in-memory implementation. The team accepted that choice because
-invoices are small in the current pilot dataset.
+The first internal pilot exports small invoice datasets. A streaming exporter
+would scale better and avoid holding the whole CSV output in memory, but it is
+not required for the current pilot data size.
 
 ## Decision
 
-Keep the in-memory CSV exporter for the pilot instead of replacing it with a
-streaming exporter now.
+Use the simpler in-memory CSV exporter for the pilot.
 
-## Trade-Off And Consequences
+## Trade-Off
 
-The in-memory exporter is simpler to maintain during the pilot and matches the
-current dataset size.
+This defers the cleaner streaming design and accepts that export memory use will
+grow with the number and size of invoices.
 
-The trade-off is that export memory use grows with the number of invoices. A
-larger dataset may make the exporter slower or less reliable than a streaming
-implementation.
+## Consequences
 
-## Affected Surfaces
+Future maintainers should treat the in-memory exporter as an intentional pilot
+choice, not an accidental implementation gap. Do not rely on it for larger
+datasets without checking memory behavior and export latency.
+
+## Applies To
 
 - `src/exporter.js`
 - `docs/export-format.md`
 
 ## Backlinks
 
-`docs/export-format.md` links to this record from the export format notes.
+- `docs/export-format.md` points readers back to this decision.
 
-## Revisit Conditions
+## Revisit When
 
-Revisit this decision before expanding beyond the pilot dataset or when invoice
-exports become large enough that memory use is a practical concern.
-
-Run `npm test` before changing export behavior.
+- Pilot invoice datasets grow beyond the current small batch size.
+- Export latency or memory use becomes visible to finance users.
+- The exporter becomes part of an external or automated bulk workflow.

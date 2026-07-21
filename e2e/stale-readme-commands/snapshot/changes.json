@@ -1,0 +1,12 @@
+[
+  {
+    "path": "AGENTS.md",
+    "status": "created",
+    "content": "# Metric Cards - AI Agent Instructions\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)\n\n## Local Rules\n\n- Keep project documentation focused on the commands and files visible in this\n  repository.\n- Do not add setup, lint, deploy, hosting, or release instructions unless the\n  supporting command or canonical doc exists.\n\n## Source Of Truth\n\n- `README.md` is the human entry point and verified command index.\n- `package.json` is the source of truth for npm scripts.\n\n## Verification\n\n- Run `npm test` and `npm run docs:check` after documentation changes.\n- If a check cannot run, report why and state the remaining risk.\n"
+  },
+  {
+    "path": "README.md",
+    "status": "modified",
+    "content": "# Metric Cards\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Source Of Truth\n\n| Document | Purpose |\n| --- | --- |\n| `README.md` | Project overview and verified commands |\n| `AGENTS.md` | Project-specific agent instructions |\n\n## Verification\n\nRun the checks defined in `package.json`:\n\n```bash\nnpm test\nnpm run docs:check\n```\n\nThe project is private and does not document a production deployment workflow.\n"
+  }
+]

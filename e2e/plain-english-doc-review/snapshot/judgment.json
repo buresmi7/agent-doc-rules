@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Rewrote the README in plain English, removed broad marketing language, and kept the contributor guidance limited to facts supported by the provided README and package.json. I did not add install, setup, deployment, or cloud-cache steps because the project files do not support those details. Verification documented: `npm test`.",
-  "judgeNotes": "The generated README preserves the supported project facts, removes generic marketing phrasing, documents only the supported npm test command, avoids invented setup/deploy/cloud details, and stays concise without creating unrelated files."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Improve the README so it is easier for a new contributor to understand.\nFiles: README.md\nAgent: Updated [README.md](<project>/README.md) to explain the project plainly, clarify the repository scope, and keep only the supported verification command.\n\nVerified with `npm test`; it passes, though the current test suite contains 0 tests.",
+  "judgeNotes": "The README rewrite preserves the supported project facts, removes generic marketing language, stays concise, documents only npm test, and avoids inventing setup, deployment, cloud, or workflow details."
 }

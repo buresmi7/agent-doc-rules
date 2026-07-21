@@ -1,19 +1,19 @@
 # Harbor Backup Notes
 
-Harbor Backup Notes is a documentation-only repository for human maintainer
-notes about restoring a staging SQLite backup for local documentation checks.
+Harbor Backup Notes is a documentation-only repository for staging SQLite
+backup restore notes used during local documentation checks.
 
 ## Canonical Docs
 
-| Document | Content |
+| Document | Purpose |
 | --- | --- |
-| `README.md` | Project overview and first verification command |
+| `README.md` | Project overview and verification command |
+| `docs/restore-staging-backup.md` | Human staging restore procedure |
 | `AGENTS.md` | Agent routing, local rules, and verification guidance |
-| `docs/staging-sqlite-restore.md` | Human staging SQLite restore runbook |
 
 ## Verification
 
-Run the documentation check before publishing documentation changes:
+Run the repository documentation check before publishing doc changes:
 
 ```bash
 npm run docs:check
@@ -21,8 +21,7 @@ npm run docs:check
 
 ## Project Notes
 
-The staging restore procedure is for human maintainers. It is not an agent
-drafting workflow, and agents should not copy the full procedure into
-`AGENTS.md`.
-
-Never paste real customer data into examples or generated documentation.
+- The restore procedure is for human maintainers, not an agent drafting
+  workflow.
+- Keep backup files, customer data, and environment-specific values out of Git
+  and generated documentation.

@@ -1,6 +1,6 @@
 {
   "name": "@buresmi7/agent-doc-rules-skill",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "private": false,
   "description": "Agent Skill for concise AGENTS.md, README, and repository documentation rules",
   "type": "module",

@@ -1,16 +1,149 @@
 {
-  "source": "prompt.md",
+  "id": "request",
+  "source": "scenario.json#/turns/0",
   "snapshotDir": "turn-01",
-  "prompt": "# Prompt\n\nWe accepted the in-memory CSV exporter for the pilot even though a streaming\nexporter would be cleaner long term. Please update the repo so future\nmaintainers do not mistake that choice for an accident.",
-  "generatedFiles": [
+  "prompt": "We accepted the in-memory CSV exporter for the pilot even though a streaming exporter would be cleaner long term. Please update the repo so future maintainers do not mistake that choice for an accident.",
+  "activity": [
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "pwd",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "cat",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "find",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "file_change",
+      "status": "completed",
+      "changes": [
+        {
+          "path": "docs/decisions/in-memory-csv-exporter.md",
+          "kind": "add"
+        },
+        {
+          "path": "docs/export-format.md",
+          "kind": "update"
+        }
+      ]
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 1,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "npm test",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 128,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 1,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "ls",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 128,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 1,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "nl",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "nl",
+      "exitCode": 0,
+      "status": "completed"
+    }
+  ],
+  "changes": [
     {
       "path": "docs/decisions/in-memory-csv-exporter.md",
-      "content": "# In-Memory CSV Exporter\n\nStatus: Accepted\n\nDate: 2026-07-14\n\n## Context\n\nInvoice Exporter converts invoice JSON files into CSV files for the finance\nteam. The exporter writes one CSV row per invoice with `id`, `customer`, and\n`total` columns.\n\nA streaming exporter would be cleaner long term, but the first internal release\nuses the simpler in-memory implementation. The team accepted that choice because\ninvoices are small in the current pilot dataset.\n\n## Decision\n\nKeep the in-memory CSV exporter for the pilot instead of replacing it with a\nstreaming exporter now.\n\n## Trade-Off And Consequences\n\nThe in-memory exporter is simpler to maintain during the pilot and matches the\ncurrent dataset size.\n\nThe trade-off is that export memory use grows with the number of invoices. A\nlarger dataset may make the exporter slower or less reliable than a streaming\nimplementation.\n\n## Affected Surfaces\n\n- `src/exporter.js`\n- `docs/export-format.md`\n\n## Backlinks\n\n`docs/export-format.md` links to this record from the export format notes.\n\n## Revisit Conditions\n\nRevisit this decision before expanding beyond the pilot dataset or when invoice\nexports become large enough that memory use is a practical concern.\n\nRun `npm test` before changing export behavior.\n"
+      "status": "created",
+      "content": "# Decision: In-Memory CSV Exporter For Pilot\n\nStatus: Accepted\nDate: 2026-07-16\n\n## Context\n\nThe first internal pilot exports small invoice datasets. A streaming exporter\nwould scale better and avoid holding the whole CSV output in memory, but it is\nnot required for the current pilot data size.\n\n## Decision\n\nUse the simpler in-memory CSV exporter for the pilot.\n\n## Trade-Off\n\nThis defers the cleaner streaming design and accepts that export memory use will\ngrow with the number and size of invoices.\n\n## Consequences\n\nFuture maintainers should treat the in-memory exporter as an intentional pilot\nchoice, not an accidental implementation gap. Do not rely on it for larger\ndatasets without checking memory behavior and export latency.\n\n## Applies To\n\n- `src/exporter.js`\n- `docs/export-format.md`\n\n## Backlinks\n\n- `docs/export-format.md` points readers back to this decision.\n\n## Revisit When\n\n- Pilot invoice datasets grow beyond the current small batch size.\n- Export latency or memory use becomes visible to finance users.\n- The exporter becomes part of an external or automated bulk workflow.\n"
     },
     {
       "path": "docs/export-format.md",
-      "content": "# Export Format\n\nThe exporter writes one CSV row per invoice with `id`, `customer`, and `total`\ncolumns.\n\nThe streaming exporter was deferred for the first internal release. The team\naccepted the simpler in-memory implementation for now because invoices are\nsmall in the current pilot dataset. See\n[`decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md) for\nthe accepted trade-off and revisit conditions.\n"
+      "status": "modified",
+      "content": "# Export Format\n\nThe exporter writes one CSV row per invoice with `id`, `customer`, and `total`\ncolumns.\n\nThe streaming exporter was deferred for the first internal release. The team\naccepted the simpler in-memory implementation for now because invoices are\nsmall in the current pilot dataset. See\n[`docs/decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md)\nfor the accepted trade-off and revisit conditions.\n"
     }
   ],
-  "notes": "Added a durable decision record and linked the export format doc to it."
+  "response": "Added a durable decision record for the pilot exporter choice at [docs/decisions/in-memory-csv-exporter.md](<project>/docs/decisions/in-memory-csv-exporter.md:1). It records the accepted in-memory CSV exporter, the streaming trade-off, consequences, affected surfaces, and revisit triggers.\n\nUpdated [docs/export-format.md](<project>/docs/export-format.md:6) to link back to that decision so maintainers find the rationale from the export docs.\n\nVerification: `npm test` passed, with the current repo containing 0 test files. Git status was not available because the mounted `.git` metadata is not a usable repository in this workspace."
 }

@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "test": "echo parser tests ok",
-    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+    "docs:check": "markdownlint-cli2 \"*.md\" \"docs/**/*.md\"",
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
   },
   "dependencies": {
     "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.22.1"
   }
 }

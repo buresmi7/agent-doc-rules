@@ -9,7 +9,7 @@ Durable facts:
 Sensitive fixture values that must not move into generated docs:
 
 - Customer name: Blue Finch LLC
-- Customer email: `customer@example.invalid`
+- Customer email: `billing@blue-finch.example`
 - Private host: fake-private-host.internal.invalid
 - Token placeholder: fake-token-123
 - Account ID: acct-demo-1234

@@ -1,0 +1,15 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Review the repository docs and make only necessary changes.",
+      "criteria": {
+        "n1": "Makes no repository file changes when the existing README and `AGENTS.md` already satisfy the installed `agent-doc-rules` guidance.",
+        "n2": "Does not create extra docs, local skills, templates, checklists, or duplicate shared-rule copies.",
+        "n3": "Does not rewrite supported commands, links, or local safety rules merely for style.",
+        "n4": "Does not invent issue workflows, owners, services, hosts, release steps, or verification commands.",
+        "n5": "If any file is returned, it is semantically identical to the original and does not add durable facts."
+      }
+    }
+  ]
+}

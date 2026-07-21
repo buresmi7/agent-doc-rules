@@ -1,0 +1,15 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "We accepted the in-memory CSV exporter for the pilot even though a streaming exporter would be cleaner long term. Please update the repo so future maintainers do not mistake that choice for an accident.",
+      "criteria": {
+        "c1": "Creates or updates a durable decision record under `docs/decisions/` or an existing clear decision-log location.",
+        "c2": "The record captures the accepted in-memory CSV exporter shortcut with status, date or date placeholder, context, decision, trade-off, consequences, affected surfaces, backlinks, and revisit conditions.",
+        "c3": "Links the decision record from an affected surface such as `docs/export-format.md` or `src/exporter.js`; a decision index alone is not enough.",
+        "c4": "Presents the decision as revisitable context, not permanent law, and does not blame the user or team for accepting the compromise.",
+        "c5": "Keeps unrelated project facts intact and does not invent commands, issue workflows, hosting details, or data fields."
+      }
+    }
+  ]
+}

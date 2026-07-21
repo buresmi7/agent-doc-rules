@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+## v0.10.0 - 2026-07-21
+
+- Added the publishable `@buresmi7/agent-e2e-runner` package with a standalone
+  CLI and library API for agent and deterministic command scenarios.
+- Made each agent fixture's normal package dependency the source of truth for
+  the skill package and version. Standard npm scripts select the package and
+  skill through CLI flags, without custom `package.json` metadata.
+- Replaced simulated agent output with real persistent Codex sessions and a
+  separate read-only Codex judge; removed the Ollama backend.
+- Standardized agent scenarios on one `scenario.json` with ordered prompts and
+  named per-turn criteria, replacing the separate turn and criteria files.
+- Allowed two isolated agent scenarios to run concurrently while retaining a
+  documented serial command for rate-limited CI environments.
+- Added per-turn responses, safe tool activity, actual project diffs, protected
+  skill and lockfile inputs, and isolated Codex authentication to E2E output.
+- Added a five-turn dictated-todo example that tests conflict detection and
+  clarification before unresolved tasks are written.
+- Expanded factual-review and sensitive-note scenarios into multi-turn flows
+  that test a changed product decision and a rejected request to restore
+  sensitive values.
+
 ## v0.9.0 - 2026-07-14
 
 - Added decision-record guidance and a starter template for accepted

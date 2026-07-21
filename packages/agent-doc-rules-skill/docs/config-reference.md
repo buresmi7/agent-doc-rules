@@ -183,9 +183,10 @@ like instructions an agent should execute.
 The duplicate checker skips code blocks and short noise before it builds
 candidates. It sends only candidate pairs to Codex.
 
-Use `ignorePairs` for expected overlaps such as E2E criteria repeating the rule
-under test or standalone templates sharing boilerplate. Each entry uses `left`
-and `right` regex strings matched against file paths; matching is symmetric. Add
+Use `ignorePairs` for expected overlaps such as standalone templates sharing
+boilerplate or fixture documents repeating a rule under test. Each entry uses
+`left` and `right` regex strings matched against file paths; matching is
+symmetric. Add
 an optional `reason` string when the exception needs durable human context, such
 as a link to a decision record.
 

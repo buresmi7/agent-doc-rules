@@ -17,12 +17,19 @@ importers:
       '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:packages/agent-doc-rules-skill
+      '@buresmi7/agent-e2e-runner':
+        specifier: workspace:*
+        version: link:packages/agent-e2e-runner
 
   e2e/compliant-noop/project:
     dependencies:
       '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
+    devDependencies:
+      '@buresmi7/agent-e2e-runner':
+        specifier: workspace:*
+        version: link:../../../packages/agent-e2e-runner
 
   e2e/context-placement/project:
     dependencies:
@@ -126,6 +133,10 @@ importers:
       '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
         version: link:../../../packages/agent-doc-rules-skill
+    devDependencies:
+      markdownlint-cli2:
+        specifier: ^0.22.1
+        version: 0.22.1
 
   e2e/shortcut-confirmation/project:
     dependencies:
@@ -160,6 +171,8 @@ importers:
       skill-meta-skill:
         specifier: 0.1.0
         version: 0.1.0
+
+  packages/agent-e2e-runner: {}
 
   packages/docs-duplicates:
     dependencies:

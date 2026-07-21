@@ -58,7 +58,10 @@ canonical, plain, and easy for agents and people to use.
      [references/writing-style.md](references/writing-style.md). If the README
      carries a long runbook or procedure, also read
      [docs/context-placement.md](docs/context-placement.md) and
-     [references/doc-audit.md](references/doc-audit.md).
+     [references/doc-audit.md](references/doc-audit.md). If the requested README
+     change affects commands, versions, runtime support, compatibility, or
+     another factual claim, also read
+     [references/factual-review.md](references/factual-review.md).
    - For README reviews, also read
      [references/readme-rubric.md](references/readme-rubric.md).
    - For documentation placement, canonical homes, or skill/template structure,
@@ -136,6 +139,17 @@ For design influences and attribution, see
 - When simplifying existing docs, do not add generic setup, install, test,
   deployment, or package-manager steps unless the source docs, user request, or
   local manifests support them.
+- During a style or plain-English rewrite, preserve concrete project behavior,
+  limitations, and supported workflow facts from the source document unless
+  stronger local evidence directly contradicts them. A partial checkout with
+  no corroborating source or tests is not, by itself, a contradiction. Do not
+  replace supported service facts with claims about what the checkout lacks.
+- A documentation request does not authorize changing manifests, source code,
+  configuration, tests, or other evidence just to make a requested claim true.
+  When local evidence contradicts the requested documentation, leave both the
+  documentation and its source of truth unchanged and report the conflict. Only
+  change the supported behavior or compatibility contract when the user asks
+  for that product change explicitly.
 - Move ordinary human runbooks to `docs/` and link to them; do not turn them
   into task-specific skills unless they are repeated agent workflows.
 - For documentation placement tasks, put rationale and trade-off explanations in
@@ -154,10 +168,15 @@ For design influences and attribution, see
   `AGENTS.md` when they affect public docs, committed examples, secrets, private
   names, customer data, or other sensitive content.
 - When project notes describe a repeated workflow meant for agents, create or
-  update a task-specific `.agents/skills/<name>/SKILL.md` and link to it instead
-  of storing the full workflow in the README or `AGENTS.md`.
+  update a task-specific `.agents/skills/<name>/SKILL.md`. Replace the workflow
+  at its original location with a short link to the skill instead of storing a
+  second copy there.
 - When adding a project skill, create or update `AGENTS.md` with a short routing
   pointer to that skill; do not copy the full workflow there.
+- Extracting a workflow does not ask you to execute it. Do not create the
+  workflow's release, migration, deployment, or other output unless the user
+  also requested that result. A manifest version or other repository metadata
+  alone does not identify the intended workflow target.
 - When adding verification guidance, include the command or check and state that
   skipped checks need a reason and residual-risk note.
 - Follow the shortcut quality gate in the workflow before applying config

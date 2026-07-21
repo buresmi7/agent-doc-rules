@@ -1,0 +1,12 @@
+[
+  {
+    "path": "package.json",
+    "status": "modified",
+    "content": "{\n  \"name\": \"ledger-cli\",\n  \"version\": \"0.0.0\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"engines\": {\n    \"node\": \">=20 <25\"\n  },\n  \"scripts\": {\n    \"test\": \"node --test\",\n    \"docs:check\": \"echo docs ok\"\n  },\n  \"dependencies\": {\n    \"@buresmi7/agent-doc-rules-skill\": \"workspace:*\"\n  }\n}\n"
+  },
+  {
+    "path": "README.md",
+    "status": "modified",
+    "content": "# Ledger CLI\n\nLedger CLI exports accounting reports from local JSON files.\n\n## Requirements\n\nLedger CLI supports Node.js 20, 22, and 24.\n\n## Commands\n\nInstall dependencies:\n\n```bash\nnpm install\n```\n\nRun the supported checks:\n\n```bash\nnpm test\nnpm run docs:check\n```\n"
+  }
+]

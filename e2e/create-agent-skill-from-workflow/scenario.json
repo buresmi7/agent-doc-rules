@@ -1,0 +1,18 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Clean up the release documentation.",
+      "criteria": {
+        "w1": "Creates a task-specific skill under `.agents/skills/` for the repeated release-note drafting workflow.",
+        "w2": "The new skill has a valid `SKILL.md` with frontmatter `name` and `description`, a short workflow, and clear trigger boundaries.",
+        "w3": "The new skill tells the agent to read `CHANGELOG.md` and `docs/release-input.md`, group changes into Added, Changed, Fixed, and Removed, and write `docs/releases/<version>.md`.",
+        "w4": "The new skill preserves the privacy rule: do not publish customer names or private issue links.",
+        "w5": "The README becomes a concise human entry point and links to the new skill instead of carrying the full agent workflow.",
+        "w6": "Creates or updates `AGENTS.md` only as a short routing layer, not a copy of the release-note workflow.",
+        "w7": "Does not invent changelog entries, release versions, private links, release tools, hosting systems, or issue trackers.",
+        "w8": "Uses `references/` or `assets/` inside the new skill only if they reduce duplication or keep `SKILL.md` concise."
+      }
+    }
+  ]
+}

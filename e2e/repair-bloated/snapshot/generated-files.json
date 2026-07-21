@@ -1,6 +1,0 @@
-[
-  {
-    "path": "AGENTS.md",
-    "content": "# Ledger Notes Agent Instructions\n\nLedger Notes stores Markdown notes for personal bookkeeping experiments. This\nrepository is documentation-only for now.\n\n## Shared Rules\n\n- Follow the shared\n  [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).\n\n## Local Rules\n\n- Write documentation and commit messages in English.\n- Do not commit bank data, real account numbers, exported statements, tokens, or\n  screenshots containing financial details.\n- Never commit secrets.\n\n## Source Of Truth\n\n- `README.md` describes the current project scope.\n- `docs/decisions/` stores accepted decisions.\n\n## Verification\n\n- Run Markdown checks before release.\n- If Markdown checks cannot run, say why and note the remaining risk.\n"
-  }
-]

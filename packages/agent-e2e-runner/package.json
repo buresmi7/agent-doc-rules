@@ -1,0 +1,25 @@
+{
+  "name": "@buresmi7/agent-e2e-runner",
+  "version": "0.10.0",
+  "private": false,
+  "description": "Run Agent Skill E2E tests in real Codex sessions against fixture projects",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "agent-e2e-runner": "bin/agent-e2e-runner.mjs"
+  },
+  "exports": "./src/index.mjs",
+  "files": [
+    "bin",
+    "docs",
+    "examples",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

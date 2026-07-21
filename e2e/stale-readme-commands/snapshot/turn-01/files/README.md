@@ -2,24 +2,20 @@
 
 Metric Cards renders Markdown snippets for dashboard metric definitions.
 
-## Commands
+## Source Of Truth
 
-Install dependencies:
+| Document | Purpose |
+| --- | --- |
+| `README.md` | Project overview and verified commands |
+| `AGENTS.md` | Project-specific agent instructions |
 
-```bash
-npm install
-```
+## Verification
 
-Run tests:
+Run the checks defined in `package.json`:
 
 ```bash
 npm test
-```
-
-Check documentation:
-
-```bash
 npm run docs:check
 ```
 
-The project does not have production hosting yet.
+The project is private and does not document a production deployment workflow.

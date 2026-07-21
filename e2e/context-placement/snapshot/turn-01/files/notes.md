@@ -1,10 +1,9 @@
 # Documentation Inbox
 
-Durable notes have moved to:
+The durable notes now live in:
 
-- [README.md](README.md) for project orientation and documentation links.
-- [AGENTS.md](AGENTS.md) for agent routing, verification, and privacy rules.
-- [docs/importer.md](docs/importer.md) for CSV input and skipped row behavior.
-- [docs/schema.md](docs/schema.md) for observation JSON fields.
-- [docs/output-format.md](docs/output-format.md) for JSON output rationale.
-- [docs/troubleshooting.md](docs/troubleshooting.md) for fixture failures.
+- [README.md](README.md)
+- [AGENTS.md](AGENTS.md)
+- [docs/schema.md](docs/schema.md)
+- [docs/architecture.md](docs/architecture.md)
+- [docs/troubleshooting.md](docs/troubleshooting.md)

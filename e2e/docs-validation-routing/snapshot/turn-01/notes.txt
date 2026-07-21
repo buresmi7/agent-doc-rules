@@ -1,1 +1,0 @@
-Created a concise root AGENTS.md using the installed agent-doc-rules guidance.

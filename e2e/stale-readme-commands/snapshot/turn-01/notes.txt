@@ -1,1 +1,0 @@
-Repaired stale README commands against package.json and added a concise root AGENTS.md.

@@ -1,1 +1,0 @@
-No README change made: package.json engines is >=20 <24 and README currently says Node.js 20 and 22, so adding Node.js 24 would contradict project facts.

@@ -1,21 +1,25 @@
-# Agent Instructions
-
-## Project Context
+# Ledger Scrubber - AI Agent Instructions
 
 Ledger Scrubber validates exported ledger CSV files before local analysis.
 
-## Documentation Rules
+## Shared Rules
 
-Use anonymized examples in repository docs. Do not include customer identifiers,
-account IDs, private hosts, tokens, or environment-specific fixture values in
-reusable documentation.
+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
+
+## Local Rules
+
+- Use anonymized examples in committed docs, examples, and generated fixtures.
+- Do not commit real or private customer names, emails, host names, tokens, or
+  account IDs.
+
+## Source Of Truth
+
+- [README](README.md) is the human entry point.
+- [Ledger CSV validation](docs/ledger-csv-validation.md) owns the parser
+  validation contract.
 
 ## Verification
 
-Run `npm test` before changing parser behavior. If a relevant check is skipped,
-state why and note the residual risk.
-
-## Skill Reference
-
-Follow the shared AGENTS.md guidance in
-`.agents/skills/agent-doc-rules/references/agents-rules.md`.
+- Run `npm test` before changing parser behavior.
+- Run `npm run docs:check` after changing README, docs, or agent instructions.
+- If a check cannot run, record the blocker and what remains unverified.

@@ -1,0 +1,6 @@
+Updated Node support in both places:
+
+- [package.json](<project>/package.json:7): engine range is now `>=20 <25`
+- [README.md](<project>/README.md:7): support statement now lists Node.js 20, 22, and 24
+
+Verification passed: `npm test` and `npm run docs:check`. Note: this workspace root did not appear to be inside a Git repository, so I could not report a git diff/status.

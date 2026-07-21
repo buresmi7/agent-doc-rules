@@ -2,9 +2,9 @@
   "scenario": "stale-readme-commands",
   "runner": "codex",
   "pass": true,
-  "score": 0.94,
+  "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Repaired stale README commands against package.json and added a concise root AGENTS.md.",
-  "judgeNotes": "Generated docs remove stale lint/deploy commands, preserve npm test and npm run docs:check, avoid invented hosting/deploy workflows, and keep AGENTS.md concise with shared-rule routing and skipped-check reporting. Minor weakness: AGENTS.md source-of-truth guidance is present only as package.json command guidance, not a distinct Source Of Truth section."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Repair the README and create a concise root `AGENTS.md`.\nFiles: AGENTS.md, README.md\nAgent: Updated [README.md](<project>/README.md) to remove unsupported `npm install`, `npm run lint`, and deploy guidance, and keep only the commands present in `package.json`.\n\nCreated a concise root [AGENTS.md](<project>/AGENTS.md) with project orientation, shared-rule links, local documentation rules, source-of-truth pointers, and verification guidance.\n\nVerified:\n- `npm test`\n- `npm run docs:check`\n\nNote: `git status` could not run because this directory is not inside a Git repository.",
+  "judgeNotes": "All critical criteria pass: README commands now match package.json, unsupported lint/deploy commands were removed, supported verification commands remain, AGENTS.md is concise and links shared rules, and no unrelated docs, skills, or unsupported workflows were added."
 }

@@ -1,0 +1,5 @@
+Added a durable decision record for the pilot exporter choice at [docs/decisions/in-memory-csv-exporter.md](<project>/docs/decisions/in-memory-csv-exporter.md:1). It records the accepted in-memory CSV exporter, the streaming trade-off, consequences, affected surfaces, and revisit triggers.
+
+Updated [docs/export-format.md](<project>/docs/export-format.md:6) to link back to that decision so maintainers find the rationale from the export docs.
+
+Verification: `npm test` passed, with the current repo containing 0 test files. Git status was not available because the mounted `.git` metadata is not a usable repository in this workspace.

@@ -1,7 +1,7 @@
-import { access, readdir } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runCommand } from './e2e-runner/process.mjs';
+import { runCommand } from '@buresmi7/agent-e2e-runner';
 
 const repoRoot = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const e2eRoot = join(repoRoot, 'e2e');
@@ -14,16 +14,21 @@ for (const entry of await readdir(e2eRoot, { withFileTypes: true })) {
   }
 
   const scenarioDir = join(e2eRoot, entry.name);
+  let scenario;
 
   try {
     await access(join(scenarioDir, 'project'));
-    await access(join(scenarioDir, 'scenario.json'));
+    scenario = JSON.parse(await readFile(join(scenarioDir, 'scenario.json'), 'utf8'));
   } catch (error) {
     if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
       continue;
     }
 
     throw error;
+  }
+
+  if (typeof scenario.command !== 'string') {
+    continue;
   }
 
   scenarioDirs.push(scenarioDir);

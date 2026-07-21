@@ -1,1 +1,0 @@
-Moved the repeated release workflow from README into a project skill and added AGENTS routing. No checks were run because the harness is read-only.

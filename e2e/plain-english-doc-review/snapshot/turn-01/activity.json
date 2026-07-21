@@ -1,0 +1,66 @@
+[
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "pwd",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "file_change",
+    "status": "completed",
+    "changes": [
+      {
+        "path": "README.md",
+        "kind": "update"
+      }
+    ]
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "npm test",
+    "exitCode": 0,
+    "status": "completed"
+  }
+]

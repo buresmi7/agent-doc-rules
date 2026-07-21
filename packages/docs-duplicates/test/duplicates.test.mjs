@@ -107,15 +107,15 @@ test('deterministic prefilter finds exact and near duplicates', () => {
 
 test('deterministic prefilter ignores configured file pairs', () => {
   const units = [
-    unit('e2e/example/criteria.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
+    unit('e2e/example/project/README.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
     unit('packages/agent-doc-rules-skill/SKILL.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
     unit('docs/guide.md', 'Keep AGENTS.md short and link to canonical documentation rules.'),
   ];
   const ignorePairs = [
     {
-      left: '^e2e/.*/criteria\\.md$',
+      left: '^e2e/.*/project/README\\.md$',
       right: '^packages/agent-doc-rules-skill/',
-      reason: 'Criteria repeat the rule they evaluate.',
+      reason: 'Fixture docs repeat the rule they exercise.',
     },
   ];
   const normalizedIgnores = normalizeIgnorePairs(ignorePairs);
@@ -128,12 +128,12 @@ test('deterministic prefilter ignores configured file pairs', () => {
 
   assert.equal(isIgnoredPair(
     'packages/agent-doc-rules-skill/SKILL.md',
-    'e2e/example/criteria.md',
+    'e2e/example/project/README.md',
     normalizedIgnores,
   ), true);
-  assert.equal(normalizedIgnores[0].reason, 'Criteria repeat the rule they evaluate.');
+  assert.equal(normalizedIgnores[0].reason, 'Fixture docs repeat the rule they exercise.');
   assert.equal(candidates.some((candidate) => (
-    candidate.left.file === 'e2e/example/criteria.md'
+    candidate.left.file === 'e2e/example/project/README.md'
     && candidate.right.file === 'packages/agent-doc-rules-skill/SKILL.md'
   )), false);
   assert.equal(candidates.some((candidate) => candidate.right.file === 'docs/guide.md'), true);

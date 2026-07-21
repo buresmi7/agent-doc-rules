@@ -1,0 +1,1 @@
+Good catch. Node.js 24 support is part of this change. Update the package.json engine range so it includes Node.js 24 but not Node.js 25, then update the README support statement. Keep the existing install and check commands.

@@ -1,6 +1,8 @@
 # Docs Validation Routing Fixture - AI Agent Instructions
 
-This repository keeps short operational notes for internal reporting scripts.
+This private Node fixture keeps short operational notes for internal reporting
+scripts. Keep repository instructions concise and grounded in `README.md` and
+`package.json`.
 
 ## Shared Rules
 
@@ -8,16 +10,17 @@ This repository keeps short operational notes for internal reporting scripts.
 
 ## Local Rules
 
-- Keep repository documentation concise and operational.
-- Preserve facts from `README.md` and `package.json`; do not invent workflows.
+- Do not add unsupported setup, runtime, deployment, or reporting workflows.
+- Keep detailed procedures out of this file; link to the canonical project doc
+  or skill instead.
 
 ## Source Of Truth
 
-- `README.md` describes the repository purpose and common commands.
-- `package.json` defines available npm scripts.
+- [README.md](README.md) describes the project purpose and supported commands.
+- [package.json](package.json) defines the available npm scripts.
 
 ## Verification
 
-- Run `npm run docs:check` for documentation changes.
-- Run `npm test` for test coverage.
+- Run `npm test` for the Node test suite.
+- Run `npm run docs:check` for Markdown, link, and duplicate-doc validation.
 - If a check cannot run, state why and note the remaining risk.

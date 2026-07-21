@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Moved the repeated release workflow from README into a project skill and added AGENTS routing. No checks were run because the harness is read-only.",
-  "judgeNotes": "The generated documentation creates a focused local release-notes skill, moves the repeated agent workflow out of README, keeps AGENTS.md as a concise routing layer, preserves privacy and residual-risk rules, and does not invent unsupported project facts."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Clean up the release documentation.\nFiles: .agents/skills/release-notes/SKILL.md, AGENTS.md, README.md\nAgent: Cleaned up the release documentation:\n\n- Shortened [README.md](<project>/README.md:1) so it points to the release-note workflow instead of carrying it inline.\n- Added [AGENTS.md](<project>/AGENTS.md:1) with project routing, shared-rule links, local release safety rules, and verification guidance.\n- Added the agent workflow as [.agents/skills/release-notes/SKILL.md](<project>/.agents/skills/release-notes/SKILL.md:1).\n\nVerification: `npm test` passed.",
+  "judgeNotes": "The final state creates a focused release-notes skill with valid frontmatter, required inputs and workflow, privacy safeguards, concise README routing, and short AGENTS.md routing without inventing unsupported release details or unnecessary skill assets."
 }

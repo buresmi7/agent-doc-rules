@@ -1,16 +1,119 @@
 {
-  "source": "prompt.md",
+  "id": "request",
+  "source": "scenario.json#/turns/0",
   "snapshotDir": "turn-01",
-  "prompt": "# Prompt\n\nRepair the README and create a concise root `AGENTS.md`.",
-  "generatedFiles": [
+  "prompt": "Repair the README and create a concise root `AGENTS.md`.",
+  "activity": [
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "rg",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "test",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "git",
+      "exitCode": 128,
+      "status": "failed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "test",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "file_change",
+      "status": "completed",
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "kind": "add"
+        },
+        {
+          "path": "README.md",
+          "kind": "update"
+        }
+      ]
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "sed",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "npm run docs:check",
+      "exitCode": 0,
+      "status": "completed"
+    },
+    {
+      "type": "command_execution",
+      "commandSummary": "npm test",
+      "exitCode": 0,
+      "status": "completed"
+    }
+  ],
+  "changes": [
     {
       "path": "AGENTS.md",
-      "content": "# AGENTS.md\n\n## Project Context\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Commands\n\nUse the scripts defined in `package.json`:\n\n```bash\nnpm test\nnpm run docs:check\n```\n\nThere is no documented production hosting for this project yet.\n\n## Shared Rules\n\nFollow `.agents/skills/agent-doc-rules/references/agents-rules.md` for general\n`AGENTS.md` guidance.\n\nIf a relevant check is skipped, include the reason and residual risk in the\nfinal note.\n"
+      "status": "created",
+      "content": "# Metric Cards - AI Agent Instructions\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)\n\n## Local Rules\n\n- Keep project documentation focused on the commands and files visible in this\n  repository.\n- Do not add setup, lint, deploy, hosting, or release instructions unless the\n  supporting command or canonical doc exists.\n\n## Source Of Truth\n\n- `README.md` is the human entry point and verified command index.\n- `package.json` is the source of truth for npm scripts.\n\n## Verification\n\n- Run `npm test` and `npm run docs:check` after documentation changes.\n- If a check cannot run, report why and state the remaining risk.\n"
     },
     {
       "path": "README.md",
-      "content": "# Metric Cards\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Commands\n\nInstall dependencies:\n\n```bash\nnpm install\n```\n\nRun tests:\n\n```bash\nnpm test\n```\n\nCheck documentation:\n\n```bash\nnpm run docs:check\n```\n\nThe project does not have production hosting yet.\n"
+      "status": "modified",
+      "content": "# Metric Cards\n\nMetric Cards renders Markdown snippets for dashboard metric definitions.\n\n## Source Of Truth\n\n| Document | Purpose |\n| --- | --- |\n| `README.md` | Project overview and verified commands |\n| `AGENTS.md` | Project-specific agent instructions |\n\n## Verification\n\nRun the checks defined in `package.json`:\n\n```bash\nnpm test\nnpm run docs:check\n```\n\nThe project is private and does not document a production deployment workflow.\n"
     }
   ],
-  "notes": "Repaired stale README commands against package.json and added a concise root AGENTS.md."
+  "response": "Updated [README.md](<project>/README.md) to remove unsupported `npm install`, `npm run lint`, and deploy guidance, and keep only the commands present in `package.json`.\n\nCreated a concise root [AGENTS.md](<project>/AGENTS.md) with project orientation, shared-rule links, local documentation rules, source-of-truth pointers, and verification guidance.\n\nVerified:\n- `npm test`\n- `npm run docs:check`\n\nNote: `git status` could not run because this directory is not inside a Git repository."
 }

@@ -1,0 +1,17 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Improve the README so it is easier for a new contributor to understand.",
+      "criteria": {
+        "p1": "Updates `README.md` while preserving the supported facts: in-memory recent event signals, lookup helper, `npm test`, no deploy script, and no cloud cache.",
+        "p2": "Replaces generic marketing or AI-style phrasing with direct repository facts.",
+        "p3": "Removes or avoids words such as robust, comprehensive, ecosystem, seamlessly, empowers, leverage, landscape, holistic, pathway, and navigating when a plainer phrase works.",
+        "p4": "Keeps the README concise and useful as a human entry point.",
+        "p5": "Does not invent setup commands, deployment steps, cloud services, architecture, owners, issue workflows, or runtime dependencies.",
+        "p6": "Does not create unrelated docs or agent skills for this simple rewrite.",
+        "p7": "Uses plain English without being told explicitly in the scenario prompt."
+      }
+    }
+  ]
+}

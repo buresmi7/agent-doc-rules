@@ -1,0 +1,12 @@
+Updated the repo docs to separate stable concerns:
+
+- [README.md](<project>/README.md) is now a short entry point with a canonical docs index, quick test command, and project overview.
+- [AGENTS.md](<project>/AGENTS.md) now holds the agent rules, safety boundaries, source-of-truth links, and verification notes.
+- [docs/operations.md](<project>/docs/operations.md) now owns release checks and troubleshooting notes.
+
+I removed unsupported actionable steps for `npm run replay` and changelog updates because `package.json` only exposes `npm test`, and no changelog file exists in this checkout.
+
+Verification:
+- `npm test` passed, reporting zero tests.
+- Manual relative-link checks passed.
+- No `docs:check` script exists.

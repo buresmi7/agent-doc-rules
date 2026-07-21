@@ -1,0 +1,16 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Create concise agent instructions for this repository. Keep directory-specific rules near the directory they govern.",
+      "criteria": {
+        "o1": "Creates a concise root `AGENTS.md` for the workspace.",
+        "o2": "Creates `packages/importer/AGENTS.md` for importer-only rules instead of placing all importer details in the root file.",
+        "o3": "The root `AGENTS.md` links to installed `agent-doc-rules` guidance and points to the nested importer instructions.",
+        "o4": "The nested file preserves supported importer facts: read `packages/importer/docs/schema.md`, keep samples anonymous, and use the importer-specific test command when importer behavior changes.",
+        "o5": "Does not create unrelated docs or task-specific skills.",
+        "o6": "Does not invent package names, services, owners, hosts, issue workflows, or commands beyond the provided project files."
+      }
+    }
+  ]
+}

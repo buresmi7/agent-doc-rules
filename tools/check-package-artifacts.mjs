@@ -32,6 +32,19 @@ const packages = [
       'agent-doc-rules-docs-duplicates check',
     ],
   },
+  {
+    dir: 'packages/agent-e2e-runner',
+    name: '@buresmi7/agent-e2e-runner',
+    bin: {
+      'agent-e2e-runner': 'bin/agent-e2e-runner.mjs',
+    },
+    files: ['bin', 'docs', 'examples', 'src', 'README.md'],
+    readmeTerms: [
+      '@buresmi7/agent-e2e-runner',
+      'agent-e2e-runner agent',
+      'agent-e2e-runner command',
+    ],
+  },
 ];
 
 for (const packageInfo of packages) {

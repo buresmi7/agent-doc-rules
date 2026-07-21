@@ -6,5 +6,5 @@ columns.
 The streaming exporter was deferred for the first internal release. The team
 accepted the simpler in-memory implementation for now because invoices are
 small in the current pilot dataset. See
-[`decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md) for
-the accepted trade-off and revisit conditions.
+[`docs/decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md)
+for the accepted trade-off and revisit conditions.

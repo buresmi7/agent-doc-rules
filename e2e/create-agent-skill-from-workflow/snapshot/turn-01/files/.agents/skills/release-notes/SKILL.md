@@ -1,17 +1,22 @@
 ---
 name: release-notes
-description: Draft Atlas CLI release notes from the changelog and release input.
+description: Use when drafting Atlas CLI release notes from the changelog and merged pull request input.
 ---
 
 # Release Notes
 
-Use this skill when drafting `docs/releases/<version>.md` for the Atlas CLI.
+Use this skill to draft `docs/releases/<version>.md` for an Atlas CLI release.
+
+## Inputs
+
+- `CHANGELOG.md`
+- `docs/release-input.md`
 
 ## Workflow
 
 1. Read `CHANGELOG.md`.
 2. Read merged pull request titles from `docs/release-input.md`.
-3. Group changes into Added, Changed, Fixed, and Removed.
+3. Group changes into `Added`, `Changed`, `Fixed`, and `Removed`.
 4. Keep customer names and private issue links out of release notes.
 5. Write `docs/releases/<version>.md`.
 6. If the release input is incomplete, write a short residual-risk note instead
@@ -19,10 +24,5 @@ Use this skill when drafting `docs/releases/<version>.md` for the Atlas CLI.
 
 ## Verification
 
-Run the repository test suite before publishing release documentation changes:
-
-```sh
-npm test
-```
-
-If the check is skipped, state the reason and residual risk in the final note.
+Run `npm test` before publishing release documentation changes. If the check
+cannot run, record the blocker and what remains unverified.

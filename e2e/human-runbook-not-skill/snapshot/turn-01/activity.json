@@ -1,0 +1,122 @@
+[
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "git",
+    "exitCode": 128,
+    "status": "failed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "pwd",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "find",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "ls",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "mkdir",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "file_change",
+    "status": "completed",
+    "changes": [
+      {
+        "path": "AGENTS.md",
+        "kind": "add"
+      },
+      {
+        "path": "README.md",
+        "kind": "update"
+      },
+      {
+        "path": "docs/restore-staging-backup.md",
+        "kind": "add"
+      }
+    ]
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "sed",
+    "exitCode": 0,
+    "status": "completed"
+  },
+  {
+    "type": "command_execution",
+    "commandSummary": "npm run docs:check",
+    "exitCode": 0,
+    "status": "completed"
+  }
+]

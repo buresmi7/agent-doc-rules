@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo tests ok",
     "docs:check": "echo docs ok",
-    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs"
+    "test:agent": "node ../../../tools/run-agent-e2e-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
   },
   "dependencies": {
     "@buresmi7/agent-doc-rules-skill": "workspace:*"

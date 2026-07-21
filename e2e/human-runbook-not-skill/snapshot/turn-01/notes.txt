@@ -1,1 +1,0 @@
-Cleaned the README, added concise AGENTS.md guidance, moved the human restore procedure to docs, and verified with `npm run docs:check`.

@@ -1,0 +1,7 @@
+[
+  {
+    "path": "docs/ledger-csv-validation.md",
+    "status": "modified",
+    "content": "# Ledger CSV Validation\n\nLedger Scrubber validates exported ledger CSV files before local analysis.\n\nParser behavior changes must keep exported ledger CSV validation working. Run\n`npm test` before changing parser behavior.\n\n## Example Values\n\nUse anonymized values when writing docs, examples, or fixtures:\n\n| Field | Example value |\n| --- | --- |\n| Company name | `Example Ledger Customer LLC` |\n| Customer email | `customer@example.invalid` |\n| Private host | `ledger-host.example.invalid` |\n| Token | `token_example_redacted_0000` |\n| Account ID | `acct_example_0000` |\n\nThese values are placeholders. Do not replace them with real customer names,\nemails, private host names, tokens, or account IDs in committed docs or\nfixtures.\n"
+  }
+]

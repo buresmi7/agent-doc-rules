@@ -39,6 +39,9 @@ and a reference page should not hide required setup in prose.
 ## Repository Documentation Rules
 
 - Say what is true in this repository, not what is generally true.
+- Before rewriting, inventory the source document's concrete project claims.
+  Preserve them unless stronger repository evidence contradicts them; simplify
+  their wording instead of replacing them with an inventory of the checkout.
 - Document commands only after verifying them or marking them as examples.
 - During plain-English rewrites, keep the supported workflow intact instead of
   adding common setup, install, deploy, or package-manager steps.
@@ -49,6 +52,19 @@ and a reference page should not hide required setup in prose.
   files.
 - Preserve the consuming repository's required language. When there is no local
   override, use English.
+
+## Markdown Format
+
+Follow the repository's formatter or nearby Markdown style when either provides
+a clear rule. When neither does:
+
+- wrap prose and list items at 100 columns or less;
+- use spaces around table pipes and in delimiter rows, such as
+  `| Document | Purpose |` and `| --- | --- |`;
+- leave long URLs and code unchanged when wrapping would break them.
+
+Before finishing, inspect changed Markdown for accidental long prose lines and
+malformed table delimiters.
 
 ## What To Avoid
 

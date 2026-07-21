@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Cleaned the README, added concise AGENTS.md guidance, moved the human restore procedure to docs, and verified with `npm run docs:check`.",
-  "judgeNotes": "Generated documentation satisfies all critical criteria: README is concise, the human restore runbook lives under docs, AGENTS.md is a short routing and verification layer, no task-specific skill was created, supported facts are preserved, and no unsupported workflows or infrastructure were invented."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Clean up the README and add concise agent guidance for this repository.\nFiles: AGENTS.md, docs/restore-staging-backup.md, README.md\nAgent: Cleaned up the docs:\n\n- [README.md](<project>/README.md) now has a short project overview, canonical docs table, and verified docs check.\n- Added [docs/restore-staging-backup.md](<project>/docs/restore-staging-backup.md) as the human restore runbook.\n- Added [AGENTS.md](<project>/AGENTS.md) with concise agent guidance, safety rules, source-of-truth links, and the required shared-rule reference.\n\nVerification passed: `npm run docs:check`.",
+  "judgeNotes": "The final state satisfies all critical criteria: README is concise, the human restore runbook lives under docs/, AGENTS.md is short routing and verification guidance, no task-specific skill was created, required facts are preserved, and no unsupported providers, production workflows, owners, automation, or host names were invented."
 }

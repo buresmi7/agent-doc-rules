@@ -33,21 +33,22 @@ Use root `docs/` for maintainer workflows, E2E triage, release procedure,
 scenario coverage, and rationale that is not part of the published skill
 artifact.
 
-Use E2E `criteria.md` files for acceptance checks. Criteria may restate a rule
-briefly, but they should link mentally to an actual rule surface. If a failure
-shows missing behavior, update the rule first, then tighten the criterion only
-when the judge needs a clearer pass/fail boundary.
+Use each agent scenario's `scenario.json` for ordered user prompts and the named
+acceptance criteria beside each prompt. Criteria may restate a rule briefly,
+but they should link mentally to an actual rule surface. If a failure shows
+missing behavior, update the rule first, then tighten the criterion only when
+the judge needs a clearer pass/fail boundary.
 
 Use E2E fixture `project/` files for project evidence. Fixtures should contain
 the facts the agent may rely on. Do not hide expected behavior in fixture prose
 unless a real consuming repository would say it that way.
 
-Use E2E `prompt.md` or `turns/*.md` files for natural user requests. Do not
-name the skill, loaded references, target files, or exact artifact the agent
-should create unless the scenario is testing direct compliance with an explicit
-user instruction. Do not mirror criteria wording in prompts, such as asking for
-the exact rationale, status, backlink, or revisit fields the criteria will
-judge. Keep expected implementation details in criteria, not prompts.
+Use each turn's `prompt` for a natural user request. Do not name the skill,
+loaded references, target files, or exact artifact the agent should create
+unless the scenario is testing direct compliance with an explicit user
+instruction. Do not mirror criteria wording in prompts, such as asking for the
+exact rationale, status, backlink, or revisit fields the criteria will judge.
+Keep expected implementation details in `criteria`, not `prompt`.
 
 Use deterministic tooling when the failure is mechanical: broken links, missing
 package metadata, stale paths, invalid Markdown, unsafe generated paths, or

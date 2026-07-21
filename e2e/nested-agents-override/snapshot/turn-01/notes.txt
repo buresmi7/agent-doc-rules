@@ -1,1 +1,0 @@
-Created root instructions and an importer-local override so directory-specific rules stay near the package they govern.

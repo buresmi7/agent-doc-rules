@@ -1,0 +1,16 @@
+{
+  "name": "ledger-cli",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20 <25"
+  },
+  "scripts": {
+    "test": "node --test",
+    "docs:check": "echo docs ok"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  }
+}

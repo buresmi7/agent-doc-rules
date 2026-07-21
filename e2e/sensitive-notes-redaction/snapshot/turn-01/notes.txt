@@ -1,1 +1,0 @@
-Moved durable notes into README and AGENTS.md, and reduced notes.md to a pointer without sensitive fixture values.

@@ -1,18 +1,26 @@
 # Operations
 
-## Release Steps
+Use this page for release checks and troubleshooting notes for Orchard Webhook
+Proxy.
 
-1. Run `npm test`.
-2. Run the replay dry run when the replay command is available.
-3. Check that `docs/contracts/billing-events.md` still matches the queue schema.
-4. Update the changelog.
+## Release Checks
 
-`package.json` currently declares only the `test` script. Verify the replay
-command before relying on `npm run replay -- --dry-run`.
+1. Run the test suite:
+
+   ```sh
+   npm test
+   ```
+
+2. Check that [docs/contracts/billing-events.md](contracts/billing-events.md)
+   still matches the billing queue schema.
+
+The package manifest does not expose a replay script or changelog file in this
+checkout. Do not document replay or changelog steps as required release actions
+until the repository contains evidence for them.
 
 ## Troubleshooting
 
 - If signatures fail locally, check that the fixture header matches the fixture
   body.
-- If replay fails, run it again with `--dry-run` before changing code.
-- If queue writes fail, do not document the raw payload.
+- If queue writes fail, do not document the raw payload. Raw webhook payloads can
+  contain customer email addresses, invoice IDs, and account IDs.

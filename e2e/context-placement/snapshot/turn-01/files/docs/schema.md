@@ -1,6 +1,18 @@
 # Observation Schema
 
-Observation JSON contains `species`, `site`, `observedAt`, and `count`.
+The parser accepts UTF-8 CSV input with these columns:
 
-The importer reads `observed_at` from source CSV files and writes it as
-`observedAt` in normalized JSON observations.
+- `species`
+- `site`
+- `observed_at`
+- `count`
+
+Observation JSON contains:
+
+- `species`
+- `site`
+- `observedAt`
+- `count`
+
+Rows with empty `species` values are dropped. The importer records the dropped
+row number in the import report.

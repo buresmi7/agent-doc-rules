@@ -1,0 +1,7 @@
+Cleaned up the release documentation:
+
+- Shortened [README.md](<project>/README.md:1) so it points to the release-note workflow instead of carrying it inline.
+- Added [AGENTS.md](<project>/AGENTS.md:1) with project routing, shared-rule links, local release safety rules, and verification guidance.
+- Added the agent workflow as [.agents/skills/release-notes/SKILL.md](<project>/.agents/skills/release-notes/SKILL.md:1).
+
+Verification: `npm test` passed.

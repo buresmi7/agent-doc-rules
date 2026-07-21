@@ -5,6 +5,6 @@
   "score": 1,
   "failedCriteria": [],
   "requiredFixes": [],
-  "generatorNotes": "Created root instructions and an importer-local override so directory-specific rules stay near the package they govern.",
-  "judgeNotes": "The generated root AGENTS.md is concise, links to the installed shared guidance, routes importer work to the nested AGENTS.md, and preserves supported verification guidance. The nested importer AGENTS.md contains the importer-only schema, sample anonymity, and test-command rules without inventing unsupported project facts or adding unrelated files."
+  "transcript": "Turn 1 (request, scenario.json#/turns/0)\nUser: Create concise agent instructions for this repository. Keep directory-specific rules near the directory they govern.\nFiles: AGENTS.md, packages/importer/AGENTS.md\nAgent: Created concise agent instructions:\n\n- [AGENTS.md](<project>/AGENTS.md): root workspace orientation, shared rule link, source-of-truth routing, broad verification.\n- [packages/importer/AGENTS.md](<project>/packages/importer/AGENTS.md): importer-specific schema, anonymity, safety, and test rules.\n\nVerification passed:\n\n```bash\nnpm test\nnpm run test:importer\n```\n\nNote: `git status` was not available because this workspace path is not currently inside a Git repository.",
+  "judgeNotes": "The output creates concise root and importer-specific AGENTS.md files, links shared guidance and nested rules, preserves supported importer facts and test command, avoids unrelated docs, and does not introduce unsupported workflows or package/service facts."
 }
