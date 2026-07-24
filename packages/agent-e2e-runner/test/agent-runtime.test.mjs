@@ -228,12 +228,14 @@ test('prepareIsolatedCodexHome copies auth without copying local config or rules
     tempDir,
     sourceCodexHome,
     codexModel: 'gpt-test',
+    sandboxMode: 'workspace-write',
   });
 
   assert.equal(await readFile(join(isolatedCodexHome, 'auth.json'), 'utf8'), '{"token":"test"}\n');
 
   const isolatedConfig = await readFile(join(isolatedCodexHome, 'config.toml'), 'utf8');
   assert.match(isolatedConfig, /model = "gpt-test"/);
+  assert.match(isolatedConfig, /sandbox_mode = "workspace-write"/);
   assert.doesNotMatch(isolatedConfig, /local-model/);
 
   await assert.rejects(

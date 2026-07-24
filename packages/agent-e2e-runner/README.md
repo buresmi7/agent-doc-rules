@@ -121,7 +121,7 @@ normal dependencies:
   "private": true,
   "devDependencies": {
     "@acme/my-skill": "file:../../..",
-    "@buresmi7/agent-e2e-runner": "^0.10.0"
+    "@buresmi7/agent-e2e-runner": "^0.11.0"
   }
 }
 ```

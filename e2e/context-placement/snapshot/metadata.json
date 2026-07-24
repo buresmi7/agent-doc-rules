@@ -29,6 +29,7 @@
   "skillsCliVersion": "1.5.12",
   "skillPackage": {
     "name": "@buresmi7/agent-doc-rules-skill",
-    "source": "packages/agent-doc-rules-skill"
+    "source": "workspace:*",
+    "skill": "agent-doc-rules"
   }
 }

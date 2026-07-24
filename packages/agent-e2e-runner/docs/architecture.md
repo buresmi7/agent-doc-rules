@@ -26,6 +26,10 @@ turn starts a Codex session; later turns use `codex exec resume` with the same
 session ID. Codex therefore sees its real prior responses and tool activity
 instead of a transcript reconstructed by the runner.
 
+The isolated Codex configuration keeps the agent session in `workspace-write`
+mode across resumed turns. The separate judge uses its own `read-only`
+configuration.
+
 User turns are still scripted before the run. The runner does not yet choose a
 branch based on the exact question Codex asks. Criteria should fail the scenario
 when a later reply does not make sense after the actual preceding response.

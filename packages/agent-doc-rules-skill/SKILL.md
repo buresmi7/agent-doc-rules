@@ -71,7 +71,8 @@ canonical, plain, and easy for agents and people to use.
      decision logs, read
      [references/decision-records.md](references/decision-records.md).
    - For repairing bloated docs, moving inbox notes, or auditing duplicated
-     durable facts, read [references/doc-audit.md](references/doc-audit.md).
+     durable facts, read [references/doc-audit.md](references/doc-audit.md) and
+     [references/factual-review.md](references/factual-review.md).
    - For factual accuracy, contradictions, unsupported claims, stale facts, or
      misleading documentation review, read
      [references/factual-review.md](references/factual-review.md).
@@ -196,7 +197,23 @@ For design influences and attribution, see
   behind.
 - Make local overrides explicit, narrow, and easy to find.
 - Keep persisted content in the language required by the consuming repository.
+- Write the durable result, not the conversation that produced it. Turn
+  supported project facts and requirements, durable rationale, and confirmed
+  decisions into standalone project documentation.
+  Do not fill gaps from field names, adjacent lists, or common practice.
+  Unless project evidence states them, do not infer meanings, required status,
+  mappings, transformations, cardinality, causes, or downstream behavior.
+  When evidence supplies only a list of names, keep a bare list; do not add
+  description, notes, source, mapping, or semantics columns.
+  Omit prompts and replies, speaker labels, greetings and acknowledgements,
+  agent work plans and status updates, task narration, tool traces, chat-session
+  metadata, and session-specific temporary paths. Do not present superseded
+  conversational instructions as current facts. Preserve them only when needed
+  to explain a decision or maintain project history. Keep raw conversation only
+  in an explicit transcript or conversation example whose purpose requires it.
 - Do not include secrets, real customer names, emails, account IDs, private host
   names, tokens, or environment-specific notes in reusable docs. When source
   notes contain sensitive examples, keep only a short safety rule that names the
-  sensitive categories to avoid.
+  sensitive categories to avoid. Preserve the categories supported by project
+  evidence; do not turn this skill's generic examples into project-specific
+  facts or broaden a narrower local rule.

@@ -17,6 +17,8 @@ task-specific skill for agents.
 - Reviews agent-facing docs for data leaks, prompt-injection language,
   validation bypasses, and backdoor-style guidance.
 - Applies plain-English writing rules to repository documentation.
+- Keeps prompts, task narration, and tool traces out of durable
+  documentation without dropping supported project facts and decisions.
 - Uses progressive disclosure so detailed rules live in references, not in the
   always-loaded skill entry point.
 

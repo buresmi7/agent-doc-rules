@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## v0.11.0 - 2026-07-24
+
+- Added an always-loaded rule that keeps prompts, replies, speaker labels,
+  agent work plans, status updates, task narration, tool traces, chat-session
+  metadata, and session-specific paths out of durable documentation.
+- Kept supported project facts, requirements, rationale, and confirmed
+  decisions while allowing raw conversation only in explicit transcripts or
+  conversation examples.
+- Expanded the context-placement E2E scenario to reject chat framing,
+  interaction-only files, and unsupported schema or troubleshooting claims.
+- Kept resumed multi-turn agent E2E sessions writable so confirmed follow-up
+  changes can be applied; the separate judge remains read-only.
+- Added a GitHub release template that lists every public package and draws
+  user-visible notes from the matching changelog entry.
+
 ## v0.10.0 - 2026-07-21
 
 - Added the publishable `@buresmi7/agent-e2e-runner` package with a standalone

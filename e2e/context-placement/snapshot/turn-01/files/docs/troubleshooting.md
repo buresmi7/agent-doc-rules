@@ -2,7 +2,7 @@
 
 ## Fixture Failures
 
-If a fixture fails, run:
+When a fixture fails, run:
 
 ```sh
 npm test

@@ -1,6 +1,6 @@
 {
   "name": "@buresmi7/agent-e2e-runner",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": false,
   "description": "Run Agent Skill E2E tests in real Codex sessions against fixture projects",
   "type": "module",

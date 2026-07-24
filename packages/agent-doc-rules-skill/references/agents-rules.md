@@ -66,6 +66,8 @@ and document the remaining risk.
 - Brief project description.
 - Links to shared rules and project docs.
 - Local language, safety, security, or workflow overrides.
+- Project-specific privacy categories supported by local evidence. Do not
+  broaden them with generic examples from this reference or the skill.
 - Project-specific verification commands.
 - A short rule that makes skipped verification visible. Existing local wording
   such as "say what remained unchecked" satisfies this; do not rewrite it only

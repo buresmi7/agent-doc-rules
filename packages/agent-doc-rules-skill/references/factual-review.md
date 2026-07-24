@@ -34,6 +34,13 @@ disprove a documented `npm run <name>` command. A missing dependency does not by
 itself prove that a service is unused unless the claim depends on that
 dependency.
 
+Treat names and layout as labels, not behavioral evidence. Field names and
+adjacent input and output lists do not establish meanings, required status,
+mappings, transformations, cardinality, causes, or downstream behavior. For
+example, two similarly named fields do not establish a one-to-one mapping.
+Document the lists separately unless source text, code, tests, or configuration
+states the relationship.
+
 Treat a checkout as potentially partial. An existing concrete project claim is
 documentation evidence even when this checkout does not contain enough source
 or tests to verify it independently. Do not delete that claim or replace it
@@ -52,6 +59,8 @@ Make one pass over the relevant docs and collect claims. Then compare each claim
 against evidence:
 
 - Compare documented commands with manifests before preserving them.
+- Check every added field description, mapping, transformation, and causal claim
+  against source text, code, tests, or configuration.
 - Check that named files, folders, scripts, config keys, and generated outputs
   exist or are clearly examples.
 - Compare repeated claims across README files, `AGENTS.md`, docs, templates, and
@@ -113,6 +122,10 @@ When editing instead of only reviewing:
   task does not expand runtime support or change a product contract. Make those
   changes only when the user explicitly requests the underlying product change.
 - Preserve verified project-specific facts.
+- Preserve the scope and form of an existing enumeration. When a task adds one
+  named item to a supported list, add that item; do not turn the list into a
+  continuous range or broader category unless the evidence explicitly supports
+  that broader claim.
 - Remove false claims instead of replacing them with invented details.
 - Narrow overclaims to match the evidence.
 - Mark examples as examples when they are not supported project commands.

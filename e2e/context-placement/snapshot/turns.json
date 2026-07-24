@@ -3,7 +3,7 @@
     "id": "request",
     "source": "scenario.json#/turns/0",
     "snapshotDir": "turn-01",
-    "prompt": "Organize the project notes into durable documentation.",
+    "prompt": "Thanks, this finally makes sense. I've been calling our chat the \"CSV cleanup brain-dump.\" Organize the project notes into concise, durable documentation. When you're done, tell me what changed.",
     "activity": [
       {
         "type": "command_execution",
@@ -37,7 +37,13 @@
       },
       {
         "type": "command_execution",
-        "commandSummary": "pwd",
+        "commandSummary": "rg",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "find",
         "exitCode": 0,
         "status": "completed"
       },
@@ -46,18 +52,6 @@
         "commandSummary": "git",
         "exitCode": 128,
         "status": "failed"
-      },
-      {
-        "type": "command_execution",
-        "commandSummary": "find",
-        "exitCode": 0,
-        "status": "completed"
-      },
-      {
-        "type": "command_execution",
-        "commandSummary": "find",
-        "exitCode": 0,
-        "status": "completed"
       },
       {
         "type": "command_execution",
@@ -102,7 +96,7 @@
             "kind": "update"
           },
           {
-            "path": "docs/architecture.md",
+            "path": "docs/output-format.md",
             "kind": "add"
           },
           {
@@ -145,7 +139,13 @@
       },
       {
         "type": "command_execution",
-        "commandSummary": "npm test",
+        "commandSummary": "sed",
+        "exitCode": 0,
+        "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "sed",
         "exitCode": 0,
         "status": "completed"
       },
@@ -154,40 +154,46 @@
         "commandSummary": "test",
         "exitCode": 0,
         "status": "completed"
+      },
+      {
+        "type": "command_execution",
+        "commandSummary": "npm test",
+        "exitCode": 0,
+        "status": "completed"
       }
     ],
     "changes": [
       {
         "path": "AGENTS.md",
         "status": "created",
-        "content": "# Habitat Importer - AI Agent Instructions\n\nHabitat Importer reads field-team CSV exports and writes normalized species\nobservations as JSON.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)\n\n## Local Rules\n\n- Read [docs/schema.md](docs/schema.md) before changing parser output.\n- Do not mention private site names in public docs.\n- Keep generated JSON examples out of commits when they include real site names.\n\n## Source Of Truth\n\n- [README.md](README.md) is the human entry point.\n- [docs/schema.md](docs/schema.md) owns parser input, output, and import report\n  behavior.\n- [docs/architecture.md](docs/architecture.md) owns output-format rationale.\n- [docs/troubleshooting.md](docs/troubleshooting.md) owns fixture failure\n  checks.\n\n## Verification\n\n- Run `npm test` before changing parser behavior.\n- If a check cannot run, state the blocker and what remains unverified.\n"
+        "content": "# Habitat Importer - AI Agent Instructions\n\nHabitat Importer converts field-team CSV files into normalized JSON species\nobservations.\n\n## Shared Rules\n\n- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)\n\n## Local Rules\n\n- Read [docs/schema.md](docs/schema.md) before changing parser output.\n- Do not commit generated JSON examples that include real site names.\n- Do not mention private site names in public docs.\n\n## Source Of Truth\n\n- [README.md](README.md) is the human entry point.\n- [docs/schema.md](docs/schema.md) owns the CSV input and JSON output contract.\n- [docs/output-format.md](docs/output-format.md) owns the JSON output rationale.\n- [docs/troubleshooting.md](docs/troubleshooting.md) owns fixture failure\n  repair guidance.\n\n## Verification\n\n- Run `npm test` before changing parser behavior.\n- If a check cannot run, state the blocker and what remains unverified.\n"
       },
       {
-        "path": "docs/architecture.md",
+        "path": "docs/output-format.md",
         "status": "created",
-        "content": "# Architecture\n\nHabitat Importer writes normalized observations as JSON because downstream\nreview tools do not agree on a CSV dialect.\n\nFor the input and output contract, see [Observation schema](schema.md).\n"
+        "content": "# Output Format\n\nHabitat Importer writes normalized observations as JSON because downstream\nreview tools do not agree on one CSV dialect.\n"
       },
       {
         "path": "docs/schema.md",
         "status": "modified",
-        "content": "# Observation Schema\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n- `species`\n- `site`\n- `observed_at`\n- `count`\n\nObservation JSON contains:\n\n- `species`\n- `site`\n- `observedAt`\n- `count`\n\nRows with empty `species` values are dropped. The importer records the dropped\nrow number in the import report.\n"
+        "content": "# Observation Schema\n\n## CSV Input\n\nThe parser accepts UTF-8 CSV input with these columns:\n\n- `species`\n- `site`\n- `observed_at`\n- `count`\n\nRows with empty `species` values are dropped. The import report records the row\nnumber for each dropped row.\n\n## JSON Output\n\nObservation JSON contains:\n\n- `species`\n- `site`\n- `observedAt`\n- `count`\n"
       },
       {
         "path": "docs/troubleshooting.md",
         "status": "created",
-        "content": "# Troubleshooting\n\n## Fixture Failures\n\nIf a fixture fails, run:\n\n```sh\nnpm test\n```\n\nInspect the failing row number before changing schema docs.\n"
+        "content": "# Troubleshooting\n\n## Fixture Failures\n\nWhen a fixture fails, run:\n\n```sh\nnpm test\n```\n\nInspect the failing row number before changing schema docs.\n"
       },
       {
         "path": "notes.md",
         "status": "modified",
-        "content": "# Documentation Inbox\n\nThe durable notes now live in:\n\n- [README.md](README.md)\n- [AGENTS.md](AGENTS.md)\n- [docs/schema.md](docs/schema.md)\n- [docs/architecture.md](docs/architecture.md)\n- [docs/troubleshooting.md](docs/troubleshooting.md)\n"
+        "content": "# Documentation Inbox\n\nThe durable project notes now live in:\n\n- [README.md](README.md)\n- [AGENTS.md](AGENTS.md)\n- [docs/schema.md](docs/schema.md)\n- [docs/output-format.md](docs/output-format.md)\n- [docs/troubleshooting.md](docs/troubleshooting.md)\n"
       },
       {
         "path": "README.md",
         "status": "modified",
-        "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\nRun `npm test` before changing parser behavior.\n\n## Documentation\n\n- [Observation schema](docs/schema.md) describes the accepted CSV columns,\n  normalized JSON output, and import report behavior.\n- [Architecture](docs/architecture.md) explains why the importer writes JSON.\n- [Troubleshooting](docs/troubleshooting.md) covers fixture failure checks.\n"
+        "content": "# Habitat Importer\n\nHabitat Importer reads CSV exports from field teams and writes normalized\nspecies observations to JSON files.\n\n## Documentation\n\n- [Observation schema](docs/schema.md) describes accepted CSV input and JSON\n  output.\n- [Output format rationale](docs/output-format.md) explains why imports produce\n  JSON.\n- [Troubleshooting](docs/troubleshooting.md) covers fixture failures.\n\n## Verification\n\nRun `npm test` before changing parser behavior.\n"
       }
     ],
-    "response": "Organized the notes into durable docs:\n\n- Added [AGENTS.md](<project>/AGENTS.md) for agent routing, local safety rules, and verification.\n- Expanded [docs/schema.md](<project>/docs/schema.md) with CSV input, JSON output, and dropped-row behavior.\n- Added [docs/architecture.md](<project>/docs/architecture.md) for the JSON rationale.\n- Added [docs/troubleshooting.md](<project>/docs/troubleshooting.md) for fixture failure checks.\n- Updated [README.md](<project>/README.md) with a compact docs index.\n- Reduced [notes.md](<project>/notes.md) to pointers so it no longer duplicates the durable facts.\n\nVerification: `npm test` passed. The suite currently contains zero tests, so this confirms the test runner starts cleanly. I also checked the local doc links target existing files."
+    "response": "Organized the CSV cleanup notes into durable docs:\n\n- Added [AGENTS.md](<project>/AGENTS.md) with agent routing, safety rules, source-of-truth links, and verification guidance.\n- Expanded [docs/schema.md](<project>/docs/schema.md) with CSV input columns, dropped-row behavior, and JSON output fields.\n- Added [docs/output-format.md](<project>/docs/output-format.md) for the JSON rationale.\n- Added [docs/troubleshooting.md](<project>/docs/troubleshooting.md) for fixture failure handling.\n- Updated [README.md](<project>/README.md) with a compact documentation index.\n- Reduced [notes.md](<project>/notes.md) to pointers so it no longer duplicates durable facts.\n\nVerification: `npm test` passed, though the repo currently has zero tests. Local doc links were also checked for existence."
   }
 ]

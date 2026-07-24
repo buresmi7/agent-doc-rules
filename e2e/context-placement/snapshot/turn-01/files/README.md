@@ -3,11 +3,14 @@
 Habitat Importer reads CSV exports from field teams and writes normalized
 species observations to JSON files.
 
-Run `npm test` before changing parser behavior.
-
 ## Documentation
 
-- [Observation schema](docs/schema.md) describes the accepted CSV columns,
-  normalized JSON output, and import report behavior.
-- [Architecture](docs/architecture.md) explains why the importer writes JSON.
-- [Troubleshooting](docs/troubleshooting.md) covers fixture failure checks.
+- [Observation schema](docs/schema.md) describes accepted CSV input and JSON
+  output.
+- [Output format rationale](docs/output-format.md) explains why imports produce
+  JSON.
+- [Troubleshooting](docs/troubleshooting.md) covers fixture failures.
+
+## Verification
+
+Run `npm test` before changing parser behavior.

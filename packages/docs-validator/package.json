@@ -1,6 +1,6 @@
 {
   "name": "@buresmi7/agent-doc-rules-docs-validator",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "private": false,
   "description": "Markdown, security, and link validation CLI for agent-doc-rules projects",
   "type": "module",

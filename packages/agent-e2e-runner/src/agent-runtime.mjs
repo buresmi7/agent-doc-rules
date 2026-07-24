@@ -120,6 +120,7 @@ export async function createCodexSession(runtime, {
     tempDir: outputDir,
     sourceCodexHome: runtime.codexConfigHome,
     codexModel: runtime.codexModel,
+    sandboxMode: 'workspace-write',
   });
   const env = buildCodexProcessEnv(baseEnv, codexHome);
   let sessionId = null;
@@ -208,6 +209,7 @@ export async function judgeAgentOutput(runtime, {
     tempDir: outputDir,
     sourceCodexHome: runtime.codexConfigHome,
     codexModel: runtime.codexJudgeModel,
+    sandboxMode: 'read-only',
   });
 
   try {
@@ -431,7 +433,12 @@ function portableBasename(path) {
   return basename(path.replaceAll('\\', '/'));
 }
 
-export async function prepareIsolatedCodexHome({ tempDir, sourceCodexHome, codexModel }) {
+export async function prepareIsolatedCodexHome({
+  tempDir,
+  sourceCodexHome,
+  codexModel,
+  sandboxMode,
+}) {
   const codexHome = join(tempDir, 'codex-home');
 
   await mkdir(codexHome, { recursive: true });
@@ -446,6 +453,10 @@ export async function prepareIsolatedCodexHome({ tempDir, sourceCodexHome, codex
 
   if (codexModel) {
     configLines.push(`model = ${JSON.stringify(codexModel)}`);
+  }
+
+  if (sandboxMode) {
+    configLines.push(`sandbox_mode = ${JSON.stringify(sandboxMode)}`);
   }
 
   await writeFile(join(codexHome, 'config.toml'), `${configLines.join('\n')}\n`);

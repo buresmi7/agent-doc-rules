@@ -28,6 +28,9 @@ asked for an audit report.
   land, not only in the README.
 - Do not infer hidden harness commands such as `test:agent`; a script belongs in
   docs only when the target manifest or user request supports it.
+- When a source gives only field, command, option, or artifact names, preserve a
+  bare list. Do not add description, notes, source, mapping, or semantics
+  columns unless evidence supports every added cell.
 - Preserve supported project-specific facts even when rewriting the surrounding
   prose.
 - Remove or label unsupported commands, integrations, hosts, issue workflows, and
@@ -58,5 +61,7 @@ Before finishing, check that:
 - each moved fact has one canonical home,
 - source files no longer duplicate durable facts,
 - links point from short entry files to the new canonical homes,
+- every added sentence and table cell traces to the source-fact inventory or
+  stronger project evidence,
 - command guidance is verified or marked as unavailable,
 - skipped checks include a reason and remaining risk.

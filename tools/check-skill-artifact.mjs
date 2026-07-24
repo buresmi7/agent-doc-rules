@@ -89,6 +89,10 @@ async function checkSkillFrontmatter() {
     errors.push('SKILL.md must explicitly name sensitive documentation categories.');
   }
 
+  if (!content.includes("do not turn this skill's generic examples into project-specific")) {
+    errors.push('SKILL.md must prevent generic sensitive examples becoming project facts.');
+  }
+
   if (!content.includes('do not add generic setup, install, test')) {
     errors.push('SKILL.md must keep unsupported generic setup-step guidance always loaded.');
   }
@@ -102,6 +106,16 @@ async function checkSkillFrontmatter() {
     || !content.includes('do not bury the shared-rule link under')
     || !content.includes('Source Of Truth')) {
     errors.push('SKILL.md must keep dedicated Shared Rules section guidance always loaded.');
+  }
+
+  if (!content.includes('Write the durable result, not the conversation that produced it.')
+    || !content.includes('Do not fill gaps from field names')
+    || !content.includes('do not infer meanings, required status')
+    || !content.includes('mappings, transformations, cardinality')
+    || !content.includes('When evidence supplies only a list of names, keep a bare list')
+    || !content.includes('Omit prompts and replies')
+    || !content.includes('explicit transcript or conversation example')) {
+    errors.push('SKILL.md must keep the conversation-artifact rule always loaded.');
   }
 }
 
@@ -239,6 +253,8 @@ async function checkFactualReviewContract() {
 
   const requiredReferenceTerms = [
     '## Evidence Rules',
+    'Treat names and layout as labels, not behavioral evidence.',
+    'two similarly named fields do not establish a one-to-one mapping',
     '## Detection Pass',
     '## Finding Types',
     '## Severity',
