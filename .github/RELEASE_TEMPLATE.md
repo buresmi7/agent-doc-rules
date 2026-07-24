@@ -1,11 +1,8 @@
 <!--
-Set the GitHub release title to "agent-doc-rules TAG". Replace every ALL_CAPS
-placeholder, then remove all comments and unused optional sections before
-publishing.
-
-This lockstep template applies through v0.11.0. Read
-[Release Management](../docs/release-management.md) before preparing later
-package-specific releases.
+Use this template only for package-specific releases after v0.11.0. Set the
+GitHub Release title to "PACKAGE_NAME VERSION" and use the package tag from
+release-packages.json. Replace every ALL_CAPS placeholder, then remove comments
+and unused optional sections before publishing.
 -->
 
 RELEASE_SUMMARY
@@ -13,12 +10,12 @@ RELEASE_SUMMARY
 ## Highlights
 
 <!--
-List two to five user-visible changes. Omit internal refactors, CI work, and
-release chores. For a one-change patch, keep only the summary and omit this
-section.
+List two to five user-visible package changes. Omit unrelated monorepo work,
+internal refactors, CI work, and release chores. For a one-change patch, keep
+only the summary and omit this section.
 -->
 
-- RELEASE_CHANGE
+- PACKAGE_CHANGE
 
 <!-- Optional: keep this section only when users must take action. -->
 
@@ -26,18 +23,13 @@ section.
 
 - UPGRADE_STEP
 
-## Packages
-
-All packages in this release use version `VERSION`.
+## Package
 
 | Package | Version |
 | --- | --- |
-| [`@buresmi7/agent-doc-rules-skill`](https://www.npmjs.com/package/@buresmi7/agent-doc-rules-skill) | `VERSION` |
-| [`@buresmi7/agent-e2e-runner`](https://www.npmjs.com/package/@buresmi7/agent-e2e-runner) | `VERSION` |
-| [`@buresmi7/agent-doc-rules-docs-validator`](https://www.npmjs.com/package/@buresmi7/agent-doc-rules-docs-validator) | `VERSION` |
-| [`@buresmi7/agent-doc-rules-docs-duplicates`](https://www.npmjs.com/package/@buresmi7/agent-doc-rules-docs-duplicates) | `VERSION` |
+| [`PACKAGE_NAME`](https://www.npmjs.com/package/PACKAGE_NAME) | `VERSION` |
 
 ## Changelog
 
 - [Full changelog](https://github.com/buresmi7/agent-doc-rules/compare/PREVIOUS_TAG...TAG)
-- [Changelog entry](https://github.com/buresmi7/agent-doc-rules/blob/TAG/CHANGELOG.md)
+- [Changelog entry](https://github.com/buresmi7/agent-doc-rules/blob/TAG/PACKAGE_CHANGELOG_PATH)

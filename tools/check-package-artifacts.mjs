@@ -4,7 +4,6 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const rootPackage = JSON.parse(await readFile(join(repoRoot, 'package.json'), 'utf8'));
 const errors = [];
 
 const packages = [
@@ -67,10 +66,6 @@ async function checkPackage(packageInfo) {
 
   if (packageJson.name !== packageInfo.name) {
     errors.push(`${packageInfo.dir}/package.json name must be ${packageInfo.name}.`);
-  }
-
-  if (packageJson.version !== rootPackage.version) {
-    errors.push(`${packageInfo.dir}/package.json version must match root version ${rootPackage.version}.`);
   }
 
   if (packageJson.private !== false) {

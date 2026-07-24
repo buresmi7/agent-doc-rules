@@ -1,0 +1,25 @@
+{
+  "repository": "buresmi7/agent-doc-rules",
+  "packages": [
+    {
+      "name": "@buresmi7/agent-doc-rules-skill",
+      "directory": "packages/agent-doc-rules-skill",
+      "tagPrefix": "agent-doc-rules-skill"
+    },
+    {
+      "name": "@buresmi7/agent-e2e-runner",
+      "directory": "packages/agent-e2e-runner",
+      "tagPrefix": "agent-e2e-runner"
+    },
+    {
+      "name": "@buresmi7/agent-doc-rules-docs-validator",
+      "directory": "packages/docs-validator",
+      "tagPrefix": "agent-doc-rules-docs-validator"
+    },
+    {
+      "name": "@buresmi7/agent-doc-rules-docs-duplicates",
+      "directory": "packages/docs-duplicates",
+      "tagPrefix": "agent-doc-rules-docs-duplicates"
+    }
+  ]
+}

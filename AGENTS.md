@@ -41,6 +41,9 @@ Keep generated maintainer skill files and their source links documented in
 - Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
 - Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
 - Monorepo developer docs: `docs/development.md`
+- Release procedure: `docs/release-management.md`
+- Public package release identities: `release-packages.json`
+- Checked-in package release intent: `.changeset/`
 - Rule placement rubric: `docs/rule-placement.md`
 - E2E failure triage: `docs/e2e-failure-triage.md`
 - E2E rule matrix: `docs/e2e-rule-matrix.md`
@@ -82,8 +85,8 @@ Keep generated maintainer skill files and their source links documented in
 
 ## Maintenance
 
-- Use the release checklist in `docs/development.md` for changelog and publish
-  preparation requirements.
+- Use `docs/release-management.md` to prepare versions, changelogs, Git tags,
+  npm publications, and GitHub Releases.
 - Review external skill updates before committing lockfile changes; follow the
   maintainer-skill guidance in `docs/maintainer-skills.md`. Commit the
   lockfile, not generated external skill copies.

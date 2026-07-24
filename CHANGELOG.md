@@ -5,6 +5,8 @@
 - Documented `v0.11.0` as the final lockstep release, the legacy tag and
   GitHub Release reconciliation procedure, and independent versioning for later
   package releases.
+- Added Changesets metadata, package-specific changelogs and tag identities,
+  and release checks for prepared, tagged, and published package versions.
 
 ## v0.11.0 - 2026-07-24
 

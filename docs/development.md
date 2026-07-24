@@ -12,7 +12,7 @@ For install commands, usage examples, the feature guide, and product docs, use
 - You change reusable documentation rules, references, or starter templates.
 - You work on the Markdown/link validator or semantic duplicate checker.
 - You test how agents read and apply documentation in E2E scenarios.
-- You prepare a release of the skill package.
+- You prepare a release of any public package.
 
 ## Quick Start
 
@@ -105,9 +105,9 @@ explains how maintainers review and restore them.
 
 ### Release Management
 
-Use [docs/release-management.md](release-management.md) to reconcile legacy
-tags and GitHub Releases, complete the final lockstep release, and publish later
-package versions independently. The accepted release model is recorded in
+Use [docs/release-management.md](release-management.md) to audit the reconciled
+legacy tags and GitHub Releases and publish later package versions
+independently. The accepted release model is recorded in
 [Independent package versioning](decisions/independent-package-versioning.md).
 
 ## Common Tasks
@@ -157,6 +157,8 @@ snapshot metadata.
 | [`docs/project-cleanup.md`](project-cleanup.md) | Maintainer checklist for making cleanup part of development. |
 | [`docs/release-management.md`](release-management.md) | Legacy Release reconciliation and independent package release procedure. |
 | [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Decision to end lockstep package versions after `v0.11.0`. |
+| [`.changeset/`](../.changeset/) | Checked-in package release intent and independent-version configuration. |
+| [`release-packages.json`](../release-packages.json) | Public package directories, tag prefixes, and repository identity used by release checks. |
 | [`tools/`](../tools/) | Monorepo support scripts and E2E wrappers for this repository. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
@@ -178,7 +180,8 @@ snapshot metadata.
 | [`docs/project-cleanup.md`](project-cleanup.md) | How maintainers fold cleanup into ordinary development. |
 | [`docs/release-management.md`](release-management.md) | How maintainers reconcile legacy Releases and publish independent package versions. |
 | [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Why public packages stop using lockstep versions after `v0.11.0`. |
-| [`CHANGELOG.md`](../CHANGELOG.md) | Released skill and template behavior changes. |
+| [`release-packages.json`](../release-packages.json) | Which public package, directory, and tag identity each release tool uses. |
+| [`CHANGELOG.md`](../CHANGELOG.md) | Legacy lockstep releases and later repository-maintenance changes. |
 
 When docs conflict, use the document that is the canonical source for that
 detail.

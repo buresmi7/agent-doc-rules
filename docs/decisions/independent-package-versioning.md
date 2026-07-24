@@ -58,16 +58,16 @@ the original tag date. Their notes must identify them as historical records.
   procedure.
 - Maintainers use the [Monorepo Development](../development.md) page to find
   the release procedure.
-- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) identifies
-  the release model it supports.
+- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) defines the
+  package-specific Release format.
 
 ## Backlinks
 
 - [Release Management](../release-management.md) links to this decision.
 - [Monorepo Development](../development.md) links to this decision through the
   release checklist.
-- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) identifies
-  its lockstep scope and links to the transition procedure.
+- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) implements
+  the package title, version, and changelog-link requirements.
 
 ## Revisit When
 

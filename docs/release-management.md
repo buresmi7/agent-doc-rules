@@ -72,8 +72,8 @@ Complete the transition in this order:
 - [x] Create the `v0.11.0` GitHub Release.
 - [x] Backfill the other missing legacy Releases.
 - [x] Standardize legacy Release titles and links.
-- [ ] Add independent version metadata and package changelogs.
-- [ ] Replace the lockstep release template and checklist.
+- [x] Add independent version metadata and package changelogs.
+- [x] Replace the lockstep release template and checklist.
 - [ ] Exercise the independent workflow with the next changed package.
 
 Update this checklist in the same change that completes each item.
@@ -140,7 +140,7 @@ Use this section only for `v0.11.0`.
 2. Confirm that all four package manifests in the tag use `0.11.0`.
 3. Confirm that npm exposes `0.11.0` for all four packages.
 4. Draft the Release from the `v0.11.0` changelog entry and
-   [the lockstep template](../.github/RELEASE_TEMPLATE.md).
+   [the lockstep template stored in that tag](https://github.com/buresmi7/agent-doc-rules/blob/v0.11.0/.github/RELEASE_TEMPLATE.md).
 5. Create `agent-doc-rules v0.11.0` for the existing tag.
 6. Verify the package links, comparison link, changelog link, and public
    Release page.
@@ -148,34 +148,66 @@ Use this section only for `v0.11.0`.
 Do not republish a package or recreate the tag when only the GitHub Release is
 missing.
 
-## Prepare Independent Versioning
+## Independent Release Controls
 
-The implementation must provide these behaviors before the first independent
-release:
+[`release-packages.json`](../release-packages.json) maps each public package to
+its directory and tag prefix. The release tools reject public packages missing
+from that file, duplicate identities, invalid SemVer values, package changelogs
+that do not match their manifests, and new unqualified version tags.
 
-- each change names the affected package and SemVer bump;
-- only changed packages receive new versions;
-- each public package has its own changelog;
-- the root private package is not part of public version calculation;
-- package tags follow the patterns in this document;
-- each package tag gets one GitHub Release;
-- the release template names one package and one version;
-- release checks compare the manifest, npm version, tag, and GitHub Release;
-- the full monorepo verification gate still runs.
+Changesets records which packages should be released and whether each change is
+major, minor, or patch. Its configuration keeps `fixed` and `linked` empty and
+does not version or tag private packages. This makes the checked-in changeset,
+not a file diff, the source of the SemVer decision.
 
-Use Changesets or an equivalent checked-in metadata format. Do not infer the
-SemVer bump only from a file diff.
+Use these commands from the repository root:
+
+| Command | Purpose |
+| --- | --- |
+| `corepack pnpm changeset` | Record affected public packages, SemVer bumps, and a user-visible summary. |
+| `corepack pnpm run release:status` | Show the versions that pending changesets would produce. |
+| `corepack pnpm run release:version` | Consume pending changesets and update only affected manifests and package changelogs. |
+| `corepack pnpm run release:metadata` | Check package identities, independent-version configuration, changelog versions, and tag formats. |
+| `corepack pnpm run release:check -- --phase PHASE --package PACKAGE` | Compare an intended package version with npm, Git tags, and its GitHub Release. |
+| `corepack pnpm run release:tag -- --package PACKAGE` | Preview the exact package tag; add `--write` only after the release commit is clean. |
+
+Repeat `--package PACKAGE` when one release commit contains several affected
+packages. Package selectors may be npm names, tag prefixes, or configured
+directories.
+
+Do not use `changeset publish`. The repository uses its own unscoped package
+tag format and keeps tagging, npm publication, and GitHub Release creation
+behind separate verification steps.
+
+Repository-only maintenance does not need a changeset. Any change that alters a
+published package's behavior, API, documentation, dependencies, or artifact
+must include one.
 
 ## Prepare A Release
 
-After applying version and changelog changes, run the full gate before
-committing, tagging, or publishing:
+When a release is ready:
 
-```bash
-corepack pnpm run verify:release
-```
+1. Fetch `master` and all tags, then confirm that the worktree starts clean.
+2. Run `corepack pnpm run release:status` and review every affected package and
+   bump.
+3. Run `corepack pnpm run release:version`.
+4. Confirm that only affected package manifests and changelogs changed.
+5. Run `corepack pnpm run release:metadata`.
+6. For each affected package, run the `prepared` release-state check:
 
-Then apply the checks for each affected package:
+   ```bash
+   corepack pnpm run release:check -- --phase prepared --package PACKAGE
+   ```
+
+   This check requires a manifest version newer than npm latest and confirms
+   that the exact npm version, package tag, and GitHub Release do not exist.
+7. Run the full gate before committing, tagging, or publishing:
+
+   ```bash
+   corepack pnpm run verify:release
+   ```
+
+Also review the pack output for each affected package:
 
 | Package | Pack check |
 | --- | --- |
@@ -195,24 +227,51 @@ When the skill package changes:
 When the E2E runner changes, check that its README install command and
 dependency example use the version being published rather than `workspace:*`.
 
-Update the affected package changelog. Until independent package changelogs are
-installed, update the root `CHANGELOG.md`.
-
 ## Publish An Independent Package Release
 
-Use this sequence after the independent tooling is installed:
+After [Prepare A Release](#prepare-a-release):
 
-1. Add or review the checked-in release metadata for each changed package.
-2. Apply the version changes and inspect the affected manifests and package
-   changelogs.
-3. Complete [Prepare A Release](#prepare-a-release).
-4. Confirm npm authentication and that none of the intended versions exist.
-5. Commit the version changes.
-6. Create annotated package tags on that commit and push them atomically.
-7. Publish only the tagged packages.
-8. Verify each exact version on npm.
-9. Create one GitHub Release for each package tag.
-10. Verify the tag, npm package, changelog, and Release URL.
+1. Run `npm whoami` against the publication registry.
+2. Commit the version changes and push the release commit.
+3. Preview all intended tags. After reviewing them, create annotated tags:
+
+   ```bash
+   corepack pnpm run release:tag -- --package PACKAGE
+   corepack pnpm run release:tag -- --package PACKAGE --write
+   ```
+
+   Select every affected package in one invocation when a commit releases more
+   than one. The command refuses versions already on npm, versions not newer
+   than npm latest, and conflicting local or remote tags.
+4. Push every new tag to origin in one atomic operation:
+
+   ```bash
+   git push origin --atomic TAG [TAG...]
+   ```
+
+5. For each affected package, run:
+
+   ```bash
+   corepack pnpm run release:check -- --phase tagged --package PACKAGE
+   ```
+
+   This confirms that the local and remote annotated tag objects match, the tag
+   points to the release commit, and neither npm nor GitHub has the release yet.
+6. Run `npm publish --access public` from only the affected package
+   directories.
+7. Confirm each exact version with `npm view PACKAGE@VERSION version`.
+8. Create one GitHub Release per tag with the
+   [package release template](../.github/RELEASE_TEMPLATE.md). Use title
+   `<npm package name> <version>` and link to the package changelog stored in
+   that tag.
+9. Run the final state check:
+
+   ```bash
+   corepack pnpm run release:check -- --phase published --package PACKAGE
+   ```
+
+   It verifies the manifest in the tag, npm version, matching local and remote
+   tag objects, Release title, and tagged package-changelog link.
 
 Publishing reserves an npm version permanently. Confirm authentication, package
 contents, and the absence of that version before running `npm publish`.
