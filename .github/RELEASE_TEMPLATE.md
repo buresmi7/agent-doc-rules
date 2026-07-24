@@ -1,19 +1,30 @@
 <!--
-Copy this template into the GitHub release body. Replace every ALL_CAPS placeholder and
-remove all comments before publishing.
+Set the GitHub release title to "agent-doc-rules TAG". Replace every ALL_CAPS
+placeholder, then remove all comments and unused optional sections before
+publishing.
 -->
 
-# TAG
+RELEASE_SUMMARY
 
 ## Highlights
 
-<!-- List the user-visible changes. Keep each item concrete. -->
+<!--
+List two to five user-visible changes. Omit internal refactors, CI work, and
+release chores. For a one-change patch, keep only the summary and omit this
+section.
+-->
 
 - RELEASE_CHANGE
 
-## Public packages
+<!-- Optional: keep this section only when users must take action. -->
 
-All public packages in this release use version `VERSION`.
+## Upgrade notes
+
+- UPGRADE_STEP
+
+## Packages
+
+All packages in this release use version `VERSION`.
 
 | Package | Version |
 | --- | --- |
@@ -22,13 +33,7 @@ All public packages in this release use version `VERSION`.
 | [`@buresmi7/agent-doc-rules-docs-validator`](https://www.npmjs.com/package/@buresmi7/agent-doc-rules-docs-validator) | `VERSION` |
 | [`@buresmi7/agent-doc-rules-docs-duplicates`](https://www.npmjs.com/package/@buresmi7/agent-doc-rules-docs-duplicates) | `VERSION` |
 
-## Migration
-
-<!-- Describe required migration steps or write "None." -->
-
-MIGRATION_NOTES
-
-## Links
+## Changelog
 
 - [Full changelog](https://github.com/buresmi7/agent-doc-rules/compare/PREVIOUS_TAG...TAG)
 - [Changelog entry](https://github.com/buresmi7/agent-doc-rules/blob/TAG/CHANGELOG.md)

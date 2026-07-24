@@ -208,8 +208,10 @@ Before publishing, verify these items:
   `npm publish --access public`.
 - After every listed package is available on npm, create one GitHub release for
   the monorepo tag. Draft its body from
-  [`.github/RELEASE_TEMPLATE.md`](../.github/RELEASE_TEMPLATE.md), replace every
-  placeholder, remove the comments, and keep all public packages in the table.
+  [`.github/RELEASE_TEMPLATE.md`](../.github/RELEASE_TEMPLATE.md) and use the
+  matching `CHANGELOG.md` entry as the source. Keep only user-visible highlights
+  and required upgrade steps, omit empty optional sections, and list every
+  public package.
 
 ## Maintainers
 
