@@ -206,6 +206,10 @@ Before publishing, verify these items:
   `packages/agent-doc-rules-skill/`, `packages/docs-validator/`,
   `packages/docs-duplicates/`, and `packages/agent-e2e-runner/` with
   `npm publish --access public`.
+- After every listed package is available on npm, create one GitHub release for
+  the monorepo tag. Draft its body from
+  [`.github/RELEASE_TEMPLATE.md`](../.github/RELEASE_TEMPLATE.md), replace every
+  placeholder, remove the comments, and keep all public packages in the table.
 
 ## Maintainers
 
