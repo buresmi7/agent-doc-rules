@@ -46,8 +46,9 @@ Title each package Release `<npm package name> <version>`, such as
 
 The root package is private and does not define public package versions.
 Continue to test the whole workspace even when a release changes one package.
-After the migration, the root changelog may summarize repository maintenance,
-but it must not assign one version to all public packages.
+After the migration, the root changelog records only repository and monorepo
+changes. Package behavior and publication history belong only in the matching
+package changelog.
 
 ## Transition Checklist
 
@@ -179,9 +180,19 @@ Do not use `changeset publish`. The repository uses its own unscoped package
 tag format and keeps tagging, npm publication, and GitHub Release creation
 behind separate verification steps.
 
-Repository-only maintenance does not need a changeset. Any change that alters a
-published package's behavior, API, documentation, dependencies, or artifact
-must include one.
+Repository-only maintenance outside public package directories does not need a
+changeset. When repository-only work touches a public package directory,
+include an empty changeset:
+
+```bash
+corepack pnpm changeset --empty
+```
+
+State why the change does not need a package release. For historical changelog
+corrections, use `pnpm pack --dry-run` to confirm that the changelog is not part
+of the package artifact. Any change that alters a published package's behavior,
+API, shipped documentation, dependencies, or artifact must include a non-empty
+changeset.
 
 ## Prepare A Release
 

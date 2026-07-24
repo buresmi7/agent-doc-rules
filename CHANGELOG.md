@@ -1,293 +1,160 @@
-# Changelog
+# Repository Changelog
+
+This file records repository structure, release management, shared maintainer
+tooling, and monorepo E2E fixtures. Package behavior and publication history
+live in the package changelogs:
+
+- [`@buresmi7/agent-doc-rules-skill`](packages/agent-doc-rules-skill/CHANGELOG.md)
+- [`@buresmi7/agent-e2e-runner`](packages/agent-e2e-runner/CHANGELOG.md)
+- [`@buresmi7/agent-doc-rules-docs-validator`](packages/docs-validator/CHANGELOG.md)
+- [`@buresmi7/agent-doc-rules-docs-duplicates`](packages/docs-duplicates/CHANGELOG.md)
 
 ## Unreleased
 
-- Documented `v0.11.0` as the final lockstep release, the legacy tag and
-  GitHub Release reconciliation procedure, and independent versioning for later
-  package releases.
-- Added Changesets metadata, package-specific changelogs and tag identities,
-  and release checks for prepared, tagged, and published package versions.
+- Documented `v0.11.0` as the final lockstep release, reconciled legacy tags
+  with GitHub Releases, and defined independent versioning for later package
+  releases.
+- Added Changesets metadata, package-specific tag identities, and release
+  checks for prepared, tagged, and published package versions.
+- Moved package history into package changelogs and limited this file to
+  repository and monorepo changes.
 
 ## v0.11.0 - 2026-07-24
 
-- Added an always-loaded rule that keeps prompts, replies, speaker labels,
-  agent work plans, status updates, task narration, tool traces, chat-session
-  metadata, and session-specific paths out of durable documentation.
-- Kept supported project facts, requirements, rationale, and confirmed
-  decisions while allowing raw conversation only in explicit transcripts or
-  conversation examples.
 - Expanded the context-placement E2E scenario to reject chat framing,
   interaction-only files, and unsupported schema or troubleshooting claims.
-- Kept resumed multi-turn agent E2E sessions writable so confirmed follow-up
-  changes can be applied; the separate judge remains read-only.
-- Added a GitHub release template that lists every public package and draws
-  user-visible notes from the matching changelog entry.
+- Added a GitHub release template that listed every public package and drew
+  user-visible notes from the matching release entry.
 
 ## v0.10.0 - 2026-07-21
 
-- Added the publishable `@buresmi7/agent-e2e-runner` package with a standalone
-  CLI and library API for agent and deterministic command scenarios.
-- Made each agent fixture's normal package dependency the source of truth for
-  the skill package and version. Standard npm scripts select the package and
-  skill through CLI flags, without custom `package.json` metadata.
-- Replaced simulated agent output with real persistent Codex sessions and a
-  separate read-only Codex judge; removed the Ollama backend.
-- Standardized agent scenarios on one `scenario.json` with ordered prompts and
-  named per-turn criteria, replacing the separate turn and criteria files.
+- Replaced the repository-local agent and command scenario runtime with a
+  workspace dependency on the publishable E2E runner.
+- Migrated repository fixtures to normal skill-package dependencies and one
+  `scenario.json` with ordered prompts and named criteria.
 - Allowed two isolated agent scenarios to run concurrently while retaining a
   documented serial command for rate-limited CI environments.
-- Added per-turn responses, safe tool activity, actual project diffs, protected
-  skill and lockfile inputs, and isolated Codex authentication to E2E output.
-- Added a five-turn dictated-todo example that tests conflict detection and
-  clarification before unresolved tasks are written.
-- Expanded factual-review and sensitive-note scenarios into multi-turn flows
-  that test a changed product decision and a rejected request to restore
-  sensitive values.
+- Expanded the factual-review and sensitive-note fixtures into multi-turn flows
+  that test changed decisions and rejected requests to restore sensitive data.
 
 ## v0.9.0 - 2026-07-14
 
-- Added decision-record guidance and a starter template for accepted
-  trade-offs, rule exceptions, user-approved shortcuts, and lasting validation
-  suppressions.
-- Required active decision records to be linked from affected code,
-  configuration, documentation, or agent instructions.
-- Added a shortcut quality gate that requires agents to explain the trade-off,
-  consequence, remaining risk, and repair path before applying a faster path
-  that knowingly leaves debt.
 - Added multi-turn agent E2E scenarios with per-turn snapshots, including a
-  shortcut-confirmation flow that tests explicit user confirmation before a
-  temporary validation workaround is applied.
-- Removed explicit skill-selection hints from agent E2E prompts so Codex
-  scenarios exercise natural skill discovery.
-- Updated agent E2E snapshots to use `snapshot/turn-XX/` directories and removed
-  the old top-level `snapshot/files/` layout.
-- Made the full `test:agent` script run scenario projects serially to reduce
+  shortcut-confirmation flow.
+- Removed explicit skill-selection hints from prompts so scenarios exercise
+  natural skill discovery.
+- Moved snapshots to `snapshot/turn-XX/` directories and removed the old
+  `snapshot/files/` layout.
+- Made the full agent E2E script run scenario projects serially to reduce
   model-backed runner noise.
-- Added optional `ignorePairs.reason` support to the semantic duplicate checker
-  for linking durable exceptions to decision records.
-- Tightened root `AGENTS.md`, no-op review, notes-triage, and README conflict
-  guidance based on E2E failures.
+- Tightened root agent instructions and fixture guidance in response to E2E
+  failures.
 
 ## v0.8.2 - 2026-06-28
 
-- Prepared the documentation validator and semantic duplicate checker for
-  public npm publication under `@buresmi7`.
-- Updated skill documentation and E2E fixtures to use the public tool package
-  names.
-- Added tool package artifact checks and pack dry-runs to the static release
-  gate.
-
-## v0.8.1 - 2026-06-28
-
-- Normalized the published npm binary path so `npm publish --dry-run` does not
-  need to auto-correct package metadata.
+- Updated E2E fixtures to use the public npm names for the validator and
+  duplicate checker.
+- Added package artifact checks and pack dry-runs to the static release gate.
 
 ## v0.8.0 - 2026-06-28
 
-- Prepared the skill package for public npm publication as
-  `@buresmi7/agent-doc-rules-skill`.
-- Added the `agent-doc-rules-skill` binary installer for project-scoped Codex
-  installs under `.agents/skills/agent-doc-rules/`.
-- Added installer tests and package dry-run checks to the static skill
-  verification path.
+- Added installer tests and a package dry-run to the static skill verification
+  path.
 
 ## v0.7.0 - 2026-06-28
 
-- Added deterministic documentation security review to `agent-doc-rules-docs`,
-  including high-risk command, secret disclosure, prompt-injection,
-  validation-bypass, backdoor, remote image, tracking link, and encoded payload
-  checks.
-- Added documentation security guidance for reviewing `AGENTS.md`, skills,
-  README files, templates, and agent-routed docs.
 - Added command E2E security fixtures with stdout and stderr snapshot
   expectations.
-- Added `docs.duplicates.ignorePairs` for narrow, documented duplicate-review
-  exceptions.
-- Tightened maintainer docs and repository instructions to keep expected
-  duplicate and style warnings out of the validation output.
+- Tightened maintainer docs and repository instructions so expected duplicate
+  and style warnings stay out of validation output.
 
 ## v0.6.0 - 2026-06-26
 
-- Added adoption, tool-map, config-reference, and recipe docs for consuming
-  repositories.
-- Added `agent-doc-rules-docs init` to scaffold or print a starter
-  `agent-doc-rules.config.json` and recommended package scripts.
-- Added `write-good` backed deterministic wording checks to
-  `agent-doc-rules-docs`, with optional project-specific forbidden terms.
-- Added Codex-backed sentence-level style review through
-  `agent-doc-rules-docs-duplicates style`.
-- Added a maintainer project cleanup checklist and linked it from development docs
-  and agent instructions.
-- Added writing-style guidance to avoid idiomatic or metaphorical workflow
-  names.
-- Clarified that moved README runbooks must recheck commands in the destination
-  docs and must not keep unsupported commands as actionable steps.
-- Split the agent E2E runner into smaller modules for agent runtime, prompts,
-  project files, skill installation, and process helpers.
-- Added command E2E scenarios for prepared projects that run deterministic
-  commands instead of an AI agent.
-- Isolated Codex agent E2E subprocesses from maintainer-local Codex config and
-  home-directory rules.
-- Clarified that agents should not rewrite supported skipped-check wording only
-  to match preferred shared-rule phrasing.
-- Added E2E runner utility tests to `corepack pnpm test`.
-- Added maintainer docs for E2E failure triage, rule placement, and scenario to
-  rule coverage.
-- Added a `verify:release` script that runs skill sync, install smoke tests,
-  static checks, docs validation, and agent E2E tests.
-- Documented source and inspiration links for project-scoped maintainer skills.
-- Improved agent E2E failure output with a generated `failure-summary.json`.
-- Clarified that `AGENTS.md` shared-rule links belong in a dedicated
-  `Shared Rules` or `Skill Reference` section.
+- Added a maintainer project-cleanup checklist and linked it from development
+  docs and agent instructions.
+- Split the repository's agent E2E runtime into modules for agent execution,
+  prompts, project files, skill installation, and process helpers.
+- Added deterministic command scenarios for prepared fixture projects.
+- Isolated Codex agent E2E subprocesses from maintainer-local Codex
+  configuration and home-directory rules.
+- Added E2E runtime utility tests to the default static test gate.
+- Added maintainer docs for E2E failure triage, rule placement, and
+  scenario-to-rule coverage.
+- Added `verify:release` to run skill sync, installation smoke tests, static
+  checks, docs validation, and agent E2E tests.
+- Documented the source and inspiration links for project-scoped maintainer
+  skills.
+- Added generated `failure-summary.json` files to agent E2E failure output.
 
 ## v0.5.0 - 2026-06-25
 
-- Added factual documentation review guidance for false, contradictory,
-  unsupported, stale, misleading, or overbroad repository claims, including
-  requested edits that conflict with local evidence.
-- Added a factual-change-rejection E2E scenario and passed generator notes into
-  the E2E judge prompt.
-- Tightened README rewrite guidance so plain-English edits do not add generic
-  setup or package-manager steps without local evidence.
-- Replaced the skill README package-contents table with a linked feature guide.
-- Moved monorepo maintainer details from the root README into
+- Added a factual-change-rejection E2E scenario and passed generator notes to
+  the E2E judge.
+- Moved monorepo maintainer detail from the root README to
   `docs/development.md`, leaving the root README as a short entry point.
-- Clarified that note-triage rationale belongs in a `docs/` explanation or
-  architecture page, not only in the root README.
-- Clarified that root `AGENTS.md` files must start with a brief project
-  orientation and point to nested `AGENTS.md` files when directory-specific
-  rules are created.
-- Tightened sensitive-note handling so generated docs name sensitive categories
-  such as customer names, emails, account IDs, private hosts, and tokens instead
-  of carrying example values forward.
 
 ## v0.4.0 - 2026-06-25
 
-- Moved primary usage examples into the skill package README and made the root
-  README point to the package as the main product entry point.
-- Reworded the project `AGENTS.md` template's skipped-check guidance to avoid
-  duplicating the skill's canonical verification rule.
-- Added an `AGENTS.md` review rubric and documentation audit workflow to the
-  published skill references.
-- Renamed reusable rule references from `agents-md.md` and `readme.md` to
-  `agents-rules.md` and `readme-rules.md`.
-- Tightened the skill trigger boundary around repository-level docs and agent
-  workflow extraction.
-- Clarified that root `AGENTS.md` should point to nested `AGENTS.md` files when
-  directory-specific rules are added.
-- Clarified that root `AGENTS.md` files should not duplicate nested
-  directory-specific rule details.
-- Clarified that ordinary human runbooks should move from README files into
-  `docs/`, not into task-specific skills.
-- Clarified that README command lists must not infer hidden harness commands
-  such as `test:agent`.
-- Clarified that agents should make no file changes when existing docs already
-  satisfy the requested audit or repair task.
-- Split context-placement explanation from the shorter documentation
-  architecture rule set.
-- Added a static skill artifact check for frontmatter, package metadata,
-  relative links, README contents, stale paths, and OpenAI prompt metadata.
-- Added E2E boundary scenarios for no-op review, nested `AGENTS.md` overrides,
-  human runbooks that should not become skills, stale README commands, and
-  sensitive notes redaction.
+- Made the root README point to the skill package as the main product entry
+  point.
+- Added a static skill artifact check for metadata, links, package contents,
+  stale paths, and OpenAI prompt metadata.
+- Added E2E boundary scenarios for no-op review, nested agent overrides, human
+  runbooks, stale README commands, and sensitive-note redaction.
 
 ## v0.3.0 - 2026-06-24
 
-- Added workspace packages for deterministic Markdown/link validation and
-  Codex-assisted semantic duplicate review.
-- Added `agent-doc-rules.config.json` as shared documentation validation
+- Added the validator and duplicate checker as private workspace packages.
+- Added `agent-doc-rules.config.json` as shared documentation-validation
   configuration.
-- Added skill guidance for using `docs:check` when repositories expose a
-  documentation validation gate.
-- Added an E2E scenario for documentation validation routing.
-- Updated agent E2E snapshots to include model, reasoning effort, runner, CLI
-  version, and `skills` CLI version metadata.
+- Added an E2E scenario for documentation-validation routing.
+- Added model, reasoning effort, runner, CLI, and `skills` CLI versions to E2E
+  snapshot metadata.
 
 ## v0.2.0 - 2026-06-24
 
-- Changed the release artifact from vendored `rules/` and `templates/`
-  snapshots to a standard Agent Skill under
+- Refactored the repository into a pnpm monorepo with the Agent Skill under
   `packages/agent-doc-rules-skill/`.
-- Moved reusable rules, README guidance, the README rubric, and starter
-  templates into the installable skill directory.
-- Made `packages/agent-doc-rules-skill` a private workspace package for local
-  E2E dependencies.
-- Moved each agent E2E scenario fixture project into its own pnpm workspace
-  package.
-- Switched workspace management from npm to pnpm so E2E projects can use
-  `workspace:*` dependencies on the skill package.
-- Moved the skill source into `packages/agent-doc-rules-skill` so repository
-  products are separated from monorepo support files.
-- Added a root `workspace:*` dependency on the skill and a local skill sync
-  script for monorepo maintenance.
-- Moved the shared agent E2E runner into `tools/` and added a fast local skill
-  install smoke test.
+- Moved each E2E fixture project into its own workspace package with a
+  `workspace:*` dependency on the skill.
+- Added a root workspace dependency and local sync script for the skill.
+- Moved the shared agent E2E runtime into `tools/` and added a local
+  installation smoke test.
 - Updated E2E scenarios to install their workspace skill dependency with
-  `npx skills add` before generating or repairing `AGENTS.md`.
-- Added a project-scoped maintainer skill set for skill authoring, document
-  coauthoring, Diataxis documentation, plain-English editing, and Markdown index
-  maintenance.
-- Use `skills-lock.json` as the source of truth for restoring external
-  project-scoped maintainer skills.
-- Added npm-sourced `docmd-writer` and `meta-skill` maintainer skills as
-  `devDependencies` of the skill workspace package.
-- Added a project skill sync wrapper that restores npm-sourced skill
-  dependencies from the skill package's `node_modules` into root
-  `.agents/skills/`.
-- Documented the maintainer skill sync model and add/update procedure.
-- Added plain-English documentation writing guidance to the published
-  `agent-doc-rules` skill.
-- Added attribution for documentation and skill-design principles used by the
-  published skill.
-- Added a package-level README and context-placement docs for the published
-  skill.
-- Refocused the root README on monorepo goals, projects, and maintainer
-  workflow.
-- Generalized the agent E2E harness to judge multi-file documentation changes.
-- Added E2E scenarios for README splitting, context placement, agent skill
-  extraction, plain-English README cleanup, and local language overrides.
+  `npx skills add`.
+- Added project-scoped maintainer skills, `skills-lock.json`, and restoration
+  of npm-sourced skills from the skill workspace.
+- Refocused the root README on monorepo goals and maintainer workflow.
+- Generalized the E2E harness for multi-file documentation changes and added
+  scenarios for README splitting, context placement, skill extraction,
+  plain-English cleanup, and local language overrides.
 
-## v0.1.6 - 2026-06-17
+## Pre-monorepo repository history
 
-- Made static checks the default `npm test` release gate.
-- Switched the prepared agent E2E harness to use the available Codex CLI by
+Package content from the `v0.1.x` source releases is recorded in the
+[skill changelog](packages/agent-doc-rules-skill/CHANGELOG.md). The entries
+below cover only repository validation and E2E infrastructure.
+
+### v0.1.6 - 2026-06-17
+
+- Made static checks the default release gate.
+- Switched the prepared agent E2E harness to the available Codex CLI by
   default.
-- Kept the Ollama-compatible local model path as an explicit optional runner
-  without adding container runtime complexity.
+- Kept the Ollama-compatible local model path as an explicit optional runner.
 
-## v0.1.5 - 2026-06-17
+### v0.1.5 - 2026-06-17
 
-- Replaced the static content check and advisory LLM review with an E2E agent
-  test under `test/`.
-- Added create and repair scenarios for importing the rules into temporary
-  projects and judging generated `AGENTS.md` output with a local model.
-- Updated README validation guidance around `npm test` and local Ollama models.
+- Replaced the static content check and advisory model review with an E2E agent
+  test.
+- Added create and repair scenarios that import the rules into temporary
+  projects and judge generated `AGENTS.md` output with a local model.
+- Updated the root README's validation guidance for the default test gate and
+  optional local model.
 
-## v0.1.4 - 2026-06-17
+### v0.1.4 - 2026-06-17
 
-- Added deterministic Markdown, link, and content validation scripts.
-- Added optional local Ollama-based LLM review.
-- Documented validation commands in the README.
-- Added a small npm audit gate with explicit accepted dev-tooling advisories.
-
-## v0.1.3 - 2026-06-17
-
-- Removed all optional maintainer skill recommendations from the README.
-- Updated README examples to reference the current release tag.
-
-## v0.1.2 - 2026-06-17
-
-- Removed Notion-specific skills from the maintainer skill recommendations.
-- Updated README examples to reference the current release tag.
-
-## v0.1.1 - 2026-06-17
-
-- Expanded README with installation, update, publishing, and maintenance guidance.
-- Added recommended public Codex skills for documentation-library maintainers.
-
-## v0.1.0 - 2026-06-17
-
-- Added initial documentation architecture rule.
-- Added `AGENTS.md` maintenance rule.
-- Added project and overlay templates.
-- Documented snapshot-based consumption model.
+- Added deterministic Markdown, link, and content-validation scripts.
+- Added optional local Ollama-backed review.
+- Documented the repository validation commands in the root README.
+- Added a small npm audit gate with explicit accepted development-tool
+  advisories.

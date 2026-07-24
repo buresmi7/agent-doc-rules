@@ -8,8 +8,9 @@ Date: 2026-07-24
 The monorepo publishes four packages with separate purposes and no direct
 runtime dependencies on one another. The lockstep release process gave every
 package the same version, including packages whose contents had not changed.
-This weakened the meaning of each package's SemVer history and required
-unnecessary npm publications.
+This made each package's SemVer history less useful because a version bump did
+not always mean that package had changed. It also required unnecessary npm
+publications.
 
 The repository also had more legacy Git tags than GitHub Releases. Rewriting
 published tags would break stable references, while leaving the mismatch
@@ -25,8 +26,8 @@ After `v0.11.0`, version and publish each public package independently. Use a
 checked-in release record for each changed package, publish only packages whose
 contents changed, and continue to run the full monorepo verification checks.
 
-The canonical procedure, tag patterns, and GitHub Release rules live in the
-[Release Management page](../release-management.md).
+The [Release Management page](../release-management.md) defines the canonical
+procedure, tag patterns, and GitHub Release rules.
 
 ## Trade-Off
 
@@ -42,6 +43,8 @@ the original tag date. Their notes must identify them as historical records.
 
 - Unchanged packages keep their current versions.
 - A package's SemVer history describes changes to that package.
+- Package changelogs record package behavior and publication history; the root
+  changelog records repository and monorepo changes.
 - Generic `vMAJOR.MINOR.PATCH` tags stop after `v0.11.0`.
 - The private root package no longer acts as the public release version.
 - Existing legacy tags remain valid and immutable.
@@ -53,9 +56,8 @@ the original tag date. Their notes must identify them as historical records.
 - Public package manifests and changelogs under `packages/` follow this release
   model.
 - Release metadata and scripts in the repository root implement this decision.
-- Git tag names and GitHub Releases use the identities defined by the runbook.
-- The [Release Management page](../release-management.md) defines the release
-  procedure.
+- The [Release Management page](../release-management.md) defines Git tag
+  identities, GitHub Release rules, and the release procedure.
 - Maintainers use the [Monorepo Development](../development.md) page to find
   the release procedure.
 - The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) defines the
@@ -66,8 +68,8 @@ the original tag date. Their notes must identify them as historical records.
 - [Release Management](../release-management.md) links to this decision.
 - [Monorepo Development](../development.md) links to this decision through the
   release checklist.
-- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) implements
-  the package title, version, and changelog-link requirements.
+- The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) sets the
+  required package title, package version, and changelog link.
 
 ## Revisit When
 

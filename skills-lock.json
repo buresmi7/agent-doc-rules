@@ -4,7 +4,7 @@
     "agent-doc-rules": {
       "source": "packages/agent-doc-rules-skill",
       "sourceType": "local",
-      "computedHash": "40eb71cc20272d0916b5f31343466c8b036e54c68259ee5a524544227d5fd6f6"
+      "computedHash": "d18108eb32dbbecf7ecbbd2c2e1363dbf4bb90f8911c4b0673204917fbf92483"
     },
     "doc-coauthoring": {
       "source": "anthropics/skills",

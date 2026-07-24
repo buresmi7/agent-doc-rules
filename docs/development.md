@@ -181,7 +181,7 @@ snapshot metadata.
 | [`docs/release-management.md`](release-management.md) | How maintainers reconcile legacy Releases and publish independent package versions. |
 | [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Why public packages stop using lockstep versions after `v0.11.0`. |
 | [`release-packages.json`](../release-packages.json) | Which public package, directory, and tag identity each release tool uses. |
-| [`CHANGELOG.md`](../CHANGELOG.md) | Legacy lockstep releases and later repository-maintenance changes. |
+| [`CHANGELOG.md`](../CHANGELOG.md) | Repository and monorepo history; package histories live beside their manifests. |
 
 When docs conflict, use the document that is the canonical source for that
 detail.
