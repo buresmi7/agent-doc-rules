@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Documented `v0.11.0` as the final lockstep release, the legacy tag and
+  GitHub Release reconciliation procedure, and independent versioning for later
+  package releases.
+
 ## v0.11.0 - 2026-07-24
 
 - Added an always-loaded rule that keeps prompts, replies, speaker labels,

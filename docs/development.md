@@ -103,6 +103,13 @@ Maintainer skills are restored from `skills-lock.json` and the local skill
 workspace with `corepack pnpm run skills:sync`. `docs/maintainer-skills.md`
 explains how maintainers review and restore them.
 
+### Release Management
+
+Use [docs/release-management.md](release-management.md) to reconcile legacy
+tags and GitHub Releases, complete the final lockstep release, and publish later
+package versions independently. The accepted release model is recorded in
+[Independent package versioning](decisions/independent-package-versioning.md).
+
 ## Common Tasks
 
 | Task | Command |
@@ -148,6 +155,8 @@ snapshot metadata.
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |
 | [`docs/rule-placement.md`](rule-placement.md) | Rubric for deciding whether a behavior belongs in `SKILL.md`, references, docs, criteria, fixtures, or tooling. |
 | [`docs/project-cleanup.md`](project-cleanup.md) | Maintainer checklist for making cleanup part of development. |
+| [`docs/release-management.md`](release-management.md) | Legacy Release reconciliation and independent package release procedure. |
+| [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Decision to end lockstep package versions after `v0.11.0`. |
 | [`tools/`](../tools/) | Monorepo support scripts and E2E wrappers for this repository. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
@@ -167,6 +176,8 @@ snapshot metadata.
 | [`docs/rule-placement.md`](rule-placement.md) | Where new maintainer or skill behavior should be encoded. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | How project-scoped maintainer skills are declared, restored, reviewed, and locked. |
 | [`docs/project-cleanup.md`](project-cleanup.md) | How maintainers fold cleanup into ordinary development. |
+| [`docs/release-management.md`](release-management.md) | How maintainers reconcile legacy Releases and publish independent package versions. |
+| [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Why public packages stop using lockstep versions after `v0.11.0`. |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Released skill and template behavior changes. |
 
 When docs conflict, use the document that is the canonical source for that
@@ -177,41 +188,10 @@ procedures in the linked docs.
 
 ## Release Checklist
 
-Release tags use `vMAJOR.MINOR.PATCH`.
-
-Before publishing, verify these items:
-
-- Run `corepack pnpm run verify:release`.
-- Run `corepack pnpm test`.
-- Run `corepack pnpm run test:skill`.
-- Run `corepack pnpm run test:packages`.
-- Run `corepack pnpm run test:install`.
-- Check that `npx skills add . --list` discovers `agent-doc-rules`.
-- Check that `corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run`
-  contains only files needed to install the public skill.
-- Check that `corepack pnpm --dir packages/docs-validator pack --dry-run`
-  contains only the public validator package files.
-- Check that `corepack pnpm --dir packages/docs-duplicates pack --dry-run`
-  contains only the public duplicate-checker package files.
-- Check that `corepack pnpm --dir packages/agent-e2e-runner pack --dry-run`
-  contains only the public E2E runner package files.
-- Check that the E2E runner README install command and dependency example use
-  the npm version being published rather than `workspace:*`.
-- Review external maintainer skills if
-  `packages/agent-doc-rules-skill/package.json` or `skills-lock.json` changed.
-- Update `CHANGELOG.md` for released skill or template behavior changes.
-- Check that reusable skill content contains no secrets, private environment
-  details, or unsupported project-specific rules.
-- After the tag is pushed and npm auth is available, publish from
-  `packages/agent-doc-rules-skill/`, `packages/docs-validator/`,
-  `packages/docs-duplicates/`, and `packages/agent-e2e-runner/` with
-  `npm publish --access public`.
-- After every listed package is available on npm, create one GitHub release for
-  the monorepo tag. Draft its body from
-  [`.github/RELEASE_TEMPLATE.md`](../.github/RELEASE_TEMPLATE.md) and use the
-  matching `CHANGELOG.md` entry as the source. Keep only user-visible highlights
-  and required upgrade steps, omit empty optional sections, and list every
-  public package.
+Follow [Release Management](release-management.md) before changing versions,
+tags, npm packages, or GitHub Releases. It owns release preparation, historical
+reconciliation, package-specific publishing, verification, and failure
+recovery.
 
 ## Maintainers
 

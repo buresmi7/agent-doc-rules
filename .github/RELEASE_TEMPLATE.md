@@ -2,6 +2,10 @@
 Set the GitHub release title to "agent-doc-rules TAG". Replace every ALL_CAPS
 placeholder, then remove all comments and unused optional sections before
 publishing.
+
+This lockstep template applies through v0.11.0. Read
+[Release Management](../docs/release-management.md) before preparing later
+package-specific releases.
 -->
 
 RELEASE_SUMMARY
