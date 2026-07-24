@@ -69,9 +69,9 @@ Complete the transition in this order:
 
 - [x] Create and push the `v0.11.0` tag.
 - [x] Publish version `0.11.0` of all four public packages.
-- [ ] Create the `v0.11.0` GitHub Release.
-- [ ] Backfill the other missing legacy Releases.
-- [ ] Standardize legacy Release titles and links.
+- [x] Create the `v0.11.0` GitHub Release.
+- [x] Backfill the other missing legacy Releases.
+- [x] Standardize legacy Release titles and links.
 - [ ] Add independent version metadata and package changelogs.
 - [ ] Replace the lockstep release template and checklist.
 - [ ] Exercise the independent workflow with the next changed package.
