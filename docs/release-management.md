@@ -31,18 +31,19 @@ version:
 
 Use these identities for releases governed by the independent model:
 
-| Package | Tag pattern | Changelog |
-| --- | --- | --- |
-| `@buresmi7/agent-doc-rules-skill` | `agent-doc-rules-skill@VERSION` | `packages/agent-doc-rules-skill/CHANGELOG.md` |
-| `@buresmi7/agent-e2e-runner` | `agent-e2e-runner@VERSION` | `packages/agent-e2e-runner/CHANGELOG.md` |
-| `@buresmi7/agent-doc-rules-docs-validator` | `agent-doc-rules-docs-validator@VERSION` | `packages/docs-validator/CHANGELOG.md` |
-| `@buresmi7/agent-doc-rules-docs-duplicates` | `agent-doc-rules-docs-duplicates@VERSION` | `packages/docs-duplicates/CHANGELOG.md` |
+| Package | Release title | Tag pattern | Changelog |
+| --- | --- | --- | --- |
+| `@buresmi7/agent-doc-rules-skill` | `Agent Doc Rules Skill` | `agent-doc-rules-skill@VERSION` | `packages/agent-doc-rules-skill/CHANGELOG.md` |
+| `@buresmi7/agent-e2e-runner` | `E2E Runner` | `agent-e2e-runner@VERSION` | `packages/agent-e2e-runner/CHANGELOG.md` |
+| `@buresmi7/agent-doc-rules-docs-validator` | `Docs Validator` | `agent-doc-rules-docs-validator@VERSION` | `packages/docs-validator/CHANGELOG.md` |
+| `@buresmi7/agent-doc-rules-docs-duplicates` | `Docs Duplicate Checker` | `agent-doc-rules-docs-duplicates@VERSION` | `packages/docs-duplicates/CHANGELOG.md` |
 
 Do not create another unqualified `vMAJOR.MINOR.PATCH` tag. A release commit may
 carry more than one package tag when it publishes several packages.
 
-Title each package Release `<npm package name> <version>`, such as
-`@buresmi7/agent-doc-rules-skill 0.12.0`.
+Title each package Release `<release title> <version>`, such as
+`E2E Runner 0.12.0`. `release-packages.json` owns the short release title.
+Keep the full scoped npm package name and versioned npm link in the body.
 
 The root package is private and does not define public package versions.
 Continue to test the whole workspace even when a release changes one package.
@@ -275,9 +276,9 @@ After [Prepare A Release](#prepare-a-release):
    directories.
 7. Confirm each exact version with `npm view PACKAGE@VERSION version`.
 8. Create one GitHub Release per tag with the
-   [package release template](../.github/RELEASE_TEMPLATE.md). Use title
-   `<npm package name> <version>` and link to the package changelog stored in
-   that tag.
+   [package release template](../.github/RELEASE_TEMPLATE.md). Use the
+   configured `<release title> <version>`, link to the exact npm package
+   version, and link to the package changelog stored in that tag.
 9. Run the final state check:
 
    ```bash
@@ -285,7 +286,8 @@ After [Prepare A Release](#prepare-a-release):
    ```
 
    It verifies the manifest in the tag, npm version, matching local and remote
-   tag objects, Release title, and tagged package-changelog link.
+   tag objects, configured Release title, versioned npm link, and tagged
+   package-changelog link.
 
 Publishing reserves an npm version permanently. Confirm authentication, package
 contents, and the absence of that version before running `npm publish`.

@@ -54,6 +54,14 @@ export function findReleasePackage(metadata, selector) {
   ));
 }
 
+export function packageReleaseTitle(entry) {
+  return `${entry.releaseTitle} ${entry.version}`;
+}
+
+export function packageNpmUrl(entry) {
+  return `https://www.npmjs.com/package/${entry.name}/v/${entry.version}`;
+}
+
 export function parseSemver(version) {
   const match = semverPattern.exec(version);
 
@@ -155,6 +163,13 @@ function validateEntry(entry) {
     || normalize(entry.directory) !== entry.directory
     || normalize(entry.directory).startsWith('..')) {
     throw new Error(`Invalid release package directory for ${entry.name ?? 'unknown package'}.`);
+  }
+
+  if (typeof entry.releaseTitle !== 'string'
+    || entry.releaseTitle.trim() !== entry.releaseTitle
+    || entry.releaseTitle.length === 0
+    || /[\r\n]/.test(entry.releaseTitle)) {
+    throw new Error(`Invalid GitHub Release title for ${entry.name}.`);
   }
 
   if (typeof entry.tagPrefix !== 'string'

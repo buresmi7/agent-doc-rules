@@ -23,6 +23,8 @@ live in the package changelogs:
 - Exercised the independent release workflow with package-specific tags and
   GitHub Releases, with a recorded one-release verification exception for the
   metadata-only `0.11.1` release.
+- Shortened package-specific GitHub Release titles and replaced one-row package
+  tables with versioned npm links.
 
 ## v0.11.0 - 2026-07-24
 

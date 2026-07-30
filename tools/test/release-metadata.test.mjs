@@ -8,6 +8,8 @@ import {
   compareSemver,
   currentChangelogVersion,
   loadReleaseMetadata,
+  packageNpmUrl,
+  packageReleaseTitle,
   parseSemver,
   repoRoot,
 } from '../release-metadata.mjs';
@@ -19,12 +21,40 @@ test('release metadata maps every public package to an independent tag', async (
 
   assert.equal(metadata.packages.length, 4);
   assert.equal(new Set(metadata.packages.map((entry) => entry.name)).size, 4);
+  assert.equal(new Set(metadata.packages.map((entry) => entry.releaseTitle)).size, 4);
   assert.equal(new Set(metadata.packages.map((entry) => entry.tag)).size, 4);
 
   for (const entry of metadata.packages) {
     assert.equal(entry.tag, `${entry.tagPrefix}@${entry.version}`);
+    assert.equal(packageReleaseTitle(entry), `${entry.releaseTitle} ${entry.version}`);
+    assert.equal(
+      packageNpmUrl(entry),
+      `https://www.npmjs.com/package/${entry.name}/v/${entry.version}`,
+    );
     assert.equal(currentChangelogVersion(entry.changelog), entry.version);
   }
+
+  assert.deepEqual(
+    metadata.packages.map(({ name, releaseTitle }) => ({ name, releaseTitle })),
+    [
+      {
+        name: '@buresmi7/agent-doc-rules-skill',
+        releaseTitle: 'Agent Doc Rules Skill',
+      },
+      {
+        name: '@buresmi7/agent-e2e-runner',
+        releaseTitle: 'E2E Runner',
+      },
+      {
+        name: '@buresmi7/agent-doc-rules-docs-validator',
+        releaseTitle: 'Docs Validator',
+      },
+      {
+        name: '@buresmi7/agent-doc-rules-docs-duplicates',
+        releaseTitle: 'Docs Duplicate Checker',
+      },
+    ],
+  );
 });
 
 test('parseSemver accepts release and prerelease versions', () => {

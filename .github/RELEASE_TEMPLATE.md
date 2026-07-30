@@ -1,8 +1,8 @@
 <!--
 Use this template only for package-specific releases after v0.11.0. Set the
-GitHub Release title to "PACKAGE_NAME VERSION" and use the package tag from
-release-packages.json. Replace every ALL_CAPS placeholder, then remove comments
-and unused optional sections before publishing.
+GitHub Release title to "RELEASE_TITLE VERSION", using the release title and
+package tag from release-packages.json. Replace every ALL_CAPS placeholder,
+then remove comments and unused optional sections before publishing.
 -->
 
 RELEASE_SUMMARY
@@ -23,11 +23,7 @@ only the summary and omit this section.
 
 - UPGRADE_STEP
 
-## Package
-
-| Package | Version |
-| --- | --- |
-| [`PACKAGE_NAME`](https://www.npmjs.com/package/PACKAGE_NAME) | `VERSION` |
+**npm:** [`PACKAGE_NAME@VERSION`](https://www.npmjs.com/package/PACKAGE_NAME/v/VERSION)
 
 ## Changelog
 

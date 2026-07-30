@@ -3,21 +3,25 @@
   "packages": [
     {
       "name": "@buresmi7/agent-doc-rules-skill",
+      "releaseTitle": "Agent Doc Rules Skill",
       "directory": "packages/agent-doc-rules-skill",
       "tagPrefix": "agent-doc-rules-skill"
     },
     {
       "name": "@buresmi7/agent-e2e-runner",
+      "releaseTitle": "E2E Runner",
       "directory": "packages/agent-e2e-runner",
       "tagPrefix": "agent-e2e-runner"
     },
     {
       "name": "@buresmi7/agent-doc-rules-docs-validator",
+      "releaseTitle": "Docs Validator",
       "directory": "packages/docs-validator",
       "tagPrefix": "agent-doc-rules-docs-validator"
     },
     {
       "name": "@buresmi7/agent-doc-rules-docs-duplicates",
+      "releaseTitle": "Docs Duplicate Checker",
       "directory": "packages/docs-duplicates",
       "tagPrefix": "agent-doc-rules-docs-duplicates"
     }

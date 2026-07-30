@@ -69,7 +69,8 @@ the original tag date. Their notes must identify them as historical records.
 - [Monorepo Development](../development.md) links to this decision through the
   release checklist.
 - The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) sets the
-  required package title, package version, and changelog link.
+  configured short title, exact npm package link, package version, and
+  changelog link.
 
 ## Revisit When
 

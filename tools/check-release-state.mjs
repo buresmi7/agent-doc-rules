@@ -5,6 +5,8 @@ import {
   currentChangelogVersion,
   findReleasePackage,
   loadReleaseMetadata,
+  packageNpmUrl,
+  packageReleaseTitle,
   parseSemver,
   repoRoot,
 } from './release-metadata.mjs';
@@ -145,9 +147,11 @@ async function checkPackage(entry, repository, phase) {
         errors.push(`GitHub Release tag must be ${entry.tag}.`);
       }
 
-      if (release.name !== `${entry.name} ${entry.version}`) {
+      const expectedTitle = packageReleaseTitle(entry);
+
+      if (release.name !== expectedTitle) {
         errors.push(
-          `GitHub Release title for ${entry.tag} must be ${entry.name} ${entry.version}.`,
+          `GitHub Release title for ${entry.tag} must be ${expectedTitle}.`,
         );
       }
 
@@ -156,9 +160,14 @@ async function checkPackage(entry, repository, phase) {
       }
 
       const changelogLink = `/blob/${entry.tag}/${entry.directory}/CHANGELOG.md`;
+      const npmLink = packageNpmUrl(entry);
 
       if (!release.body.includes(changelogLink)) {
         errors.push(`GitHub Release ${entry.tag} must link to its tagged package changelog.`);
+      }
+
+      if (!release.body.includes(npmLink)) {
+        errors.push(`GitHub Release ${entry.tag} must link to ${entry.name}@${entry.version} on npm.`);
       }
     }
   }

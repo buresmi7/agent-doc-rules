@@ -124,6 +124,7 @@ async function checkPackageCoverage() {
 function checkPackageEntries() {
   const names = new Set();
   const directories = new Set();
+  const releaseTitles = new Set();
   const tagPrefixes = new Set();
 
   for (const entry of metadata.packages) {
@@ -136,6 +137,11 @@ function checkPackageEntries() {
       errors.push(`Duplicate release package directory: ${entry.directory}.`);
     }
     directories.add(entry.directory);
+
+    if (releaseTitles.has(entry.releaseTitle)) {
+      errors.push(`Duplicate GitHub Release title: ${entry.releaseTitle}.`);
+    }
+    releaseTitles.add(entry.releaseTitle);
 
     if (tagPrefixes.has(entry.tagPrefix)) {
       errors.push(`Duplicate release tag prefix: ${entry.tagPrefix}.`);
