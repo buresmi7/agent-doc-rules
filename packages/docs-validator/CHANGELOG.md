@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.1 - 2026-07-30
+
+### Patch Changes
+
+- Add GitHub repository, package homepage, and issue tracker links to the
+  published package metadata.
+
 ## 0.11.0 - 2026-07-24
 
 - Published the `0.10.0` validator unchanged in the final lockstep release.

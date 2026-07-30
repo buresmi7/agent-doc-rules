@@ -75,7 +75,10 @@ Complete the transition in this order:
 - [x] Standardize legacy Release titles and links.
 - [x] Add independent version metadata and package changelogs.
 - [x] Replace the lockstep release template and checklist.
-- [ ] Exercise the independent workflow with the next changed package.
+- [x] Exercise the independent workflow with the next changed package.
+
+The metadata-only `0.11.1` release completed this transition under a
+[one-release verification exception](decisions/skip-full-release-verification-for-0.11.1.md).
 
 Update this checklist in the same change that completes each item.
 

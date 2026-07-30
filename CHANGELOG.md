@@ -18,6 +18,11 @@ live in the package changelogs:
   checks for prepared, tagged, and published package versions.
 - Moved package history into package changelogs and limited this file to
   repository and monorepo changes.
+- Required every public package manifest to expose its GitHub repository,
+  package homepage, and issue tracker.
+- Exercised the independent release workflow with package-specific tags and
+  GitHub Releases, with a recorded one-release verification exception for the
+  metadata-only `0.11.1` release.
 
 ## v0.11.0 - 2026-07-24
 

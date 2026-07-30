@@ -1,10 +1,19 @@
 {
   "name": "@buresmi7/agent-doc-rules-docs-validator",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "private": false,
   "description": "Markdown, security, and link validation CLI for agent-doc-rules projects",
   "type": "module",
   "license": "MIT",
+  "homepage": "https://github.com/buresmi7/agent-doc-rules/tree/master/packages/docs-validator#readme",
+  "bugs": {
+    "url": "https://github.com/buresmi7/agent-doc-rules/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buresmi7/agent-doc-rules.git",
+    "directory": "packages/docs-validator"
+  },
   "bin": {
     "agent-doc-rules-docs": "bin/agent-doc-rules-docs.mjs"
   },
