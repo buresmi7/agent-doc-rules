@@ -148,6 +148,25 @@ export function currentChangelogVersion(changelog) {
   return match?.[1] ?? null;
 }
 
+export function currentChangelogEntry(changelog) {
+  const heading = /^##\s+([^\s]+)(?:\s+-\s+.+)?$/m.exec(changelog);
+
+  if (!heading) {
+    return null;
+  }
+
+  const afterHeading = changelog.slice(heading.index + heading[0].length);
+  const nextHeading = /^##\s+/m.exec(afterHeading);
+  const entry = afterHeading.slice(0, nextHeading?.index ?? afterHeading.length).trim();
+
+  return entry || null;
+}
+
+export function releaseBodyStartsWithCurrentChangelogEntry(body, changelog) {
+  const entry = currentChangelogEntry(changelog);
+  return entry !== null && body.startsWith(`${entry}\n\n`);
+}
+
 function validateEntry(entry) {
   if (!entry || typeof entry !== 'object') {
     throw new Error('Each release package entry must be an object.');

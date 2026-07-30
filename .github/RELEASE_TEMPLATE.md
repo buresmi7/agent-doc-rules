@@ -2,26 +2,16 @@
 Use this template only for package-specific releases after v0.11.0. Set the
 GitHub Release title to "RELEASE_TITLE VERSION", using the release title and
 package tag from release-packages.json. Replace every ALL_CAPS placeholder,
-then remove comments and unused optional sections before publishing.
+then remove comments before publishing.
 -->
-
-RELEASE_SUMMARY
-
-## Highlights
 
 <!--
-List two to five user-visible package changes. Omit unrelated monorepo work,
-internal refactors, CI work, and release chores. For a one-change patch, keep
-only the summary and omit this section.
+Copy CHANGELOG_ENTRY exactly from the current package changelog, starting below
+its version heading and ending before the next version heading. Do not copy the
+version heading or rewrite the entry.
 -->
 
-- PACKAGE_CHANGE
-
-<!-- Optional: keep this section only when users must take action. -->
-
-## Upgrade notes
-
-- UPGRADE_STEP
+CHANGELOG_ENTRY
 
 **npm:** [`PACKAGE_NAME@VERSION`](https://www.npmjs.com/package/PACKAGE_NAME/v/VERSION)
 

@@ -6,11 +6,13 @@ import { promisify } from 'node:util';
 
 import {
   compareSemver,
+  currentChangelogEntry,
   currentChangelogVersion,
   loadReleaseMetadata,
   packageNpmUrl,
   packageReleaseTitle,
   parseSemver,
+  releaseBodyStartsWithCurrentChangelogEntry,
   repoRoot,
 } from '../release-metadata.mjs';
 
@@ -32,6 +34,7 @@ test('release metadata maps every public package to an independent tag', async (
       `https://www.npmjs.com/package/${entry.name}/v/${entry.version}`,
     );
     assert.equal(currentChangelogVersion(entry.changelog), entry.version);
+    assert.notEqual(currentChangelogEntry(entry.changelog), null);
   }
 
   assert.deepEqual(
@@ -87,19 +90,34 @@ test('compareSemver follows release and prerelease precedence', () => {
   assert.equal(compareSemver('1.0.0', '1.0.0+build.2'), 0);
 });
 
-test('currentChangelogVersion reads the first release heading', () => {
+test('current changelog helpers read the first release section', () => {
   const changelog = [
     '# Changelog',
     '',
     '## 0.12.0 - 2026-08-01',
     '',
+    '### Minor Changes',
+    '',
     '- Change.',
     '',
     '## 0.11.0',
+    '',
+    '- Previous change.',
   ].join('\n');
 
   assert.equal(currentChangelogVersion(changelog), '0.12.0');
+  const entry = '### Minor Changes\n\n- Change.';
+  assert.equal(currentChangelogEntry(changelog), entry);
+  assert.equal(
+    releaseBodyStartsWithCurrentChangelogEntry(`${entry}\n\n**npm:** package`, changelog),
+    true,
+  );
+  assert.equal(
+    releaseBodyStartsWithCurrentChangelogEntry('Rewritten summary.\n\n**npm:** package', changelog),
+    false,
+  );
   assert.equal(currentChangelogVersion('# Changelog\n'), null);
+  assert.equal(currentChangelogEntry('# Changelog\n'), null);
 });
 
 test('release CLIs accept the pnpm argument separator', async () => {

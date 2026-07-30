@@ -25,6 +25,8 @@ Do not rewrite their targets.
 After `v0.11.0`, version and publish each public package independently. Use a
 checked-in release record for each changed package, publish only packages whose
 contents changed, and continue to run the full monorepo verification checks.
+Use the matching package changelog entry as the GitHub Release notes without
+rewriting it.
 
 The [Release Management page](../release-management.md) defines the canonical
 procedure, tag patterns, and GitHub Release rules.
@@ -45,6 +47,8 @@ the original tag date. Their notes must identify them as historical records.
 - A package's SemVer history describes changes to that package.
 - Package changelogs record package behavior and publication history; the root
   changelog records repository and monorepo changes.
+- GitHub Release notes copy the matching package changelog entry below its
+  version heading.
 - Generic `vMAJOR.MINOR.PATCH` tags stop after `v0.11.0`.
 - The private root package no longer acts as the public release version.
 - Existing legacy tags remain valid and immutable.
@@ -69,8 +73,8 @@ the original tag date. Their notes must identify them as historical records.
 - [Monorepo Development](../development.md) links to this decision through the
   release checklist.
 - The [GitHub release template](../../.github/RELEASE_TEMPLATE.md) sets the
-  configured short title, exact npm package link, package version, and
-  changelog link.
+  configured short title, copied changelog entry, exact npm package link,
+  package version, and changelog link.
 
 ## Revisit When
 

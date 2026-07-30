@@ -25,6 +25,8 @@ live in the package changelogs:
   metadata-only `0.11.1` release.
 - Shortened package-specific GitHub Release titles and replaced one-row package
   tables with versioned npm links.
+- Made each package's current changelog entry the source of its GitHub Release
+  notes and added a check that rejects rewritten summaries.
 
 ## v0.11.0 - 2026-07-24
 

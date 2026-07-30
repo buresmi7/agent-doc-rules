@@ -43,7 +43,9 @@ carry more than one package tag when it publishes several packages.
 
 Title each package Release `<release title> <version>`, such as
 `E2E Runner 0.12.0`. `release-packages.json` owns the short release title.
-Keep the full scoped npm package name and versioned npm link in the body.
+Start the body with an exact copy of the current package changelog entry below
+its version heading. Do not copy the version heading or rewrite the entry. Keep
+the full scoped npm package name and versioned npm link after it.
 
 The root package is private and does not define public package versions.
 Continue to test the whole workspace even when a release changes one package.
@@ -277,8 +279,9 @@ After [Prepare A Release](#prepare-a-release):
 7. Confirm each exact version with `npm view PACKAGE@VERSION version`.
 8. Create one GitHub Release per tag with the
    [package release template](../.github/RELEASE_TEMPLATE.md). Use the
-   configured `<release title> <version>`, link to the exact npm package
-   version, and link to the package changelog stored in that tag.
+   configured `<release title> <version>`. Copy the current package changelog
+   entry below its version heading without rewriting it, then link to the exact
+   npm package version and the changelog stored in that tag.
 9. Run the final state check:
 
    ```bash
@@ -286,8 +289,8 @@ After [Prepare A Release](#prepare-a-release):
    ```
 
    It verifies the manifest in the tag, npm version, matching local and remote
-   tag objects, configured Release title, versioned npm link, and tagged
-   package-changelog link.
+   tag objects, configured Release title, exact current package changelog entry,
+   versioned npm link, and tagged package-changelog link.
 
 Publishing reserves an npm version permanently. Confirm authentication, package
 contents, and the absence of that version before running `npm publish`.

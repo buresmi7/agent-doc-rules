@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 
 import {
+  currentChangelogEntry,
   currentChangelogVersion,
   loadReleaseMetadata,
   parseSemver,
@@ -167,6 +168,10 @@ function checkPackageEntries() {
         `${entry.directory}/CHANGELOG.md latest version ${changelogVersion ?? 'missing'}`
         + ` must match manifest version ${entry.version}.`,
       );
+    }
+
+    if (currentChangelogEntry(entry.changelog) === null) {
+      errors.push(`${entry.directory}/CHANGELOG.md current version must contain release notes.`);
     }
   }
 }

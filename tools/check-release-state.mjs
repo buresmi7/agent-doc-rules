@@ -8,6 +8,7 @@ import {
   packageNpmUrl,
   packageReleaseTitle,
   parseSemver,
+  releaseBodyStartsWithCurrentChangelogEntry,
   repoRoot,
 } from './release-metadata.mjs';
 
@@ -164,6 +165,12 @@ async function checkPackage(entry, repository, phase) {
 
       if (!release.body.includes(changelogLink)) {
         errors.push(`GitHub Release ${entry.tag} must link to its tagged package changelog.`);
+      }
+
+      if (!releaseBodyStartsWithCurrentChangelogEntry(release.body, entry.changelog)) {
+        errors.push(
+          `GitHub Release ${entry.tag} must start with its current package changelog entry.`,
+        );
       }
 
       if (!release.body.includes(npmLink)) {
