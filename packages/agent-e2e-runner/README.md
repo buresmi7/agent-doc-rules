@@ -1,7 +1,7 @@
 # Agent E2E Runner
 
 `@buresmi7/agent-e2e-runner` tests an Agent Skill in a real, persistent Codex
-session against a temporary fixture project. Codex discovers the installed
+session against an isolated fixture project. Codex discovers the installed
 skill, reads and edits the project with its normal tools, and responds to each
 user turn in the same conversation.
 
@@ -27,8 +27,8 @@ need npm registry access.
 For each agent scenario, the runner:
 
 1. checks that `--skill-package` names a dependency in `project/package.json`;
-2. copies `project/` to a temporary directory without `node_modules`;
-3. installs the temporary project's dependencies;
+2. copies `project/` to an isolated run directory without `node_modules`;
+3. installs the isolated project's dependencies;
 4. installs an isolated copy of the selected skill with `skills add --copy`;
 5. starts Codex with write access limited to that project;
 6. sends every prompt in `scenario.json.turns` to the same Codex session;
@@ -39,7 +39,7 @@ For each agent scenario, the runner:
 
 `--copy` is an isolation choice for the test, not a required Agent Skills
 installation convention. The source fixture stays unchanged. A judged failure
-keeps the temporary project, Codex event logs, transcript, and judgment. An
+keeps the isolated project, Codex event logs, transcript, and judgment. An
 earlier setup or runtime error may have only the artifacts produced before the
 error. See [Architecture](docs/architecture.md) for the test boundary and
 limitations.
@@ -199,7 +199,7 @@ npm --prefix e2e/readme-confirmation/project install
 ```
 
 Then run the scenario. The runner performs another clean dependency install in
-the temporary copy on every run:
+the isolated copy on every run:
 
 ```bash
 npm --prefix e2e/readme-confirmation/project run test:agent
@@ -224,13 +224,33 @@ Useful environment variables:
 | `CODEX_JUDGE_REASONING_EFFORT` | Override judge reasoning effort. |
 | `UPDATE_AGENT_SNAPSHOTS=1` | Write snapshots for passing scenarios. |
 | `AGENT_E2E_SNAPSHOT_DIR` | Write snapshots to a named directory. |
-| `KEEP_TEST_OUTPUT=1` | Keep temporary output after a passing run. |
+| `AGENT_E2E_OUTPUT_ROOT` | Parent directory for unique run output directories. |
+| `KEEP_TEST_OUTPUT=1` | Keep run output after a passing run. |
+
+## Run Output
+
+Each run gets a unique directory under
+`<scenario>/.agent-e2e-output/`. Passing runs remove their unique directory
+unless `--keep-output` or `KEEP_TEST_OUTPUT=1` is set. Failed runs stay in
+place. The runner adds an ignore file to the default output root so retained
+runs do not appear in Git status.
+
+Use `--output-root <dir>` or `AGENT_E2E_OUTPUT_ROOT` to store run directories
+elsewhere, such as a CI artifact directory. Relative paths resolve from the
+current working directory. The output root must be outside the fixture project.
+If the fixture contains the scenario directory, the default output root moves
+next to the fixture to avoid copying a run into itself.
+
+Each run contains a private root manifest and workspace file so dependency
+installation stays inside the run rather than joining a parent workspace.
+Agent failures also retain `failure-summary.json`, `project/`, the Codex event
+log, and judge output.
 
 ## Parallel Runs
 
 One CLI invocation runs one scenario. Run independent invocations concurrently
-through your test runner or workspace. Temporary projects, Codex homes, skill
-installer caches, and output directories are isolated per scenario. Package
+through your test runner or workspace. Projects, Codex homes, skill installer
+caches, and output directories are isolated per run. Package
 managers may share their normal cache or store. Keep the turns within one
 scenario sequential, and start with a concurrency limit of two to avoid API
 rate limits. For example, a pnpm workspace can use:
@@ -249,7 +269,7 @@ not the skill under test. A `skill` entry in this file is rejected:
 | `skillsCliVersion` | `skills` CLI version; defaults to `1.5.12`. |
 | `judgePrompt` | Optional custom judge prompt template. |
 | `passThreshold` | Minimum judge score; defaults to `0.8`. |
-| `tempPrefix` | Prefix for temporary output directories. |
+| `tempPrefix` | Prefix for unique run directory names. |
 | `projectFileOptions` | Judge evidence selection and ignored paths. |
 | `inspectLinks` | Extra paths written into failure summaries. |
 
@@ -310,7 +330,8 @@ agent-e2e-runner command --scenario e2e/<name>
 | `--scenario <dir>` | Both | Scenario directory. |
 | `--project <dir>` | Both | Fixture project; defaults to `<scenario>/project`. |
 | `--repo-root <dir>` | Both | Repository root; defaults to the current directory. |
-| `--keep-output` | Both | Keep temporary output after a passing run. |
+| `--output-root <dir>` | Both | Parent directory for unique run output directories. |
+| `--keep-output` | Both | Keep run output after a passing run. |
 | `--name <name>` | Both | Scenario name override. |
 | `--help` | Both | Print CLI usage. |
 | `--config <file>` | Agent | Config file; defaults to `agent-e2e.config.mjs`. |
@@ -350,7 +371,8 @@ const result = await runAgentScenario({
 ```
 
 `runAgentScenario` verifies that `skill.packageName` is a fixture dependency
-and uses its package spec as the source under test.
+and uses its package spec as the source under test. Pass `outputRoot` to place
+run directories outside the scenario.
 
 The root export also provides `createCodexSession`, `judgeAgentOutput`,
 `readAgentMetadata`, `readSnapshotDirName`, `main`, `runCommand`, and

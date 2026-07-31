@@ -1,5 +1,4 @@
-import { cp, mkdtemp, readFile, rm } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { cp, readFile } from 'node:fs/promises';
 import { basename, dirname, isAbsolute, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import {
@@ -10,6 +9,10 @@ import {
 import { runAgentScenario, readSnapshotDirName } from './agent-scenario.mjs';
 import { runCommandScenario } from './command-runtime.mjs';
 import { defaultJudgePromptTemplate } from './defaults.mjs';
+import {
+  createScenarioOutputDirectory,
+  removeScenarioOutputDirectory,
+} from './output-directory.mjs';
 
 const defaultConfigFiles = [
   'agent-e2e.config.mjs',
@@ -21,6 +24,7 @@ const commandOptions = {
     'help',
     'keep_output',
     'name',
+    'output_root',
     'project',
     'repo_root',
     'scenario',
@@ -33,6 +37,7 @@ const commandOptions = {
     'help',
     'keep_output',
     'name',
+    'output_root',
     'project',
     'repo_root',
     'scenario',
@@ -131,6 +136,7 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
   const keepOutput = options.keep_output ?? env.KEEP_TEST_OUTPUT === '1';
   const updateSnapshots = options.update_snapshots ?? env.UPDATE_AGENT_SNAPSHOTS === '1';
   const snapshotDirName = options.snapshot_dir ?? readSnapshotDirName(env);
+  const outputRoot = resolveOutputRoot(cwd, options.output_root, env);
   const judgePromptTemplate = await readJudgePrompt({
     config,
     configDir,
@@ -158,6 +164,7 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
       keepOutput,
       passThreshold: config.passThreshold ?? 0.8,
       tempPrefix: config.tempPrefix ?? 'agent-e2e',
+      outputRoot,
       inspectLinks: config.inspectLinks ?? {},
       projectFileOptions: config.projectFileOptions ?? {},
       env,
@@ -195,8 +202,14 @@ export async function runCommandCommand({ options, cwd, env, stdout, stderr }) {
     : join(scenarioDir, 'project');
   const repoRoot = options.repo_root ? resolve(cwd, options.repo_root) : cwd;
   const scenarioName = options.name ?? basename(scenarioDir);
-  const tempDir = await mkdtemp(join(tmpdir(), `agent-e2e-command-${scenarioName}-`));
-  const projectDir = join(tempDir, 'project');
+  const outputRoot = resolveOutputRoot(cwd, options.output_root, env);
+  const { outputDir } = await createScenarioOutputDirectory({
+    scenarioDir,
+    outputRoot,
+    projectFixtureDir,
+    prefix: `agent-e2e-command-${scenarioName}`,
+  });
+  const projectDir = join(outputDir, 'project');
   const keepOutput = options.keep_output ?? env.KEEP_TEST_OUTPUT === '1';
 
   try {
@@ -212,23 +225,23 @@ export async function runCommandCommand({ options, cwd, env, stdout, stderr }) {
     });
 
     if (!result.pass) {
-      printCommandFailure(stderr, scenarioName, result, tempDir);
+      printCommandFailure(stderr, scenarioName, result, outputDir);
       return 1;
     }
 
     stdout.write(`Command E2E test passed for ${scenarioName}.\n`);
 
     if (keepOutput) {
-      stdout.write(`output: ${tempDir}\n`);
+      stdout.write(`output: ${outputDir}\n`);
     } else {
-      await rm(tempDir, { recursive: true, force: true });
+      await removeScenarioOutputDirectory(outputDir);
     }
 
     return 0;
   } catch (error) {
     stderr.write(`Command E2E test failed for ${scenarioName}.\n`);
     stderr.write(`${error.stack ?? error.message}\n`);
-    stderr.write(`output: ${tempDir}\n`);
+    stderr.write(`output: ${outputDir}\n`);
     return 1;
   }
 }
@@ -386,6 +399,12 @@ function resolvePath(baseDir, value) {
   return isAbsolute(value) ? value : resolve(baseDir, value);
 }
 
+function resolveOutputRoot(cwd, option, env) {
+  const value = option ?? env.AGENT_E2E_OUTPUT_ROOT;
+
+  return value ? resolve(cwd, value) : undefined;
+}
+
 function usage() {
   return `Usage:
   agent-e2e-runner agent --scenario e2e/<name> --skill-package <package> --skill <name> [--config agent-e2e.config.mjs]
@@ -395,7 +414,8 @@ Shared options:
   --scenario <dir>       Scenario directory containing project/ and scenario.json.
   --project <dir>        Fixture project directory. Defaults to <scenario>/project.
   --repo-root <dir>      Repository root. Defaults to the current directory.
-  --keep-output          Keep temporary output directories.
+  --output-root <dir>    Parent for unique run directories.
+  --keep-output          Keep run output after a passing scenario.
   --name <name>          Scenario name override.
   --help                 Print this usage.
 

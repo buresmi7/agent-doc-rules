@@ -1,6 +1,5 @@
-import { mkdtemp, rm } from 'node:fs/promises';
-import { join } from 'node:path';
-import { tmpdir } from 'node:os';
+import { mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { assertFile } from './project-files.mjs';
 import { runCommand } from './process.mjs';
 
@@ -10,12 +9,20 @@ export async function installSkill({
   skillName,
   skillsCliVersion = '1.5.12',
   installedSkillPath = `.agents/skills/${skillName}/SKILL.md`,
+  npmCacheDir,
   baseEnv = process.env,
+  run = runCommand,
 }) {
-  const npmCache = await mkdtemp(join(tmpdir(), 'agent-e2e-npm-cache-'));
+  const cacheDir = npmCacheDir
+    ? npmCacheDir
+    : await mkdtemp(join(dirname(projectDir), '.agent-e2e-npm-cache-'));
+
+  if (npmCacheDir) {
+    await mkdir(cacheDir, { recursive: true });
+  }
 
   try {
-    await runCommand('npx', [
+    await run('npx', [
       '-y',
       `skills@${skillsCliVersion}`,
       'add',
@@ -32,11 +39,11 @@ export async function installSkill({
         ...baseEnv,
         CI: '1',
         NO_COLOR: '1',
-        npm_config_cache: npmCache,
+        npm_config_cache: cacheDir,
       },
     });
   } finally {
-    await rm(npmCache, { recursive: true, force: true });
+    await rm(cacheDir, { recursive: true, force: true });
   }
 
   await assertFile(join(projectDir, installedSkillPath));

@@ -84,6 +84,7 @@ Default excludes:
   "dist/**",
   "coverage/**",
   ".tmp/**",
+  ".agent-e2e-output/**",
   "repos/**",
   "worktrees/**"
 ]
