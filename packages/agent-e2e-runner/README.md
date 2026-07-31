@@ -215,17 +215,17 @@ UPDATE_AGENT_SNAPSHOTS=1 npm --prefix e2e/readme-confirmation/project run test:a
 
 Useful environment variables:
 
-| Variable | Purpose |
-| --- | --- |
-| `CODEX_BIN` | Codex executable; defaults to `codex`. |
-| `CODEX_MODEL` | Override the model used by the tested agent. |
-| `CODEX_REASONING_EFFORT` | Override agent reasoning effort; defaults to `medium`. |
-| `CODEX_JUDGE_MODEL` | Use a different Codex model for judging. |
-| `CODEX_JUDGE_REASONING_EFFORT` | Override judge reasoning effort. |
-| `UPDATE_AGENT_SNAPSHOTS=1` | Write snapshots for passing scenarios. |
-| `AGENT_E2E_SNAPSHOT_DIR` | Write snapshots to a named directory. |
-| `AGENT_E2E_OUTPUT_ROOT` | Parent directory for unique run output directories. |
-| `KEEP_TEST_OUTPUT=1` | Keep run output after a passing run. |
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `CODEX_BIN` | `codex` | Codex executable. |
+| `CODEX_MODEL` | Codex config or CLI default | Override the model used by the tested agent. |
+| `CODEX_REASONING_EFFORT` | `medium` | Override agent reasoning effort. |
+| `CODEX_JUDGE_MODEL` | Agent model | Use a different Codex model for judging. |
+| `CODEX_JUDGE_REASONING_EFFORT` | Agent reasoning effort | Override judge reasoning effort. |
+| `UPDATE_AGENT_SNAPSHOTS` | Off | Set to `1` to write snapshots for passing scenarios. |
+| `AGENT_E2E_SNAPSHOT_DIR` | `snapshot` | Set the snapshot directory name. |
+| `AGENT_E2E_OUTPUT_ROOT` | `<scenario>/.agent-e2e-output/` | Set a different output root. |
+| `KEEP_TEST_OUTPUT` | Off | Set to `1` to keep output after a passing run. |
 
 ## Run Output
 
