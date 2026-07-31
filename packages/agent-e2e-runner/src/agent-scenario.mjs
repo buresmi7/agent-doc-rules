@@ -109,7 +109,6 @@ export async function runAgentScenario({
       skillName: skill.name,
       skillsCliVersion,
       installedSkillPath: skill.installedSkillPath,
-      npmCacheDir: join(outputDir, 'npm-cache'),
       keepOutput,
       baseEnv: env,
     });
