@@ -12,6 +12,7 @@
       "dist/**",
       "coverage/**",
       ".tmp/**",
+      ".agent-e2e-output/**",
       "repos/**",
       "worktrees/**"
     ],
@@ -22,6 +23,7 @@
         "dist/**",
         "coverage/**",
         ".tmp/**",
+        ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
         "e2e/**/snapshot*/**"
@@ -46,6 +48,7 @@
         "dist/**",
         "coverage/**",
         ".tmp/**",
+        ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
         "e2e/**/snapshot/**",
@@ -63,6 +66,7 @@
         "dist/**",
         "coverage/**",
         ".tmp/**",
+        ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
         "e2e/docs-security-command-fail/**",
@@ -77,6 +81,7 @@
         "dist/**",
         "coverage/**",
         ".tmp/**",
+        ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
         "CHANGELOG.md",
@@ -94,6 +99,7 @@
         "dist/**",
         "coverage/**",
         ".tmp/**",
+        ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
         "e2e/**/snapshot*/**"

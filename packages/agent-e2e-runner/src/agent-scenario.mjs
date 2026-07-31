@@ -1,5 +1,4 @@
-import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { tmpdir } from 'node:os';
+import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { basename, join, relative } from 'node:path';
 import { createCodexSession, judgeAgentOutput } from './agent-runtime.mjs';
 import {
@@ -8,6 +7,10 @@ import {
   readAgentScenarioDefinition,
 } from './agent-scenario-definition.mjs';
 import { defaultJudgePromptTemplate } from './defaults.mjs';
+import {
+  createScenarioOutputDirectory,
+  removeScenarioOutputDirectory,
+} from './output-directory.mjs';
 import {
   assertProjectPathsUnchanged,
   captureProjectState,
@@ -40,6 +43,7 @@ export async function runAgentScenario({
   keepOutput = false,
   passThreshold = 0.8,
   tempPrefix = 'agent-e2e',
+  outputRoot,
   inspectLinks = {},
   projectFileOptions = {},
   env = process.env,
@@ -73,8 +77,13 @@ export async function runAgentScenario({
   };
   const scenarioDefinition = await readAgentScenarioDefinition(scenarioDir);
   const scenarioTurns = scenarioDefinition.turns;
-  const tempDir = await mkdtemp(join(tmpdir(), `${tempPrefix}-${scenarioName}-`));
-  const projectDir = join(tempDir, 'project');
+  const { outputDir } = await createScenarioOutputDirectory({
+    scenarioDir,
+    outputRoot,
+    projectFixtureDir,
+    prefix: `${tempPrefix}-${scenarioName}`,
+  });
+  const projectDir = join(outputDir, 'project');
   let agentSession = null;
 
   try {
@@ -114,7 +123,7 @@ export async function runAgentScenario({
     const conversationTurns = [];
     agentSession = await createAgentSession(runtime, {
       cwd: projectDir,
-      outputDir: join(tempDir, 'agent-session'),
+      outputDir: join(outputDir, 'agent-session'),
       baseEnv: env,
     });
 
@@ -140,9 +149,9 @@ export async function runAgentScenario({
 
       conversationTurns.push({
         ...scenarioTurn,
-        activity: normalizeAgentActivity(turnResult.activity ?? [], projectDir, tempDir),
+        activity: normalizeAgentActivity(turnResult.activity ?? [], projectDir, outputDir),
         changes: diffProjectStates(stateBeforeTurn, stateAfterTurn),
-        response: normalizeAgentResponse(turnResult.response, projectDir, tempDir),
+        response: normalizeAgentResponse(turnResult.response, projectDir, outputDir),
       });
 
       onProgress({
@@ -174,11 +183,11 @@ export async function runAgentScenario({
       prompt: judgePrompt,
       schema: judgeSchema,
       cwd: projectDir,
-      outputDir: join(tempDir, 'judge'),
+      outputDir: join(outputDir, 'judge'),
       baseEnv: env,
     });
     const pass = Boolean(judgment.pass) && Number(judgment.score) >= passThreshold;
-    const failureSummaryPath = join(tempDir, 'failure-summary.json');
+    const failureSummaryPath = join(outputDir, 'failure-summary.json');
 
     if (pass && updateSnapshots) {
       await writeScenarioSnapshot({
@@ -198,7 +207,7 @@ export async function runAgentScenario({
 
     if (!pass) {
       await writeFailureSummary({
-        tempDir,
+        outputDir,
         projectDir,
         scenarioDir,
         repoRoot,
@@ -214,7 +223,7 @@ export async function runAgentScenario({
     }
 
     if (pass && !keepOutput) {
-      await rm(tempDir, { recursive: true, force: true });
+      await removeScenarioOutputDirectory(outputDir);
     }
 
     return {
@@ -223,11 +232,11 @@ export async function runAgentScenario({
       pass,
       changedFilePaths: changes.map((file) => file.path),
       transcript,
-      outputDir: pass && !keepOutput ? undefined : tempDir,
+      outputDir: pass && !keepOutput ? undefined : outputDir,
       failureSummaryPath: pass ? undefined : failureSummaryPath,
     };
   } catch (error) {
-    error.message = `${error.message}\nAgent E2E output directory: ${tempDir}`;
+    error.message = `${error.message}\nAgent E2E output directory: ${outputDir}`;
     throw error;
   } finally {
     await agentSession?.close?.();
@@ -287,7 +296,7 @@ async function writeScenarioSnapshot({
 }
 
 async function writeFailureSummary({
-  tempDir,
+  outputDir,
   projectDir,
   scenarioDir,
   repoRoot,
@@ -328,8 +337,8 @@ async function writeFailureSummary({
         : null,
     })),
     inspect: {
-      outputDir: tempDir,
-      projectDir: relative(tempDir, projectDir),
+      outputDir,
+      projectDir: relative(outputDir, projectDir),
       scenario: repoRoot
         ? relative(repoRoot, join(scenarioDir, scenarioSource))
         : join(scenarioDir, scenarioSource),
@@ -337,7 +346,7 @@ async function writeFailureSummary({
     },
   };
 
-  await writeFile(join(tempDir, 'failure-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
+  await writeFile(join(outputDir, 'failure-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
 }
 
 export function readSnapshotDirName(env = process.env) {
@@ -350,16 +359,16 @@ export function readSnapshotDirName(env = process.env) {
   return value;
 }
 
-function normalizeAgentResponse(response, projectDir, tempDir) {
-  return normalizeRunnerPaths(response, projectDir, tempDir);
+function normalizeAgentResponse(response, projectDir, outputDir) {
+  return normalizeRunnerPaths(response, projectDir, outputDir);
 }
 
-function normalizeAgentActivity(activity, projectDir, tempDir) {
+function normalizeAgentActivity(activity, projectDir, outputDir) {
   return activity.map((item) => {
     if (item.type === 'command_execution') {
       return {
         ...item,
-        commandSummary: normalizeRunnerPaths(item.commandSummary, projectDir, tempDir),
+        commandSummary: normalizeRunnerPaths(item.commandSummary, projectDir, outputDir),
       };
     }
 
@@ -368,7 +377,7 @@ function normalizeAgentActivity(activity, projectDir, tempDir) {
         ...item,
         changes: item.changes.map((change) => ({
           ...change,
-          path: normalizeActivityPath(change.path, projectDir, tempDir),
+          path: normalizeActivityPath(change.path, projectDir, outputDir),
         })),
       };
     }
@@ -377,7 +386,7 @@ function normalizeAgentActivity(activity, projectDir, tempDir) {
   });
 }
 
-function normalizeActivityPath(path, projectDir, tempDir) {
+function normalizeActivityPath(path, projectDir, outputDir) {
   const normalizedPath = path.replaceAll('\\', '/');
   const normalizedProjectDir = projectDir.replaceAll('\\', '/');
 
@@ -385,15 +394,15 @@ function normalizeActivityPath(path, projectDir, tempDir) {
     return normalizedPath.slice(normalizedProjectDir.length + 1);
   }
 
-  return normalizeRunnerPaths(path, projectDir, tempDir);
+  return normalizeRunnerPaths(path, projectDir, outputDir);
 }
 
-function normalizeRunnerPaths(value, projectDir, tempDir) {
+function normalizeRunnerPaths(value, projectDir, outputDir) {
   return value
     .replaceAll(projectDir, '<project>')
     .replaceAll(projectDir.replaceAll('\\', '/'), '<project>')
-    .replaceAll(tempDir, '<test-output>')
-    .replaceAll(tempDir.replaceAll('\\', '/'), '<test-output>');
+    .replaceAll(outputDir, '<test-output>')
+    .replaceAll(outputDir.replaceAll('\\', '/'), '<test-output>');
 }
 
 async function readOptionalFile(path) {

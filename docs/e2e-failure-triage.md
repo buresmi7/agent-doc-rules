@@ -7,7 +7,7 @@ Use this workflow when `corepack pnpm run test:agent`,
 
 Start with the runner output:
 
-- `output:` points to the temporary scenario output directory.
+- `output:` points to the retained run directory.
 - Agent scenarios also print `score`, failed criteria, `fix:` lines, and
   `summary:` after the runner sends generated output to the judge.
 - Command scenarios print the command, actual exit code, failed expectations,
@@ -73,8 +73,10 @@ Common classifications:
    corepack pnpm run test:agent
    ```
 
-Keep failed output directories out of commits. They are debugging artifacts, not
-snapshots.
+Failed output directories live under `<scenario>/.agent-e2e-output/` by
+default. The runner ignores that directory for Git, but the files can still
+contain fixture and conversation data. Delete retained runs when triage is
+complete. They are debugging artifacts, not snapshots.
 
 ## Snapshot Updates
 
