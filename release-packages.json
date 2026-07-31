@@ -14,6 +14,12 @@
       "tagPrefix": "agent-e2e-runner"
     },
     {
+      "name": "@buresmi7/agent-e2e-report",
+      "releaseTitle": "E2E Report",
+      "directory": "packages/agent-e2e-report",
+      "tagPrefix": "agent-e2e-report"
+    },
+    {
       "name": "@buresmi7/agent-doc-rules-docs-validator",
       "releaseTitle": "Docs Validator",
       "directory": "packages/docs-validator",

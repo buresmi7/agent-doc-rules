@@ -9,15 +9,18 @@ Start with the runner output:
 
 - `output:` points to the temporary scenario output directory.
 - Agent scenarios also print `score`, failed criteria, `fix:` lines, and
-  `summary:` after the runner sends generated output to the judge.
+  `report:`, `session:`, and `summary:` paths after the runner sends generated
+  output to the judge.
 - Command scenarios print the command, actual exit code, failed expectations,
   stdout, and stderr.
 
-For agent scenarios, open `failure-summary.json` first. It lists generated file
-changes, the actual conversation, judge notes, failed criteria, turn summaries,
-and the maintainer docs to use for triage. Then inspect `project/` inside the
-same output directory to see the generated repository state. For command
-scenarios, inspect `project/` and compare the runner output with `scenario.json`.
+For agent scenarios, open `failure-report.html` first. It places each user
+request, agent response, matching expectations, tool summary, and project
+change in the same turn. Use `agent-session.json` for the portable full viewer
+input or `failure-summary.json` for a compact failure record. Then inspect
+`project/` inside the same output directory to see the final repository state.
+For command scenarios, inspect `project/` and compare the runner output with
+`scenario.json`.
 
 ## Classify The Failure
 

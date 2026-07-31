@@ -38,11 +38,11 @@ For each agent scenario, the runner:
    project against the named criteria beside each prompt.
 
 `--copy` is an isolation choice for the test, not a required Agent Skills
-installation convention. The source fixture stays unchanged. A judged failure
-keeps the temporary project, Codex event logs, transcript, and judgment. An
-earlier setup or runtime error may have only the artifacts produced before the
-error. See [Architecture](docs/architecture.md) for the test boundary and
-limitations.
+installation convention. The source fixture stays unchanged. A failure keeps
+the temporary project, Codex event logs, a portable `agent-session.json`, a
+JSON summary, and a static HTML viewer. Runtime errors can produce partial
+artifacts with the turns and project changes captured before the error. See
+[Architecture](docs/architecture.md) for the test boundary and limitations.
 
 ## Dictated Todo Example
 
@@ -206,8 +206,12 @@ npm --prefix e2e/readme-confirmation/project run test:agent
 ```
 
 A judged failure prints the failed criterion IDs and retains its inspection
-artifacts. Setup and runtime errors print the available error context but may
-occur before a transcript or judgment exists. To record a passing run:
+artifacts. Open `failure-report.html` to inspect the conversation and project
+changes side by side. Each assistant response shows the criteria that apply to
+it. `agent-session.json` contains the portable viewer input, while
+`failure-summary.json` provides a compact failure overview. Setup and runtime
+errors may produce partial artifacts when they occur before a transcript or
+judgment exists. To record a passing run:
 
 ```bash
 UPDATE_AGENT_SNAPSHOTS=1 npm --prefix e2e/readme-confirmation/project run test:agent
@@ -225,6 +229,36 @@ Useful environment variables:
 | `UPDATE_AGENT_SNAPSHOTS=1` | Write snapshots for passing scenarios. |
 | `AGENT_E2E_SNAPSHOT_DIR` | Write snapshots to a named directory. |
 | `KEEP_TEST_OUTPUT=1` | Keep temporary output after a passing run. |
+
+## Failure Artifacts
+
+A retained agent failure directory can contain:
+
+```text
+agent-e2e-example-<unique>/
+  agent-session.json
+  failure-report.html
+  failure-summary.json
+  local-packages/
+  project/
+  agent-session/
+  judge/
+```
+
+`local-packages/` holds run-scoped copies of local package dependencies,
+including transitive `workspace:*` dependencies. This lets an unpublished
+local runner use the standalone report package.
+
+`failure-report.html` is a self-contained view of `agent-session.json`. It
+shows each user request, agent response, matching scenario expectations,
+completed tool activity, and the files changed during that turn. Text changes
+show the file before and after the turn. Large and binary files show metadata
+instead of embedded content. Exact evidence returned for a failed criterion is
+highlighted in the response or resulting text file.
+
+The report package can also render captured Codex JSONL or an App Server thread
+outside an E2E run. See the
+[`agent-session` format and viewer CLI](https://github.com/buresmi7/agent-doc-rules/blob/master/packages/agent-e2e-report/docs/session-format.md).
 
 ## Parallel Runs
 
@@ -268,8 +302,10 @@ evidence boundary and retained debugging data.
 `projectFileOptions` supports `evidenceFileNames`, `evidenceFileSuffixes`,
 `evidenceFileExtensions`, `ignoredPaths`, `ignoredPathPrefixes`,
 `ignoredDirectoryNames`, `hiddenPackageScripts`, `maxEvidenceFileBytes`, and
-`maxEvidenceBytes`. Evidence limits fail with a clear error instead of silently
-truncating judge context.
+`maxEvidenceBytes`. It also accepts `maxReportFileBytes`, which defaults to
+256 KiB and limits each before or after file version embedded in the HTML
+report. Evidence limits fail with a clear error instead of silently truncating
+judge context.
 
 ## Command Scenarios
 
@@ -350,7 +386,9 @@ const result = await runAgentScenario({
 ```
 
 `runAgentScenario` verifies that `skill.packageName` is a fixture dependency
-and uses its package spec as the source under test.
+and uses its package spec as the source under test. A judged failure returns
+`failureReportPath`, `agentSessionPath`, and `failureSummaryPath`; a runtime
+error includes available artifact paths in its message.
 
 The root export also provides `createCodexSession`, `judgeAgentOutput`,
 `readAgentMetadata`, `readSnapshotDirName`, `main`, `runCommand`, and

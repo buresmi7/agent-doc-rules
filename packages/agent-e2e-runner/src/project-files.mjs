@@ -39,6 +39,8 @@ const defaultEvidenceFileExtensions = new Set([
   '.yml',
 ]);
 
+const defaultReportFileBytes = 256 * 1024;
+
 export async function prepareProjectFixture(projectDir, {
   hiddenPackageScripts = ['test:agent'],
 } = {}) {
@@ -177,6 +179,35 @@ export function diffProjectStates(before, after) {
       path,
       status: previous ? 'modified' : 'created',
       ...serializeFileContent(current),
+    });
+  }
+
+  return changes;
+}
+
+export function diffProjectStatesForReport(before, after, {
+  maxFileBytes = defaultReportFileBytes,
+} = {}) {
+  if (!Number.isInteger(maxFileBytes) || maxFileBytes < 0) {
+    throw new Error('maxReportFileBytes must be a non-negative integer.');
+  }
+
+  const paths = new Set([...before.keys(), ...after.keys()]);
+  const changes = [];
+
+  for (const path of [...paths].sort((a, b) => a.localeCompare(b))) {
+    const previous = before.get(path);
+    const current = after.get(path);
+
+    if (previous && current && previous.equals(current)) {
+      continue;
+    }
+
+    changes.push({
+      path,
+      status: !current ? 'deleted' : previous ? 'modified' : 'created',
+      before: previous ? serializeReportContent(previous, maxFileBytes) : null,
+      after: current ? serializeReportContent(current, maxFileBytes) : null,
     });
   }
 
@@ -384,6 +415,30 @@ function serializeFileContent(buffer) {
   return {
     content: buffer.toString('base64'),
     encoding: 'base64',
+    byteLength: buffer.byteLength,
+  };
+}
+
+function serializeReportContent(buffer, maxFileBytes) {
+  if (buffer.byteLength > maxFileBytes) {
+    return {
+      kind: 'omitted',
+      byteLength: buffer.byteLength,
+    };
+  }
+
+  const serialized = serializeFileContent(buffer);
+
+  if (serialized.encoding === 'base64') {
+    return {
+      kind: 'binary',
+      byteLength: buffer.byteLength,
+    };
+  }
+
+  return {
+    kind: 'text',
+    content: serialized.content,
     byteLength: buffer.byteLength,
   };
 }

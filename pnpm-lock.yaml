@@ -175,7 +175,13 @@ importers:
         specifier: 0.1.0
         version: 0.1.0
 
-  packages/agent-e2e-runner: {}
+  packages/agent-e2e-report: {}
+
+  packages/agent-e2e-runner:
+    dependencies:
+      '@buresmi7/agent-e2e-report':
+        specifier: workspace:*
+        version: link:../agent-e2e-report
 
   packages/docs-duplicates:
     dependencies:

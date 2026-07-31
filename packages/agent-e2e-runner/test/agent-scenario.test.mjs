@@ -203,10 +203,82 @@ test('runAgentScenario restores a fixture lock and retains turn ids on failure',
   const summary = JSON.parse(await readFile(result.failureSummaryPath, 'utf8'));
 
   assert.equal(result.pass, false);
+  await access(result.failureReportPath);
+  await access(result.agentSessionPath);
+  assert.match(
+    await readFile(result.failureReportPath, 'utf8'),
+    /Turn 1: inspect/,
+  );
+  const session = JSON.parse(await readFile(result.agentSessionPath, 'utf8'));
+
+  assert.equal(session.format, 'agent-session');
+  assert.equal(session.turns[0].expectations[0].id, 'inspect.unchanged');
+  assert.equal(session.turns[0].expectations[0].status, 'failed');
   assert.deepEqual(summary.turns.map(({ id, source }) => ({ id, source })), [{
     id: 'inspect',
     source: 'scenario.json#/turns/0',
   }]);
+});
+
+test('runAgentScenario writes a partial report for runtime errors', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'agent-e2e-agent-runtime-'));
+  const scenarioDir = join(root, 'scenario');
+  const projectFixtureDir = join(scenarioDir, 'project');
+  const skillSource = join(root, 'skill-source');
+
+  await mkdir(projectFixtureDir, { recursive: true });
+  await mkdir(skillSource, { recursive: true });
+  await writeFile(join(projectFixtureDir, 'README.md'), '# Fixture\n');
+  await writeProjectPackage(projectFixtureDir);
+  await writeScenarioDefinition(scenarioDir, [{
+    id: 'change',
+    prompt: 'Change the project.',
+    criteria: { 'change-project': 'Change the project.' },
+  }]);
+  await writeFile(join(skillSource, 'SKILL.md'), '# Test Skill\n');
+
+  let caught;
+
+  try {
+    await runAgentScenario({
+      scenarioName: 'runtime-error',
+      scenarioDir,
+      projectFixtureDir,
+      repoRoot: root,
+      runtime: { runner: 'codex' },
+      skill: selectedSkill,
+      judgePromptTemplate: '{{criteria}}',
+      createAgentSession: async () => ({
+        async runTurn() {
+          throw new Error('Codex stopped during the turn.');
+        },
+      }),
+      installProject: async () => ({ skillSource }),
+      installProjectSkill: async ({ projectDir, installedSkillPath }) => {
+        await mkdir(join(projectDir, '.agents/skills/test-skill'), { recursive: true });
+        await writeFile(join(projectDir, installedSkillPath), '# Installed Skill\n');
+      },
+    });
+  } catch (error) {
+    caught = error;
+  }
+
+  assert.ok(caught);
+  assert.match(caught.message, /Codex stopped during the turn/);
+  assert.match(caught.message, /Agent E2E failure report:/);
+
+  const reportPath = caught.message.match(/Agent E2E failure report: (.+)/)?.[1];
+  const summaryPath = caught.message.match(/Agent E2E failure summary: (.+)/)?.[1];
+
+  assert.ok(reportPath);
+  assert.ok(summaryPath);
+  assert.match(await readFile(reportPath, 'utf8'), /Runtime error/);
+
+  const summary = JSON.parse(await readFile(summaryPath, 'utf8'));
+
+  assert.equal(summary.stage, 'turn:change');
+  assert.equal(summary.turns[0].incomplete, true);
+  assert.equal(summary.error.message, 'Codex stopped during the turn.');
 });
 
 test('runAgentScenario rejects changes to the installed skill', async () => {

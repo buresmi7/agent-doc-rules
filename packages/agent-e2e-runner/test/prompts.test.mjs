@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { defaultJudgePromptTemplate } from '../src/defaults.mjs';
-import { render } from '../src/prompts.mjs';
+import { judgeSchema, render } from '../src/prompts.mjs';
 
 test('default judge prompt evaluates the real conversation without seeing the skill', () => {
   const prompt = render(defaultJudgePromptTemplate, {
@@ -17,4 +17,18 @@ test('default judge prompt evaluates the real conversation without seeing the sk
   assert.match(prompt, /Agent: Which Jane/);
   assert.doesNotMatch(prompt, /skillReference/);
   assert.doesNotMatch(prompt, /Installed skill/);
+});
+
+test('judge schema requires exact evidence locations for failed criteria', () => {
+  const failedCriterion = judgeSchema.properties.failedCriteria.items;
+
+  assert.ok(failedCriterion.required.includes('evidence'));
+  assert.deepEqual(
+    failedCriterion.properties.evidence.items.properties.target.enum,
+    ['response', 'file'],
+  );
+  assert.deepEqual(
+    failedCriterion.properties.evidence.items.required,
+    ['target', 'path', 'quote'],
+  );
 });

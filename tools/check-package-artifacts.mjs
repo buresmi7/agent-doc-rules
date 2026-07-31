@@ -44,6 +44,19 @@ const packages = [
       'agent-e2e-runner command',
     ],
   },
+  {
+    dir: 'packages/agent-e2e-report',
+    name: '@buresmi7/agent-e2e-report',
+    bin: {
+      'agent-session-viewer': 'bin/agent-session-viewer.mjs',
+    },
+    files: ['bin', 'docs', 'schema', 'src', 'README.md'],
+    readmeTerms: [
+      '@buresmi7/agent-e2e-report',
+      'agent-session-viewer',
+      'failure-report.html',
+    ],
+  },
 ];
 
 for (const packageInfo of packages) {

@@ -12,8 +12,24 @@ export const judgeSchema = {
         properties: {
           id: { type: 'string' },
           reason: { type: 'string' },
+          evidence: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              properties: {
+                target: {
+                  type: 'string',
+                  enum: ['response', 'file'],
+                },
+                path: { type: 'string' },
+                quote: { type: 'string' },
+              },
+              required: ['target', 'path', 'quote'],
+            },
+          },
         },
-        required: ['id', 'reason'],
+        required: ['id', 'reason', 'evidence'],
       },
     },
     requiredFixes: {

@@ -48,10 +48,12 @@ defaults to npm. It supports npm, pnpm, Yarn, and Bun.
 
 Relative `file:` dependencies are resolved against the source fixture.
 Installed `workspace:` dependencies are resolved from the source workspace.
-The runner temporarily converts those dependencies to absolute `file:` sources
-for installation outside the workspace, then restores `package.json` and its
-lockfiles before Codex starts. This lets a local workspace dependency use the
-current skill source without changing the fixture.
+The runner copies the local package dependency closure to
+`<output>/local-packages/` and converts local links in those copies to absolute
+`file:` sources. This includes transitive workspace dependencies, such as the
+standalone report package used by a local runner. It restores the fixture's
+`package.json` and lockfiles before Codex starts. The source packages and
+fixture remain unchanged.
 
 The runner verifies that `--skill-package` names a fixture dependency, resolves
 that installed package, then calls `skills add --copy --skill <name>`. Copying
@@ -102,6 +104,18 @@ judge prompt or snapshots because they can contain fixture values, become
 large, and often duplicate project evidence. The retained Codex JSONL is the
 full debugging record.
 
+Failed agent runs also produce `agent-session.json` and
+`failure-report.html`. The versioned session document groups each prompt,
+response, expectation, completed tool activity, and project change by turn.
+The static viewer shows text files before and after each change. It omits file
+content above the configured `maxReportFileBytes` limit and represents binary
+files as metadata. `failure-summary.json` remains the compact failure artifact.
+
+The `@buresmi7/agent-e2e-report` package owns the normalized session format,
+Codex import adapters, annotations, HTML renderer, JSON summary, and tests. The
+runner produces that format but does not define a failure-specific viewer
+model.
+
 The judge is read-only and does not receive the installed skill source. This
 keeps evaluation focused on externally visible behavior instead of asking the
 judge to repeat the skill's own claims.
@@ -126,9 +140,9 @@ Codex model.
 - Model-backed outcomes are nondeterministic; criteria are authoritative and
   snapshots are examples of passing runs.
 - User turns are fixed, not conditionally branched.
-- Retained output and snapshots may contain fixture content, conversation logs,
-  and executable or script names. Raw retained JSONL also contains command
-  arguments and output. Treat all of it as test data and do not use sensitive
-  fixtures.
+- Retained output, HTML reports, snapshots, and local dependency copies may
+  contain fixture content, source files, conversation logs, and executable or
+  script names. Raw retained JSONL also contains command arguments and output.
+  Treat all of it as test data and do not use sensitive fixtures.
 - A model judge should not replace deterministic command scenarios for exit
   codes, exact output, required files, or other mechanical checks.

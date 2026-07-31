@@ -1,6 +1,7 @@
 import { cp, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { basename, join, relative } from 'node:path';
+import { basename, join } from 'node:path';
+import { writeFailureArtifacts } from '@buresmi7/agent-e2e-report';
 import { createCodexSession, judgeAgentOutput } from './agent-runtime.mjs';
 import {
   formatScenarioCriteria,
@@ -12,6 +13,7 @@ import {
   assertProjectPathsUnchanged,
   captureProjectState,
   diffProjectStates,
+  diffProjectStatesForReport,
   formatConversationTurns,
   formatFileChanges,
   prepareProjectFixture,
@@ -71,17 +73,28 @@ export async function runAgentScenario({
     ignoredPathPrefixes: ignoredProjectPathPrefixes,
     ignoredDirectoryNames: projectFileOptions.ignoredDirectoryNames,
   };
+  const reportOptions = {
+    maxFileBytes: projectFileOptions.maxReportFileBytes,
+  };
   const scenarioDefinition = await readAgentScenarioDefinition(scenarioDir);
   const scenarioTurns = scenarioDefinition.turns;
   const tempDir = await mkdtemp(join(tmpdir(), `${tempPrefix}-${scenarioName}-`));
   const projectDir = join(tempDir, 'project');
+  const conversationTurns = [];
   let agentSession = null;
+  let initialProjectState = null;
+  let activeTurn = null;
+  let activeTurnState = null;
+  let activeTurnResult = null;
+  let stage = 'fixture-copy';
 
   try {
     await cp(projectFixtureDir, projectDir, {
       recursive: true,
       filter: (source) => basename(source) !== 'node_modules',
     });
+
+    stage = 'project-install';
     const { skillSource } = await installProject({
       projectDir,
       projectFixtureDir,
@@ -89,11 +102,14 @@ export async function runAgentScenario({
       skill,
       baseEnv: env,
     });
+
+    stage = 'fixture-prepare';
     await prepareProjectFixture(projectDir, {
       hiddenPackageScripts: projectFileOptions.hiddenPackageScripts,
     });
     const originalSkillsLock = await readOptionalFile(join(projectDir, 'skills-lock.json'));
 
+    stage = 'skill-install';
     await installProjectSkill({
       projectDir,
       skillSource,
@@ -109,9 +125,10 @@ export async function runAgentScenario({
     );
 
     const protectedState = await captureProjectState(projectDir);
-    const initialProjectState = await captureProjectState(projectDir, stateOptions);
+    initialProjectState = await captureProjectState(projectDir, stateOptions);
     const projectFilesBefore = await readProjectFiles(projectDir, evidenceOptions);
-    const conversationTurns = [];
+
+    stage = 'agent-session';
     agentSession = await createAgentSession(runtime, {
       cwd: projectDir,
       outputDir: join(tempDir, 'agent-session'),
@@ -119,6 +136,10 @@ export async function runAgentScenario({
     });
 
     for (const [index, scenarioTurn] of scenarioTurns.entries()) {
+      stage = `turn:${scenarioTurn.id}`;
+      activeTurn = scenarioTurn;
+      activeTurnResult = null;
+
       onProgress({
         type: 'turn:start',
         id: scenarioTurn.id,
@@ -127,8 +148,8 @@ export async function runAgentScenario({
         source: scenarioTurn.source,
       });
 
-      const stateBeforeTurn = await captureProjectState(projectDir, stateOptions);
-      const turnResult = await agentSession.runTurn(scenarioTurn.prompt);
+      activeTurnState = await captureProjectState(projectDir, stateOptions);
+      activeTurnResult = await agentSession.runTurn(scenarioTurn.prompt);
       const completeStateAfterTurn = await captureProjectState(projectDir);
 
       assertProjectPathsUnchanged(protectedState, completeStateAfterTurn, {
@@ -140,10 +161,26 @@ export async function runAgentScenario({
 
       conversationTurns.push({
         ...scenarioTurn,
-        activity: normalizeAgentActivity(turnResult.activity ?? [], projectDir, tempDir),
-        changes: diffProjectStates(stateBeforeTurn, stateAfterTurn),
-        response: normalizeAgentResponse(turnResult.response, projectDir, tempDir),
+        activity: normalizeAgentActivity(
+          activeTurnResult.activity ?? [],
+          projectDir,
+          tempDir,
+        ),
+        changes: diffProjectStates(activeTurnState, stateAfterTurn),
+        reportChanges: diffProjectStatesForReport(
+          activeTurnState,
+          stateAfterTurn,
+          reportOptions,
+        ),
+        response: normalizeAgentResponse(
+          activeTurnResult.response,
+          projectDir,
+          tempDir,
+        ),
       });
+      activeTurn = null;
+      activeTurnState = null;
+      activeTurnResult = null;
 
       onProgress({
         type: 'turn:complete',
@@ -156,6 +193,11 @@ export async function runAgentScenario({
 
     const finalProjectState = await captureProjectState(projectDir, stateOptions);
     const changes = diffProjectStates(initialProjectState, finalProjectState);
+    const reportChanges = diffProjectStatesForReport(
+      initialProjectState,
+      finalProjectState,
+      reportOptions,
+    );
     const transcript = formatTranscript(conversationTurns);
     const criteria = formatScenarioCriteria(scenarioTurns);
     const projectFilesAfter = await readProjectFiles(projectDir, evidenceOptions);
@@ -167,6 +209,7 @@ export async function runAgentScenario({
       transcript: formatConversationTurns(conversationTurns),
     });
 
+    stage = 'judge';
     onProgress({ type: 'judge:start' });
 
     const judgment = await judge(runtime, {
@@ -178,9 +221,10 @@ export async function runAgentScenario({
       baseEnv: env,
     });
     const pass = Boolean(judgment.pass) && Number(judgment.score) >= passThreshold;
-    const failureSummaryPath = join(tempDir, 'failure-summary.json');
+    let failureArtifacts = {};
 
     if (pass && updateSnapshots) {
+      stage = 'snapshot';
       await writeScenarioSnapshot({
         scenarioDir,
         snapshotDirName,
@@ -197,16 +241,19 @@ export async function runAgentScenario({
     }
 
     if (!pass) {
-      await writeFailureSummary({
-        tempDir,
+      failureArtifacts = await writeFailureArtifacts({
+        outputDir: tempDir,
         projectDir,
         scenarioDir,
         repoRoot,
         scenarioName,
         runner: runtime.runner,
+        agentMetadata,
         inspectLinks,
         scenarioSource: scenarioDefinition.source,
+        stage: 'judge',
         changes,
+        reportChanges,
         conversationTurns,
         judgment,
         transcript,
@@ -214,6 +261,7 @@ export async function runAgentScenario({
     }
 
     if (pass && !keepOutput) {
+      stage = 'cleanup';
       await rm(tempDir, { recursive: true, force: true });
     }
 
@@ -224,10 +272,66 @@ export async function runAgentScenario({
       changedFilePaths: changes.map((file) => file.path),
       transcript,
       outputDir: pass && !keepOutput ? undefined : tempDir,
-      failureSummaryPath: pass ? undefined : failureSummaryPath,
+      agentSessionPath: pass ? undefined : failureArtifacts.agentSessionPath,
+      failureSummaryPath: pass ? undefined : failureArtifacts.failureSummaryPath,
+      failureReportPath: pass ? undefined : failureArtifacts.failureReportPath,
+      artifactWriteErrors: failureArtifacts.writeErrors ?? [],
     };
   } catch (error) {
-    error.message = `${error.message}\nAgent E2E output directory: ${tempDir}`;
+    const failureStage = stage;
+    let failureArtifacts = { writeErrors: [] };
+
+    try {
+      const partial = await capturePartialFailure({
+        projectDir,
+        tempDir,
+        stateOptions,
+        reportOptions,
+        initialProjectState,
+        conversationTurns,
+        activeTurn,
+        activeTurnState,
+        activeTurnResult,
+      });
+
+      failureArtifacts = await writeFailureArtifacts({
+        outputDir: tempDir,
+        projectDir,
+        scenarioDir,
+        repoRoot,
+        scenarioName,
+        runner: runtime.runner,
+        agentMetadata,
+        inspectLinks,
+        scenarioSource: scenarioDefinition.source,
+        stage: failureStage,
+        changes: partial.changes,
+        reportChanges: partial.reportChanges,
+        conversationTurns: partial.conversationTurns,
+        transcript: partial.transcript,
+        error,
+      });
+    } catch (reportError) {
+      failureArtifacts.writeErrors.push(
+        `Could not collect failure report data: ${reportError.message}`,
+      );
+    }
+
+    const details = [
+      `Agent E2E output directory: ${tempDir}`,
+      failureArtifacts.failureReportPath
+        ? `Agent E2E failure report: ${failureArtifacts.failureReportPath}`
+        : null,
+      failureArtifacts.agentSessionPath
+        ? `Agent E2E session data: ${failureArtifacts.agentSessionPath}`
+        : null,
+      failureArtifacts.failureSummaryPath
+        ? `Agent E2E failure summary: ${failureArtifacts.failureSummaryPath}`
+        : null,
+      ...failureArtifacts.writeErrors.map((message) => `Agent E2E artifact warning: ${message}`),
+    ].filter(Boolean);
+
+    error.message = `${error.message}\n${details.join('\n')}`;
     throw error;
   } finally {
     await agentSession?.close?.();
@@ -286,58 +390,58 @@ async function writeScenarioSnapshot({
   );
 }
 
-async function writeFailureSummary({
-  tempDir,
+async function capturePartialFailure({
   projectDir,
-  scenarioDir,
-  repoRoot,
-  scenarioName,
-  runner,
-  inspectLinks,
-  scenarioSource,
-  changes,
+  tempDir,
+  stateOptions,
+  reportOptions,
+  initialProjectState,
   conversationTurns,
-  judgment,
-  transcript,
+  activeTurn,
+  activeTurnState,
+  activeTurnResult,
 }) {
-  const summary = {
-    scenario: scenarioName,
-    runner,
-    pass: false,
-    score: judgment.score ?? null,
-    failedCriteria: judgment.failedCriteria ?? [],
-    requiredFixes: judgment.requiredFixes ?? [],
-    transcript,
-    judgeNotes: judgment.notes ?? '',
-    turns: conversationTurns.map((turn) => ({
-      id: turn.id,
-      source: turn.source,
-      changes: turn.changes.map((file) => ({
-        path: file.path,
-        status: file.status,
-      })),
-      activity: turn.activity,
-      response: turn.response,
-    })),
-    changes: changes.map((file) => ({
-      path: file.path,
-      status: file.status,
-      projectPath: join('project', file.path).replaceAll('\\', '/'),
-      lineCount: typeof file.content === 'string' && file.encoding !== 'base64'
-        ? file.content.trimEnd().split('\n').length
-        : null,
-    })),
-    inspect: {
-      outputDir: tempDir,
-      projectDir: relative(tempDir, projectDir),
-      scenario: repoRoot
-        ? relative(repoRoot, join(scenarioDir, scenarioSource))
-        : join(scenarioDir, scenarioSource),
-      ...inspectLinks,
-    },
-  };
+  const currentState = await captureProjectState(projectDir, stateOptions)
+    .catch(() => null);
+  const partialTurns = [...conversationTurns];
 
-  await writeFile(join(tempDir, 'failure-summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
+  if (activeTurn) {
+    const turnChanges = activeTurnState && currentState
+      ? diffProjectStates(activeTurnState, currentState)
+      : [];
+    const turnReportChanges = activeTurnState && currentState
+      ? diffProjectStatesForReport(activeTurnState, currentState, reportOptions)
+      : [];
+
+    partialTurns.push({
+      ...activeTurn,
+      incomplete: true,
+      activity: normalizeAgentActivity(
+        activeTurnResult?.activity ?? [],
+        projectDir,
+        tempDir,
+      ),
+      changes: turnChanges,
+      reportChanges: turnReportChanges,
+      response: activeTurnResult?.response
+        ? normalizeAgentResponse(activeTurnResult.response, projectDir, tempDir)
+        : '',
+    });
+  }
+
+  const changes = initialProjectState && currentState
+    ? diffProjectStates(initialProjectState, currentState)
+    : [];
+  const reportChanges = initialProjectState && currentState
+    ? diffProjectStatesForReport(initialProjectState, currentState, reportOptions)
+    : [];
+
+  return {
+    changes,
+    reportChanges,
+    conversationTurns: partialTurns,
+    transcript: partialTurns.length > 0 ? formatTranscript(partialTurns) : '',
+  };
 }
 
 export function readSnapshotDirName(env = process.env) {

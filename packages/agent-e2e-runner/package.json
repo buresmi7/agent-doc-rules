@@ -28,6 +28,9 @@
   "scripts": {
     "test": "node --test test/*.test.mjs"
   },
+  "dependencies": {
+    "@buresmi7/agent-e2e-report": "workspace:*"
+  },
   "publishConfig": {
     "access": "public"
   }

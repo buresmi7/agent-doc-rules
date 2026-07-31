@@ -322,8 +322,20 @@ function printAgentFailure(stderr, result) {
     stderr.write(`output: ${result.outputDir}\n`);
   }
 
+  if (result.failureReportPath) {
+    stderr.write(`report: ${result.failureReportPath}\n`);
+  }
+
+  if (result.agentSessionPath) {
+    stderr.write(`session: ${result.agentSessionPath}\n`);
+  }
+
   if (result.failureSummaryPath) {
     stderr.write(`summary: ${result.failureSummaryPath}\n`);
+  }
+
+  for (const warning of result.artifactWriteErrors ?? []) {
+    stderr.write(`artifact warning: ${warning}\n`);
   }
 }
 

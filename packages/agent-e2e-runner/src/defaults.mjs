@@ -13,7 +13,14 @@ Return JSON only with this shape:
   "failedCriteria": [
     {
       "id": "criterion id",
-      "reason": "why it failed"
+      "reason": "why it failed",
+      "evidence": [
+        {
+          "target": "response",
+          "path": "",
+          "quote": "short exact text from the matching response"
+        }
+      ]
     }
   ],
   "requiredFixes": ["concrete fix"],
@@ -28,6 +35,11 @@ Scoring:
 - Each criteria block applies to the response, tool activity, and project state
   immediately after its matching turn. A later correction does not erase an
   earlier failure unless the criterion explicitly says otherwise.
+- For each failed criterion, return zero or more short exact evidence quotes.
+  Use \`target: "response"\` with an empty \`path\` for response text. Use
+  \`target: "file"\` and a project-relative \`path\` for text in that turn's
+  resulting file. Return an empty evidence array when no exact quote supports
+  the failure. Do not paraphrase evidence.
 - Fail if the output omits a critical requirement from the criteria.
 - Fail if the output contradicts the fixture project context.
 - Fail if the output invents project facts, tools, services, commands, or

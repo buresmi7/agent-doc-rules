@@ -7,6 +7,7 @@ import {
   assertProjectPathsUnchanged,
   captureProjectState,
   diffProjectStates,
+  diffProjectStatesForReport,
   formatAgentActivity,
   formatConversationTurns,
   formatFileChanges,
@@ -56,6 +57,63 @@ test('captureProjectState and diffProjectStates report real file changes', async
     { path: 'old.txt', status: 'deleted' },
     { path: 'README.md', status: 'modified', content: '# After\n' },
   ]);
+});
+
+test('diffProjectStatesForReport retains safe before and after evidence', () => {
+  const before = new Map([
+    ['binary.dat', Buffer.from([0, 1, 2])],
+    ['deleted.md', Buffer.from('# Deleted\n')],
+    ['large.txt', Buffer.from('12345')],
+    ['README.md', Buffer.from('# Before\n')],
+  ]);
+  const after = new Map([
+    ['binary.dat', Buffer.from([0, 2, 3])],
+    ['created.md', Buffer.from('# Created\n')],
+    ['large.txt', Buffer.from('67890')],
+    ['README.md', Buffer.from('# After\n')],
+  ]);
+
+  assert.deepEqual(diffProjectStatesForReport(before, after, {
+    maxFileBytes: 4,
+  }), [
+    {
+      path: 'binary.dat',
+      status: 'modified',
+      before: { kind: 'binary', byteLength: 3 },
+      after: { kind: 'binary', byteLength: 3 },
+    },
+    {
+      path: 'created.md',
+      status: 'created',
+      before: null,
+      after: { kind: 'omitted', byteLength: 10 },
+    },
+    {
+      path: 'deleted.md',
+      status: 'deleted',
+      before: { kind: 'omitted', byteLength: 10 },
+      after: null,
+    },
+    {
+      path: 'large.txt',
+      status: 'modified',
+      before: { kind: 'omitted', byteLength: 5 },
+      after: { kind: 'omitted', byteLength: 5 },
+    },
+    {
+      path: 'README.md',
+      status: 'modified',
+      before: { kind: 'omitted', byteLength: 9 },
+      after: { kind: 'omitted', byteLength: 8 },
+    },
+  ]);
+});
+
+test('diffProjectStatesForReport validates its file limit', () => {
+  assert.throws(
+    () => diffProjectStatesForReport(new Map(), new Map(), { maxFileBytes: -1 }),
+    /maxReportFileBytes must be a non-negative integer/,
+  );
 });
 
 test('assertProjectPathsUnchanged rejects installed skill changes', async () => {

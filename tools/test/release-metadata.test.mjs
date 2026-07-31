@@ -21,10 +21,10 @@ const run = promisify(execFile);
 test('release metadata maps every public package to an independent tag', async () => {
   const metadata = await loadReleaseMetadata();
 
-  assert.equal(metadata.packages.length, 4);
-  assert.equal(new Set(metadata.packages.map((entry) => entry.name)).size, 4);
-  assert.equal(new Set(metadata.packages.map((entry) => entry.releaseTitle)).size, 4);
-  assert.equal(new Set(metadata.packages.map((entry) => entry.tag)).size, 4);
+  assert.equal(metadata.packages.length, 5);
+  assert.equal(new Set(metadata.packages.map((entry) => entry.name)).size, 5);
+  assert.equal(new Set(metadata.packages.map((entry) => entry.releaseTitle)).size, 5);
+  assert.equal(new Set(metadata.packages.map((entry) => entry.tag)).size, 5);
 
   for (const entry of metadata.packages) {
     assert.equal(entry.tag, `${entry.tagPrefix}@${entry.version}`);
@@ -47,6 +47,10 @@ test('release metadata maps every public package to an independent tag', async (
       {
         name: '@buresmi7/agent-e2e-runner',
         releaseTitle: 'E2E Runner',
+      },
+      {
+        name: '@buresmi7/agent-e2e-report',
+        releaseTitle: 'E2E Report',
       },
       {
         name: '@buresmi7/agent-doc-rules-docs-validator',

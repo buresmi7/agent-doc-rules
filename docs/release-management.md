@@ -35,6 +35,7 @@ Use these identities for releases governed by the independent model:
 | --- | --- | --- | --- |
 | `@buresmi7/agent-doc-rules-skill` | `Agent Doc Rules Skill` | `agent-doc-rules-skill@VERSION` | `packages/agent-doc-rules-skill/CHANGELOG.md` |
 | `@buresmi7/agent-e2e-runner` | `E2E Runner` | `agent-e2e-runner@VERSION` | `packages/agent-e2e-runner/CHANGELOG.md` |
+| `@buresmi7/agent-e2e-report` | `E2E Report` | `agent-e2e-report@VERSION` | `packages/agent-e2e-report/CHANGELOG.md` |
 | `@buresmi7/agent-doc-rules-docs-validator` | `Docs Validator` | `agent-doc-rules-docs-validator@VERSION` | `packages/docs-validator/CHANGELOG.md` |
 | `@buresmi7/agent-doc-rules-docs-duplicates` | `Docs Duplicate Checker` | `agent-doc-rules-docs-duplicates@VERSION` | `packages/docs-duplicates/CHANGELOG.md` |
 
@@ -218,6 +219,7 @@ When a release is ready:
 
    This check requires a manifest version newer than npm latest and confirms
    that the exact npm version, package tag, and GitHub Release do not exist.
+   For a package's first release, an absent npm latest version is expected.
 7. Run the full gate before committing, tagging, or publishing:
 
    ```bash
@@ -229,6 +231,7 @@ Also review the pack output for each affected package:
 | Package | Pack check |
 | --- | --- |
 | `@buresmi7/agent-doc-rules-skill` | `corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run` |
+| `@buresmi7/agent-e2e-report` | `corepack pnpm --dir packages/agent-e2e-report pack --dry-run` |
 | `@buresmi7/agent-e2e-runner` | `corepack pnpm --dir packages/agent-e2e-runner pack --dry-run` |
 | `@buresmi7/agent-doc-rules-docs-validator` | `corepack pnpm --dir packages/docs-validator pack --dry-run` |
 | `@buresmi7/agent-doc-rules-docs-duplicates` | `corepack pnpm --dir packages/docs-duplicates pack --dry-run` |
@@ -275,7 +278,8 @@ After [Prepare A Release](#prepare-a-release):
    This confirms that the local and remote annotated tag objects match, the tag
    points to the release commit, and neither npm nor GitHub has the release yet.
 6. Run `npm publish --access public` from only the affected package
-   directories.
+   directories. When the report package and E2E runner are both new releases,
+   publish `@buresmi7/agent-e2e-report` first because the runner depends on it.
 7. Confirm each exact version with `npm view PACKAGE@VERSION version`.
 8. Create one GitHub Release per tag with the
    [package release template](../.github/RELEASE_TEMPLATE.md). Use the

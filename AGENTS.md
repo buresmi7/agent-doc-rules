@@ -4,6 +4,11 @@ This maintainer workspace builds `agent-doc-rules`; see `README.md` for the
 project overview. Keep the repository generic; project-specific rules belong in
 consuming repositories.
 
+## Shared Rules
+
+Use [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
+for shared instruction-file guidance.
+
 ## Repository Skill
 
 Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, skill
@@ -47,6 +52,7 @@ Keep generated maintainer skill files and their source links documented in
 - Rule placement rubric: `docs/rule-placement.md`
 - E2E failure triage: `docs/e2e-failure-triage.md`
 - E2E rule matrix: `docs/e2e-rule-matrix.md`
+- E2E session format: `packages/agent-e2e-report/docs/session-format.md`
 - Markdown/docs validator: `packages/docs-validator/`
 - Semantic duplicate checker: `packages/docs-duplicates/`
 - npm-sourced maintainer skill dependencies:

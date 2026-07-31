@@ -166,6 +166,11 @@ function assertUnpublishedVersion(entry) {
 
   if (latestResult.error || latestResult.status !== 0) {
     const output = `${latestResult.stderr ?? ''}\n${latestResult.stdout ?? ''}`;
+
+    if (!latestResult.error && isNpmNotFound(output)) {
+      return;
+    }
+
     fail(
       `Cannot inspect npm latest for ${entry.name}:`
       + ` ${compact(output) || latestResult.error?.message}`,
@@ -183,6 +188,10 @@ function assertUnpublishedVersion(entry) {
   if (compareSemver(entry.version, latest) <= 0) {
     fail(`${entry.name} version ${entry.version} must be newer than npm latest ${latest}.`);
   }
+}
+
+function isNpmNotFound(output) {
+  return /\bE404\b|is not in this registry/i.test(output);
 }
 
 function localTagExists(tag) {

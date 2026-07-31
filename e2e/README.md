@@ -116,11 +116,14 @@ corepack pnpm run test:e2e-command
 ```
 
 When a scenario fails, the runner leaves the temporary output directory in
-place. Agent scenarios also write `failure-summary.json` at the output root.
-Read that summary first, then inspect `project/` inside the same directory. Use
+place. Agent scenarios also write `agent-session.json`,
+`failure-report.html`, and `failure-summary.json` at the output root. Open the
+HTML viewer first to compare each response and its expectations with the
+project changes from that turn. Use the session JSON for the portable full
+record or the summary for compact inspection, then inspect `project/` inside
+the same directory when needed. Use
 [E2E Failure Triage](../docs/e2e-failure-triage.md) and
-[E2E Rule Matrix](../docs/e2e-rule-matrix.md) before changing rules or
-criteria.
+[E2E Rule Matrix](../docs/e2e-rule-matrix.md) before changing rules or criteria.
 
 `snapshot/` contains example output from a passing run. It is not an exact
 golden assertion because wording can vary between models and Codex versions.
