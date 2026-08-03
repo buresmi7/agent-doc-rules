@@ -498,6 +498,7 @@ test('init command writes a starter config', async () => {
   assert.match(stdout, /Recommended package scripts/);
 
   const config = JSON.parse(await readFile(join(root, 'agent-doc-rules.config.json'), 'utf8'));
+  assert.ok(config.docs.exclude.includes('.agent-e2e-output/**'));
   assert.deepEqual(config.docs.links, {
     skip: [],
     checkFragments: true,

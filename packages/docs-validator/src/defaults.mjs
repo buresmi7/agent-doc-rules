@@ -14,6 +14,7 @@ export const defaultExclude = [
   'dist/**',
   'coverage/**',
   '.tmp/**',
+  '.agent-e2e-output/**',
   'repos/**',
   'worktrees/**',
 ];

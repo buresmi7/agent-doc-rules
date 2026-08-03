@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { access, mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { runAgentScenario } from '../src/agent-scenario.mjs';
 
@@ -122,6 +122,11 @@ test('runAgentScenario runs real project edits through one multi-turn agent sess
     progress.filter((event) => event.id).map((event) => event.id),
     ['request', 'request', 'confirm', 'confirm'],
   );
+  assert.equal(
+    dirname(result.outputDir),
+    join(scenarioDir, '.agent-e2e-output'),
+  );
+  assert.match(result.outputDir, /agent-e2e-example-/);
   assert.equal(
     await readFile(join(result.outputDir, 'project/README.md'), 'utf8'),
     '# Updated\n',

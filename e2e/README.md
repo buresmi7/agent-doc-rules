@@ -13,7 +13,7 @@ Each agent scenario project declares the local
 `test:agent` npm script selects the package and `agent-doc-rules` skill with CLI
 flags. The workspace install makes that dependency resolvable. The runner
 installs the project dependencies and an isolated copy of the skill inside the
-temporary fixture.
+run directory.
 
 Agent scenarios use this shape:
 
@@ -92,7 +92,7 @@ Codex agent scenarios install the project skill and rely on normal skill
 discovery. `project/package.json` is the source of truth for the skill package
 and version. Scenario turns should not tell the model which skill to use.
 
-`project/` is copied into a temporary project during each test. Codex reads and
+`project/` is copied into an isolated project during each test. Codex reads and
 changes that copy with its normal tools. The first turn starts a persistent
 session, and later turns resume the same session, including its real responses
 and tool history. The runner records the response and file diff after each
@@ -115,8 +115,8 @@ expectations and output snapshots. Run them with:
 corepack pnpm run test:e2e-command
 ```
 
-When a scenario fails, the runner leaves the temporary output directory in
-place. Agent scenarios also write `agent-session.json`,
+When a scenario fails, the runner leaves its run directory in place under
+`<scenario>/.agent-e2e-output/`. Agent scenarios also write `agent-session.json`,
 `failure-report.html`, and `failure-summary.json` at the output root. Open the
 HTML viewer first to compare each response and its expectations with the
 project changes from that turn. Use the session JSON for the portable full
@@ -149,9 +149,9 @@ UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
 The root `test:agent` script runs up to two scenario projects concurrently.
-Temporary projects, Codex homes, skill installer caches, and snapshot
-directories are isolated per scenario. Package managers may share their normal
-cache or store. Use workspace concurrency one in constrained CI environments
+Projects, Codex homes, skill installer caches, and snapshot directories are
+isolated per run. Package managers may share their normal cache or store. Use
+workspace concurrency one in constrained CI environments
 or when the Codex account hits rate limits:
 
 ```bash
@@ -161,7 +161,7 @@ corepack pnpm -r --workspace-concurrency=1 --filter './e2e/*/project' run test:a
 For Codex runs, the runner reads `model` from `$CODEX_HOME/config.toml` when
 present and uses `medium` reasoning effort by default. The tested agent uses a
 persistent `workspace-write` session. The separate judge is ephemeral and
-read-only. Both use temporary `CODEX_HOME` directories that contain only
+read-only. Both use isolated `CODEX_HOME` directories that contain only
 generated test config and copied `auth.json` when one exists. This keeps
 maintainer-local Codex config and home-directory `AGENTS.md` files out of
 scenario behavior.

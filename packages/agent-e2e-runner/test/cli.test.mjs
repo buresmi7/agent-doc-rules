@@ -1,7 +1,15 @@
 import assert from 'node:assert/strict';
-import { access, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import {
+  access,
+  mkdir,
+  mkdtemp,
+  readFile,
+  readdir,
+  rm,
+  writeFile,
+} from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { dirname, join } from 'node:path';
 import test from 'node:test';
 import {
   main,
@@ -18,6 +26,7 @@ test('parseCliArgs reads commands, values, and boolean flags', () => {
     '@example/todo-skill',
     '--skill=todo-cleaner',
     '--config=agent-e2e.config.mjs',
+    '--output-root=.artifacts/agent-e2e',
     '--update-snapshots',
   ]), {
     command: 'agent',
@@ -26,6 +35,7 @@ test('parseCliArgs reads commands, values, and boolean flags', () => {
       skill_package: '@example/todo-skill',
       skill: 'todo-cleaner',
       config: 'agent-e2e.config.mjs',
+      output_root: '.artifacts/agent-e2e',
       update_snapshots: true,
     },
   });
@@ -135,12 +145,17 @@ test('main runs a command scenario from the standalone CLI surface', async () =>
   assert.match(stdout.value, /Command E2E test passed for example/);
   assert.doesNotMatch(stdout.value, /output:/);
   assert.equal(stderr.value, '');
+  assert.deepEqual(
+    await readdir(join(scenarioDir, '.agent-e2e-output')),
+    ['.gitignore'],
+  );
 });
 
 test('main reports retained command output when KEEP_TEST_OUTPUT is enabled', async () => {
   const root = await mkdtemp(join(tmpdir(), 'agent-e2e-command-cli-keep-'));
   const scenarioDir = join(root, 'e2e/example');
   const projectDir = join(scenarioDir, 'project');
+  const outputRoot = join(root, 'artifacts/agent-e2e');
   const stdout = captureStream();
   const stderr = captureStream();
 
@@ -158,7 +173,11 @@ test('main reports retained command output when KEEP_TEST_OUTPUT is enabled', as
     root,
   ], {
     cwd: root,
-    env: { PATH: process.env.PATH, KEEP_TEST_OUTPUT: '1' },
+    env: {
+      PATH: process.env.PATH,
+      KEEP_TEST_OUTPUT: '1',
+      AGENT_E2E_OUTPUT_ROOT: outputRoot,
+    },
     stdout,
     stderr,
   });
@@ -166,6 +185,7 @@ test('main reports retained command output when KEEP_TEST_OUTPUT is enabled', as
 
   assert.equal(code, 0);
   assert.ok(outputDir);
+  assert.equal(dirname(outputDir), outputRoot);
   await access(join(outputDir, 'project'));
   assert.equal(stderr.value, '');
 
@@ -206,6 +226,10 @@ test('main reports command scenario failures', async () => {
   assert.equal(stdout.value, '');
   assert.match(stderr.value, /Command E2E test failed for example/);
   assert.match(stderr.value, /Expected stdout to include "missing"/);
+  assert.match(
+    stderr.value,
+    new RegExp(`output: ${escapeRegExp(join(scenarioDir, '.agent-e2e-output'))}`),
+  );
 });
 
 function captureStream() {
@@ -215,4 +239,8 @@ function captureStream() {
       this.value += chunk;
     },
   };
+}
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

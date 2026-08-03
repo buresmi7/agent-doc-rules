@@ -16,7 +16,7 @@ The system under test includes:
 - the final project state and user-facing responses.
 
 The runner does not turn project files into a model prompt and does not apply
-model-proposed JSON patches. Codex reads and changes the temporary project
+model-proposed JSON patches. Codex reads and changes the isolated project
 itself.
 
 ## Conversation Model
@@ -40,11 +40,18 @@ immediately after that turn, so later repairs do not hide an earlier failure.
 
 ## Isolation
 
-The runner copies the fixture into a new temporary directory and gives Codex
-`workspace-write` access to that copy. It omits the fixture's `node_modules` and
-installs dependencies inside the temporary project. The runner uses the
-fixture's `packageManager` or lockfile, then the repository setting, and
+The runner copies the fixture into a unique run directory and gives Codex
+`workspace-write` access to that copy. By default, run directories live under
+`<scenario>/.agent-e2e-output/`. The CLI can place them under another parent
+with `--output-root` or `AGENT_E2E_OUTPUT_ROOT`. The runner omits the fixture's
+`node_modules` and installs dependencies inside the isolated project. It uses
+the fixture's `packageManager` or lockfile, then the repository setting, and
 defaults to npm. It supports npm, pnpm, Yarn, and Bun.
+
+The output root cannot be inside the fixture project. When the fixture contains
+the scenario directory, the runner places its default output root next to the
+fixture instead. Each run also contains local workspace markers that keep the
+dependency installation within the run instead of a parent workspace.
 
 Relative `file:` dependencies are resolved against the source fixture.
 Installed `workspace:` dependencies are resolved from the source workspace.
@@ -59,7 +66,8 @@ The runner verifies that `--skill-package` names a fixture dependency, resolves
 that installed package, then calls `skills add --copy --skill <name>`. Copying
 is a test-isolation choice: Codex receives a fixed installation instead of a
 symlink to the editable skill source. It is not part of the Agent Skills
-specification.
+specification. The isolated npm cache used by `skills add` lives in the run
+directory and is removed when installation finishes.
 
 The runner also adds the fixture's `.agents` directory as an explicit writable
 root because Codex otherwise protects that hidden directory. This lets a
@@ -69,8 +77,8 @@ the session so the test harness does not leak into project context.
 
 Each scenario receives an isolated `CODEX_HOME`. The runner copies only Codex
 authentication, writes a minimal model config, and does not copy user rules or
-home-directory instructions. The session is persistent only inside the
-scenario's temporary output directory. Authentication is removed before the
+home-directory instructions. The session is persistent only inside its run
+directory. Authentication is removed before the
 runner returns, including when failed output is retained.
 
 The Codex process still inherits the runner environment, and `workspace-write`
@@ -84,7 +92,7 @@ the fixture had none. The installed test skill and the fixture's lockfile state
 are protected harness inputs. The run fails after the offending turn if the
 agent changes them, including through the writable `.agents` root. Symbolic
 links are rejected so a fixture or agent cannot make project-state inspection
-follow a path outside the temporary project. Project diffs ignore `.git` and
+follow a path outside the isolated project. Project diffs ignore `.git` and
 `node_modules`; other generated or build directories remain visible unless the
 config excludes them explicitly.
 
