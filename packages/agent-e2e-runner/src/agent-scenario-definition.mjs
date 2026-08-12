@@ -3,6 +3,11 @@ import { join } from 'node:path';
 
 const idPattern = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 const legacyEntries = ['turns', 'criteria', 'prompt.md', 'criteria.md'];
+const maxCriteriaPerTurn = 256;
+const maxScenarioIdBytes = 128;
+const maxScenarioFileBytes = 2 * 1024 * 1024;
+const maxScenarioTextBytes = 256 * 1024;
+const maxScenarioTurns = 16;
 
 export async function readAgentScenarioDefinition(scenarioDir) {
   await rejectLegacyEntries(scenarioDir);
@@ -16,6 +21,10 @@ export async function readAgentScenarioDefinition(scenarioDir) {
 
   if (!Array.isArray(raw.turns) || raw.turns.length === 0) {
     throw new Error(`${source}.turns must be a non-empty array.`);
+  }
+
+  if (raw.turns.length > maxScenarioTurns) {
+    throw new Error(`${source}.turns must contain at most ${maxScenarioTurns} turns.`);
   }
 
   const ids = new Set();
@@ -78,6 +87,12 @@ function readCriteria(value, turnId, pointer) {
     throw new Error(`${pointer}.criteria must contain at least one criterion.`);
   }
 
+  if (entries.length > maxCriteriaPerTurn) {
+    throw new Error(
+      `${pointer}.criteria must contain at most ${maxCriteriaPerTurn} criteria.`,
+    );
+  }
+
   return entries.map(([id, content]) => {
     assertId(id, `${pointer}.criteria key`);
 
@@ -93,6 +108,10 @@ function assertId(value, label) {
   if (typeof value !== 'string' || !idPattern.test(value)) {
     throw new Error(`${label} must be a kebab-case identifier.`);
   }
+
+  if (Buffer.byteLength(value, 'utf8') > maxScenarioIdBytes) {
+    throw new Error(`${label} must not exceed ${maxScenarioIdBytes} bytes.`);
+  }
 }
 
 function readText(value, label) {
@@ -100,7 +119,13 @@ function readText(value, label) {
     throw new Error(`${label} must be a non-empty string.`);
   }
 
-  return value.trim();
+  const text = value.trim();
+
+  if (Buffer.byteLength(JSON.stringify(text), 'utf8') > maxScenarioTextBytes) {
+    throw new Error(`${label} exceeds the ${maxScenarioTextBytes}-byte report limit.`);
+  }
+
+  return text;
 }
 
 function assertPlainObject(value, message) {
@@ -141,6 +166,10 @@ async function readJson(path, source) {
     }
 
     throw error;
+  }
+
+  if (Buffer.byteLength(content, 'utf8') > maxScenarioFileBytes) {
+    throw new Error(`${source} exceeds the ${maxScenarioFileBytes}-byte limit.`);
   }
 
   try {

@@ -1,7 +1,0 @@
-[
-  {
-    "path": "README.md",
-    "status": "modified",
-    "content": "# Signal Cache\n\nSignal Cache is a small in-memory cache for recent event signals. The project\ncurrently exposes a lookup helper used by tests.\n\n## Repository Scope\n\nThis repository does not include deployment code or a cloud cache integration.\nDo not document those workflows unless the repository adds them first.\n\n## Verification\n\nRun the test script from the repository root:\n\n```bash\nnpm test\n```\n"
-  }
-]

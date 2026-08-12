@@ -1,0 +1,751 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "context-placement",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "workspace:*",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Thanks, this finally makes sense. I've been calling our chat the \"CSV cleanup brain-dump.\" Organize the project notes into concise, durable documentation. When you're done, tell me what changed.",
+      "response": "Organized the CSV cleanup notes into durable docs:\n\n- Added [AGENTS.md](<project>/AGENTS.md) with agent routing, safety rules, source-of-truth links, and verification guidance.\n- Expanded [docs/schema.md](<project>/docs/schema.md) with CSV input columns, dropped-row behavior, and JSON output fields.\n- Added [docs/output-format.md](<project>/docs/output-format.md) for the JSON rationale.\n- Added [docs/troubleshooting.md](<project>/docs/troubleshooting.md) for fixture failure handling.\n- Updated [README.md](<project>/README.md) with a compact documentation index.\n- Reduced [notes.md](<project>/notes.md) to pointers so it no longer duplicates durable facts.\n\nVerification: `npm test` passed, though the repo currently has zero tests. Local doc links were also checked for existence.",
+      "criteria": [
+        {
+          "id": "request.c1",
+          "source": "scenario.json#/turns/0/criteria/c1",
+          "content": "Updates or creates `README.md` as the human entry point with project purpose, first useful command, and links to canonical docs.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c2",
+          "source": "scenario.json#/turns/0/criteria/c2",
+          "content": "Creates or updates `AGENTS.md` with short agent instructions for reading schema docs, keeping private site names out of public docs, and documenting residual risk when checks cannot run.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c3",
+          "source": "scenario.json#/turns/0/criteria/c3",
+          "content": "Places schema details in `docs/schema.md` or another clear docs file, not in `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c4",
+          "source": "scenario.json#/turns/0/criteria/c4",
+          "content": "Places the JSON-output rationale in a durable explanation or architecture doc under `docs/`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c5",
+          "source": "scenario.json#/turns/0/criteria/c5",
+          "content": "Places fixture troubleshooting guidance in a how-to or troubleshooting doc under `docs/`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c6",
+          "source": "scenario.json#/turns/0/criteria/c6",
+          "content": "Removes or supersedes `notes.md` content by moving each durable fact to a better home, or leaves `notes.md` only as a short pointer.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c7",
+          "source": "scenario.json#/turns/0/criteria/c7",
+          "content": "Does not create an agent skill when static documentation is sufficient.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c8",
+          "source": "scenario.json#/turns/0/criteria/c8",
+          "content": "Does not invent commands, data columns, field meanings or transformations, output cardinality, failure causes, downstream tool behavior, private site names, cloud providers, or issue workflows.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c9",
+          "source": "scenario.json#/turns/0/criteria/c9",
+          "content": "Repository documentation does not contain the throwaway label `CSV cleanup brain-dump`, the acknowledgement `Thanks, this finally makes sense`, prose about what the user, assistant, or conversation said, agent work plans or status updates, task narration, or tool traces.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c10",
+          "source": "scenario.json#/turns/0/criteria/c10",
+          "content": "Does not create a transcript, conversation summary, tool log, scratch plan, or another repository file whose only purpose is to preserve the interaction.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c11",
+          "source": "scenario.json#/turns/0/criteria/c11",
+          "content": "Keeps schema and troubleshooting claims within the fixture evidence: it may list the accepted CSV columns and JSON fields, but does not assign unstated field purposes, required status, input-to-output mappings, output cardinality, failure causes, or extra troubleshooting policy.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            },
+            {
+              "path": "README.md",
+              "kind": "update"
+            },
+            {
+              "path": "docs/output-format.md",
+              "kind": "add"
+            },
+            {
+              "path": "docs/schema.md",
+              "kind": "update"
+            },
+            {
+              "path": "docs/troubleshooting.md",
+              "kind": "add"
+            },
+            {
+              "path": "notes.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 907
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,27 @@",
+              "+# Habitat Importer - AI Agent Instructions",
+              "+",
+              "+Habitat Importer converts field-team CSV files into normalized JSON species",
+              "+observations.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Read [docs/schema.md](docs/schema.md) before changing parser output.",
+              "+- Do not commit generated JSON examples that include real site names.",
+              "+- Do not mention private site names in public docs.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- [README.md](README.md) is the human entry point.",
+              "+- [docs/schema.md](docs/schema.md) owns the CSV input and JSON output contract.",
+              "+- [docs/output-format.md](docs/output-format.md) owns the JSON output rationale.",
+              "+- [docs/troubleshooting.md](docs/troubleshooting.md) owns fixture failure",
+              "+  repair guidance.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` before changing parser behavior.",
+              "+- If a check cannot run, state the blocker and what remains unverified."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "docs/output-format.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 138
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/docs/output-format.md",
+              "@@ -0,0 +1,4 @@",
+              "+# Output Format",
+              "+",
+              "+Habitat Importer writes normalized observations as JSON because downstream",
+              "+review tools do not agree on one CSV dialect."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "docs/schema.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 94
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 340
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/docs/schema.md",
+              "+++ b/docs/schema.md",
+              "@@ -1,3 +1,22 @@",
+              " # Observation Schema",
+              " ",
+              "-Observation JSON contains `species`, `site`, `observedAt`, and `count`.",
+              "+## CSV Input",
+              "+",
+              "+The parser accepts UTF-8 CSV input with these columns:",
+              "+",
+              "+- `species`",
+              "+- `site`",
+              "+- `observed_at`",
+              "+- `count`",
+              "+",
+              "+Rows with empty `species` values are dropped. The import report records the row",
+              "+number for each dropped row.",
+              "+",
+              "+## JSON Output",
+              "+",
+              "+Observation JSON contains:",
+              "+",
+              "+- `species`",
+              "+- `site`",
+              "+- `observedAt`",
+              "+- `count`"
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "docs/troubleshooting.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 148
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/docs/troubleshooting.md",
+              "@@ -0,0 +1,11 @@",
+              "+# Troubleshooting",
+              "+",
+              "+## Fixture Failures",
+              "+",
+              "+When a fixture fails, run:",
+              "+",
+              "+```sh",
+              "+npm test",
+              "+```",
+              "+",
+              "+Inspect the failing row number before changing schema docs."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "notes.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 799
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 250
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/notes.md",
+              "+++ b/notes.md",
+              "@@ -1,18 +1,9 @@",
+              " # Documentation Inbox",
+              " ",
+              "-These notes need a durable home.",
+              "-",
+              "-- New contributors need to know that the project converts field-team CSV files",
+              "-  into normalized JSON observations.",
+              "-- The parser accepts UTF-8 CSV input with the columns `species`, `site`,",
+              "-  `observed_at`, and `count`.",
+              "-- The parser drops rows with empty `species` values and records the row number",
+              "-  in the import report.",
+              "-- Maintainers should keep generated JSON examples out of commits when they",
+              "-  include real site names.",
+              "-- Agents should read `docs/schema.md` before changing parser output.",
+              "-- The reason for JSON output is that downstream review tools do not agree on a",
+              "-  CSV dialect.",
+              "-- If a fixture fails, run `npm test` and inspect the failing row number before",
+              "-  changing schema docs.",
+              "-- Do not mention private site names in public docs.",
+              "+The durable project notes now live in:",
+              "+",
+              "+- [README.md](README.md)",
+              "+- [AGENTS.md](AGENTS.md)",
+              "+- [docs/schema.md](docs/schema.md)",
+              "+- [docs/output-format.md](docs/output-format.md)",
+              "+- [docs/troubleshooting.md](docs/troubleshooting.md)"
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "README.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 179
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 460
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/README.md",
+              "+++ b/README.md",
+              "@@ -3,4 +3,14 @@",
+              " Habitat Importer reads CSV exports from field teams and writes normalized",
+              " species observations to JSON files.",
+              " ",
+              "+## Documentation",
+              "+",
+              "+- [Observation schema](docs/schema.md) describes accepted CSV input and JSON",
+              "+  output.",
+              "+- [Output format rationale](docs/output-format.md) explains why imports produce",
+              "+  JSON.",
+              "+- [Troubleshooting](docs/troubleshooting.md) covers fixture failures.",
+              "+",
+              "+## Verification",
+              "+",
+              " Run `npm test` before changing parser behavior."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 907
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,27 @@",
+          "+# Habitat Importer - AI Agent Instructions",
+          "+",
+          "+Habitat Importer converts field-team CSV files into normalized JSON species",
+          "+observations.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Read [docs/schema.md](docs/schema.md) before changing parser output.",
+          "+- Do not commit generated JSON examples that include real site names.",
+          "+- Do not mention private site names in public docs.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- [README.md](README.md) is the human entry point.",
+          "+- [docs/schema.md](docs/schema.md) owns the CSV input and JSON output contract.",
+          "+- [docs/output-format.md](docs/output-format.md) owns the JSON output rationale.",
+          "+- [docs/troubleshooting.md](docs/troubleshooting.md) owns fixture failure",
+          "+  repair guidance.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` before changing parser behavior.",
+          "+- If a check cannot run, state the blocker and what remains unverified."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "docs/output-format.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 138
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/docs/output-format.md",
+          "@@ -0,0 +1,4 @@",
+          "+# Output Format",
+          "+",
+          "+Habitat Importer writes normalized observations as JSON because downstream",
+          "+review tools do not agree on one CSV dialect."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "docs/schema.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 94
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 340
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/docs/schema.md",
+          "+++ b/docs/schema.md",
+          "@@ -1,3 +1,22 @@",
+          " # Observation Schema",
+          " ",
+          "-Observation JSON contains `species`, `site`, `observedAt`, and `count`.",
+          "+## CSV Input",
+          "+",
+          "+The parser accepts UTF-8 CSV input with these columns:",
+          "+",
+          "+- `species`",
+          "+- `site`",
+          "+- `observed_at`",
+          "+- `count`",
+          "+",
+          "+Rows with empty `species` values are dropped. The import report records the row",
+          "+number for each dropped row.",
+          "+",
+          "+## JSON Output",
+          "+",
+          "+Observation JSON contains:",
+          "+",
+          "+- `species`",
+          "+- `site`",
+          "+- `observedAt`",
+          "+- `count`"
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "docs/troubleshooting.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 148
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/docs/troubleshooting.md",
+          "@@ -0,0 +1,11 @@",
+          "+# Troubleshooting",
+          "+",
+          "+## Fixture Failures",
+          "+",
+          "+When a fixture fails, run:",
+          "+",
+          "+```sh",
+          "+npm test",
+          "+```",
+          "+",
+          "+Inspect the failing row number before changing schema docs."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "notes.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 799
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 250
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/notes.md",
+          "+++ b/notes.md",
+          "@@ -1,18 +1,9 @@",
+          " # Documentation Inbox",
+          " ",
+          "-These notes need a durable home.",
+          "-",
+          "-- New contributors need to know that the project converts field-team CSV files",
+          "-  into normalized JSON observations.",
+          "-- The parser accepts UTF-8 CSV input with the columns `species`, `site`,",
+          "-  `observed_at`, and `count`.",
+          "-- The parser drops rows with empty `species` values and records the row number",
+          "-  in the import report.",
+          "-- Maintainers should keep generated JSON examples out of commits when they",
+          "-  include real site names.",
+          "-- Agents should read `docs/schema.md` before changing parser output.",
+          "-- The reason for JSON output is that downstream review tools do not agree on a",
+          "-  CSV dialect.",
+          "-- If a fixture fails, run `npm test` and inspect the failing row number before",
+          "-  changing schema docs.",
+          "-- Do not mention private site names in public docs.",
+          "+The durable project notes now live in:",
+          "+",
+          "+- [README.md](README.md)",
+          "+- [AGENTS.md](AGENTS.md)",
+          "+- [docs/schema.md](docs/schema.md)",
+          "+- [docs/output-format.md](docs/output-format.md)",
+          "+- [docs/troubleshooting.md](docs/troubleshooting.md)"
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 179
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 460
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/README.md",
+          "+++ b/README.md",
+          "@@ -3,4 +3,14 @@",
+          " Habitat Importer reads CSV exports from field teams and writes normalized",
+          " species observations to JSON files.",
+          " ",
+          "+## Documentation",
+          "+",
+          "+- [Observation schema](docs/schema.md) describes accepted CSV input and JSON",
+          "+  output.",
+          "+- [Output format rationale](docs/output-format.md) explains why imports produce",
+          "+  JSON.",
+          "+- [Troubleshooting](docs/troubleshooting.md) covers fixture failures.",
+          "+",
+          "+## Verification",
+          "+",
+          " Run `npm test` before changing parser behavior."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "All criteria pass. The documentation was organized into the expected durable locations, notes.md was reduced to pointers, AGENTS.md stayed concise, and the content stayed within the facts available from the original notes."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

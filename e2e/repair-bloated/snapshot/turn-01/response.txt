@@ -1,5 +1,0 @@
-Repaired [AGENTS.md](<project>/AGENTS.md:1). It now keeps the README-backed project orientation, English/docs-only constraints, financial-data safety rule, source-of-truth pointers, and verification guidance.
-
-Removed the copied shared architecture text and unsupported workflow/tool recommendations like Notion, `tm`, private worktrees, and vague “maybe run tests” guidance.
-
-Verification: checked the file for the required `Shared Rules` section and confirmed the removed workflow terms are gone. No Markdown/package check was run because `package.json` defines no scripts, and the available `agent-doc-rules-skill` binary is only an installer.

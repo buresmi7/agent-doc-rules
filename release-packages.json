@@ -15,7 +15,7 @@
     },
     {
       "name": "@buresmi7/agent-e2e-report",
-      "releaseTitle": "E2E Report",
+      "releaseTitle": "E2E Report Format",
       "directory": "packages/agent-e2e-report",
       "tagPrefix": "agent-e2e-report"
     },

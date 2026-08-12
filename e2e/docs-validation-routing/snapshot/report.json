@@ -1,0 +1,275 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "docs-validation-routing",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Create a concise root `AGENTS.md` for this repository.",
+      "response": "Created [AGENTS.md](<project>/AGENTS.md) with a concise project orientation, shared-rules link, local rules, source-of-truth pointers, and verification guidance.\n\nVerification:\n- `npm test` passed.\n- `npm run docs:check` failed on pre-existing line-length errors in `.agents/skills/agent-doc-rules/...`; the new `AGENTS.md` was not reported in the failures.\n- A direct `npx markdownlint-cli2 AGENTS.md` check could not run because `markdownlint-cli2` is not exposed as a local binary.",
+      "criteria": [
+        {
+          "id": "request.d1",
+          "source": "scenario.json#/turns/0/criteria/d1",
+          "content": "Creates a concise root `AGENTS.md` for the fixture project.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.d2",
+          "source": "scenario.json#/turns/0/criteria/d2",
+          "content": "Includes a short verification rule that uses the existing `npm run docs:check` command for documentation, README, `AGENTS.md`, skill, or template changes.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.d3",
+          "source": "scenario.json#/turns/0/criteria/d3",
+          "content": "Keeps validation guidance short and does not copy duplicate-check thresholds, Codex model settings, or long tool internals into `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.d4",
+          "source": "scenario.json#/turns/0/criteria/d4",
+          "content": "Includes a short `Shared Rules` or `Skill Reference` section that links to `.agents/skills/agent-doc-rules/references/agents-rules.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.d5",
+          "source": "scenario.json#/turns/0/criteria/d5",
+          "content": "Does not invent issue workflows, cloud services, deployment commands, owners, host names, secrets, or project-specific tooling.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:check",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npx markdownlint-cli2",
+          "exitCode": 127,
+          "status": "failed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 889
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,26 @@",
+              "+# Docs Validation Routing Fixture - AI Agent Instructions",
+              "+",
+              "+This private Node fixture keeps short operational notes for internal reporting",
+              "+scripts. Keep repository instructions concise and grounded in `README.md` and",
+              "+`package.json`.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Do not add unsupported setup, runtime, deployment, or reporting workflows.",
+              "+- Keep detailed procedures out of this file; link to the canonical project doc",
+              "+  or skill instead.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- [README.md](README.md) describes the project purpose and supported commands.",
+              "+- [package.json](package.json) defines the available npm scripts.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` for the Node test suite.",
+              "+- Run `npm run docs:check` for Markdown, link, and duplicate-doc validation.",
+              "+- If a check cannot run, state why and note the remaining risk."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 889
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,26 @@",
+          "+# Docs Validation Routing Fixture - AI Agent Instructions",
+          "+",
+          "+This private Node fixture keeps short operational notes for internal reporting",
+          "+scripts. Keep repository instructions concise and grounded in `README.md` and",
+          "+`package.json`.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Do not add unsupported setup, runtime, deployment, or reporting workflows.",
+          "+- Keep detailed procedures out of this file; link to the canonical project doc",
+          "+  or skill instead.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- [README.md](README.md) describes the project purpose and supported commands.",
+          "+- [package.json](package.json) defines the available npm scripts.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` for the Node test suite.",
+          "+- Run `npm run docs:check` for Markdown, link, and duplicate-doc validation.",
+          "+- If a check cannot run, state why and note the remaining risk."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The created root AGENTS.md is concise, links to the shared agent-doc-rules reference, grounds guidance in README.md and package.json, and uses the existing npm run docs:check command without adding unsupported workflows or detailed internals."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

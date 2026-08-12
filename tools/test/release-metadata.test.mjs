@@ -50,7 +50,7 @@ test('release metadata maps every public package to an independent tag', async (
       },
       {
         name: '@buresmi7/agent-e2e-report',
-        releaseTitle: 'E2E Report',
+        releaseTitle: 'E2E Report Format',
       },
       {
         name: '@buresmi7/agent-doc-rules-docs-validator',

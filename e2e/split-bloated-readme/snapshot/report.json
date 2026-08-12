@@ -1,0 +1,646 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "split-bloated-readme",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Make the repository documentation easier to maintain.",
+      "response": "Updated the repo docs to separate stable concerns:\n\n- [README.md](<project>/README.md) is now a short entry point with a canonical docs index, quick test command, and project overview.\n- [AGENTS.md](<project>/AGENTS.md) now holds the agent rules, safety boundaries, source-of-truth links, and verification notes.\n- [docs/operations.md](<project>/docs/operations.md) now owns release checks and troubleshooting notes.\n\nI removed unsupported actionable steps for `npm run replay` and changelog updates because `package.json` only exposes `npm test`, and no changelog file exists in this checkout.\n\nVerification:\n- `npm test` passed, reporting zero tests.\n- Manual relative-link checks passed.\n- No `docs:check` script exists.",
+      "criteria": [
+        {
+          "id": "request.s1",
+          "source": "scenario.json#/turns/0/criteria/s1",
+          "content": "Updates `README.md` into a concise human entry point for Orchard Webhook Proxy.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s2",
+          "source": "scenario.json#/turns/0/criteria/s2",
+          "content": "Keeps the verified command `npm test` in the README and does not invent unsupported commands beyond those present in the fixture.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s3",
+          "source": "scenario.json#/turns/0/criteria/s3",
+          "content": "Moves durable architecture, release, or troubleshooting detail out of the README into one or more files under `docs/`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s4",
+          "source": "scenario.json#/turns/0/criteria/s4",
+          "content": "Creates or updates `AGENTS.md` as a short agent routing layer with local rules for English docs, payload privacy, no invented cloud providers, and checking docs before editing.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s5",
+          "source": "scenario.json#/turns/0/criteria/s5",
+          "content": "Links to the installed `agent-doc-rules` references instead of copying their full text.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s6",
+          "source": "scenario.json#/turns/0/criteria/s6",
+          "content": "Preserves the billing queue contract as the source of truth and does not duplicate the full contract in the README or `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s7",
+          "source": "scenario.json#/turns/0/criteria/s7",
+          "content": "Does not expose or invent customer data, webhook payload examples, account IDs, cloud providers, issue workflows, or deployment systems.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.s8",
+          "source": "scenario.json#/turns/0/criteria/s8",
+          "content": "Produces plain, direct documentation without marketing filler.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            },
+            {
+              "path": "README.md",
+              "kind": "update"
+            },
+            {
+              "path": "docs/operations.md",
+              "kind": "add"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "agent-doc-rules-skill",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 1343
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,35 @@",
+              "+# Orchard Webhook Proxy - AI Agent Instructions",
+              "+",
+              "+Orchard Webhook Proxy validates Orchard webhook signatures and forwards accepted",
+              "+events to the internal billing queue.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+              "+- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Inspect [README.md](README.md) and the relevant files under [docs/](docs/)",
+              "+  before editing documentation.",
+              "+- Keep persisted documentation in English.",
+              "+- Do not invent cloud provider names or deployment hosts.",
+              "+- Do not paste raw webhook payloads into issues, generated docs, examples, or",
+              "+  committed fixtures. Payloads can contain customer email addresses, invoice",
+              "+  IDs, and account IDs.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- [README.md](README.md) is the human entry point and canonical docs index.",
+              "+- [docs/contracts/billing-events.md](docs/contracts/billing-events.md) owns the",
+              "+  billing queue event contract.",
+              "+- [docs/operations.md](docs/operations.md) owns release and troubleshooting",
+              "+  notes.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` after code or contract changes.",
+              "+- This repository does not expose `docs:check`.",
+              "+- If a relevant check cannot run, state the blocker and what remains",
+              "+  unverified."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "docs/operations.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 760
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/docs/operations.md",
+              "@@ -0,0 +1,26 @@",
+              "+# Operations",
+              "+",
+              "+Use this page for release checks and troubleshooting notes for Orchard Webhook",
+              "+Proxy.",
+              "+",
+              "+## Release Checks",
+              "+",
+              "+1. Run the test suite:",
+              "+",
+              "+   ```sh",
+              "+   npm test",
+              "+   ```",
+              "+",
+              "+2. Check that [docs/contracts/billing-events.md](contracts/billing-events.md)",
+              "+   still matches the billing queue schema.",
+              "+",
+              "+The package manifest does not expose a replay script or changelog file in this",
+              "+checkout. Do not document replay or changelog steps as required release actions",
+              "+until the repository contains evidence for them.",
+              "+",
+              "+## Troubleshooting",
+              "+",
+              "+- If signatures fail locally, check that the fixture header matches the fixture",
+              "+  body.",
+              "+- If queue writes fail, do not document the raw payload. Raw webhook payloads can",
+              "+  contain customer email addresses, invoice IDs, and account IDs."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "README.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 1574
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 966
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/README.md",
+              "+++ b/README.md",
+              "@@ -3,42 +3,28 @@",
+              " Orchard Webhook Proxy receives webhook events from Orchard, validates the",
+              " signature, and forwards approved events to the internal billing queue.",
+              " ",
+              "-## Quick start",
+              "-",
+              "-Run the tests with `npm test`.",
+              "-",
+              "-## Architecture, operations, agent rules, and other notes",
+              "-",
+              "-The service has one HTTP entry point, `POST /webhooks/orchard`. The handler",
+              "-checks the `x-orchard-signature` header before accepting a request. Events that",
+              "-fail validation are rejected without writing to the queue.",
+              "-",
+              "-The billing queue contract lives in `docs/contracts/billing-events.md`.",
+              "-",
+              "-When a delivery fails because the queue is unavailable, the service writes the",
+              "-event to local retry storage. Operators replay retry storage with",
+              "-`npm run replay`.",
+              "-",
+              "-Agents must not paste webhook payloads into issues or generated docs. Payloads",
+              "-can contain customer email addresses and invoice IDs.",
+              "-",
+              "-Agents must inspect the README and docs before editing. Agents must not invent",
+              "-cloud provider names. Agents must keep documentation in English.",
+              "-",
+              "-Release steps:",
+              "-",
+              "-1. Run `npm test`.",
+              "-2. Run `npm run replay -- --dry-run`.",
+              "-3. Check that `docs/contracts/billing-events.md` still matches the queue",
+              "-   schema.",
+              "-4. Update the changelog.",
+              "-",
+              "-Troubleshooting:",
+              "-",
+              "-- If signatures fail locally, check that the fixture header matches the fixture",
+              "-  body.",
+              "-- If replay fails, run it again with `--dry-run` before changing code.",
+              "-- If queue writes fail, do not document the raw payload.",
+              "-",
+              "-This README intentionally holds too much information. It should be split into a",
+              "-small entry point plus durable docs and short agent instructions.",
+              "+## Canonical Docs",
+              "+",
+              "+| Document | Content |",
+              "+| --- | --- |",
+              "+| [AGENTS.md](AGENTS.md) | Local instructions for AI agents |",
+              "+| [docs/contracts/billing-events.md](docs/contracts/billing-events.md) | Billing queue event contract |",
+              "+| [docs/operations.md](docs/operations.md) | Release and troubleshooting notes |",
+              "+",
+              "+## Quick Start",
+              "+",
+              "+Run the tests:",
+              "+",
+              "+```sh",
+              "+npm test",
+              "+```",
+              "+",
+              "+## Project Notes",
+              "+",
+              "+The service exposes one HTTP entry point: `POST /webhooks/orchard`. The handler",
+              "+checks the `x-orchard-signature` header before accepting a request. Events that",
+              "+fail validation are rejected without writing to the queue.",
+              "+",
+              "+The billing queue receives only events that match the",
+              "+[billing events contract](docs/contracts/billing-events.md). Operational checks",
+              "+and repair notes live in [docs/operations.md](docs/operations.md)."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 1343
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,35 @@",
+          "+# Orchard Webhook Proxy - AI Agent Instructions",
+          "+",
+          "+Orchard Webhook Proxy validates Orchard webhook signatures and forwards accepted",
+          "+events to the internal billing queue.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+          "+- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Inspect [README.md](README.md) and the relevant files under [docs/](docs/)",
+          "+  before editing documentation.",
+          "+- Keep persisted documentation in English.",
+          "+- Do not invent cloud provider names or deployment hosts.",
+          "+- Do not paste raw webhook payloads into issues, generated docs, examples, or",
+          "+  committed fixtures. Payloads can contain customer email addresses, invoice",
+          "+  IDs, and account IDs.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- [README.md](README.md) is the human entry point and canonical docs index.",
+          "+- [docs/contracts/billing-events.md](docs/contracts/billing-events.md) owns the",
+          "+  billing queue event contract.",
+          "+- [docs/operations.md](docs/operations.md) owns release and troubleshooting",
+          "+  notes.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` after code or contract changes.",
+          "+- This repository does not expose `docs:check`.",
+          "+- If a relevant check cannot run, state the blocker and what remains",
+          "+  unverified."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "docs/operations.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 760
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/docs/operations.md",
+          "@@ -0,0 +1,26 @@",
+          "+# Operations",
+          "+",
+          "+Use this page for release checks and troubleshooting notes for Orchard Webhook",
+          "+Proxy.",
+          "+",
+          "+## Release Checks",
+          "+",
+          "+1. Run the test suite:",
+          "+",
+          "+   ```sh",
+          "+   npm test",
+          "+   ```",
+          "+",
+          "+2. Check that [docs/contracts/billing-events.md](contracts/billing-events.md)",
+          "+   still matches the billing queue schema.",
+          "+",
+          "+The package manifest does not expose a replay script or changelog file in this",
+          "+checkout. Do not document replay or changelog steps as required release actions",
+          "+until the repository contains evidence for them.",
+          "+",
+          "+## Troubleshooting",
+          "+",
+          "+- If signatures fail locally, check that the fixture header matches the fixture",
+          "+  body.",
+          "+- If queue writes fail, do not document the raw payload. Raw webhook payloads can",
+          "+  contain customer email addresses, invoice IDs, and account IDs."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 1574
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 966
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/README.md",
+          "+++ b/README.md",
+          "@@ -3,42 +3,28 @@",
+          " Orchard Webhook Proxy receives webhook events from Orchard, validates the",
+          " signature, and forwards approved events to the internal billing queue.",
+          " ",
+          "-## Quick start",
+          "-",
+          "-Run the tests with `npm test`.",
+          "-",
+          "-## Architecture, operations, agent rules, and other notes",
+          "-",
+          "-The service has one HTTP entry point, `POST /webhooks/orchard`. The handler",
+          "-checks the `x-orchard-signature` header before accepting a request. Events that",
+          "-fail validation are rejected without writing to the queue.",
+          "-",
+          "-The billing queue contract lives in `docs/contracts/billing-events.md`.",
+          "-",
+          "-When a delivery fails because the queue is unavailable, the service writes the",
+          "-event to local retry storage. Operators replay retry storage with",
+          "-`npm run replay`.",
+          "-",
+          "-Agents must not paste webhook payloads into issues or generated docs. Payloads",
+          "-can contain customer email addresses and invoice IDs.",
+          "-",
+          "-Agents must inspect the README and docs before editing. Agents must not invent",
+          "-cloud provider names. Agents must keep documentation in English.",
+          "-",
+          "-Release steps:",
+          "-",
+          "-1. Run `npm test`.",
+          "-2. Run `npm run replay -- --dry-run`.",
+          "-3. Check that `docs/contracts/billing-events.md` still matches the queue",
+          "-   schema.",
+          "-4. Update the changelog.",
+          "-",
+          "-Troubleshooting:",
+          "-",
+          "-- If signatures fail locally, check that the fixture header matches the fixture",
+          "-  body.",
+          "-- If replay fails, run it again with `--dry-run` before changing code.",
+          "-- If queue writes fail, do not document the raw payload.",
+          "-",
+          "-This README intentionally holds too much information. It should be split into a",
+          "-small entry point plus durable docs and short agent instructions.",
+          "+## Canonical Docs",
+          "+",
+          "+| Document | Content |",
+          "+| --- | --- |",
+          "+| [AGENTS.md](AGENTS.md) | Local instructions for AI agents |",
+          "+| [docs/contracts/billing-events.md](docs/contracts/billing-events.md) | Billing queue event contract |",
+          "+| [docs/operations.md](docs/operations.md) | Release and troubleshooting notes |",
+          "+",
+          "+## Quick Start",
+          "+",
+          "+Run the tests:",
+          "+",
+          "+```sh",
+          "+npm test",
+          "+```",
+          "+",
+          "+## Project Notes",
+          "+",
+          "+The service exposes one HTTP entry point: `POST /webhooks/orchard`. The handler",
+          "+checks the `x-orchard-signature` header before accepting a request. Events that",
+          "+fail validation are rejected without writing to the queue.",
+          "+",
+          "+The billing queue receives only events that match the",
+          "+[billing events contract](docs/contracts/billing-events.md). Operational checks",
+          "+and repair notes live in [docs/operations.md](docs/operations.md)."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 0.95,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The final state satisfies the critical criteria: README is concise, keeps only npm test as the supported command, routes durable operations material to docs/operations.md, creates a short AGENTS.md with local rules and links to shared references, preserves the billing contract as source of truth, avoids raw payloads/customer data/invented infrastructure, and uses plain documentation. Minor residual risk: README still contains a short architecture summary, but it is brief entry-point context rather than duplicated durable docs."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

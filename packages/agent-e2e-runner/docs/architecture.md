@@ -21,10 +21,11 @@ itself.
 
 ## Conversation Model
 
-The runner sends each `scenario.json.turns` prompt in array order. The first
-turn starts a Codex session; later turns use `codex exec resume` with the same
-session ID. Codex therefore sees its real prior responses and tool activity
-instead of a transcript reconstructed by the runner.
+The runner trims outer whitespace from each `scenario.json.turns` prompt and
+sends the normalized prompts in array order. The first turn starts a Codex
+session; later turns use `codex exec resume` with the same session ID. Codex
+therefore sees its real prior responses and tool activity instead of a
+transcript reconstructed by the runner.
 
 The isolated Codex configuration keeps the agent session in `workspace-write`
 mode across resumed turns. The separate judge uses its own `read-only`
@@ -55,19 +56,16 @@ dependency installation within the run instead of a parent workspace.
 
 Relative `file:` dependencies are resolved against the source fixture.
 Installed `workspace:` dependencies are resolved from the source workspace.
-The runner copies the local package dependency closure to
-`<output>/local-packages/` and converts local links in those copies to absolute
-`file:` sources. This includes transitive workspace dependencies, such as the
-standalone report package used by a local runner. It restores the fixture's
-`package.json` and lockfiles before Codex starts. The source packages and
-fixture remain unchanged.
+The runner temporarily converts those dependencies to absolute `file:` sources
+for installation outside the workspace, then restores `package.json` and its
+lockfiles before Codex starts. This lets a local workspace dependency use the
+current skill source without changing the fixture.
 
 The runner verifies that `--skill-package` names a fixture dependency, resolves
 that installed package, then calls `skills add --copy --skill <name>`. Copying
 is a test-isolation choice: Codex receives a fixed installation instead of a
 symlink to the editable skill source. It is not part of the Agent Skills
-specification. The isolated npm cache used by `skills add` lives in the run
-directory and is removed when installation finishes.
+specification.
 
 The runner also adds the fixture's `.agents` directory as an explicit writable
 root because Codex otherwise protects that hidden directory. This lets a
@@ -112,25 +110,63 @@ judge prompt or snapshots because they can contain fixture values, become
 large, and often duplicate project evidence. The retained Codex JSONL is the
 full debugging record.
 
-Failed agent runs also produce `agent-session.json` and
-`failure-report.html`. The versioned session document groups each prompt,
-response, expectation, completed tool activity, and project change by turn.
-The static viewer shows text files before and after each change. It omits file
-content above the configured `maxReportFileBytes` limit and represents binary
-files as metadata. `failure-summary.json` remains the compact failure artifact.
-
-The `@buresmi7/agent-e2e-report` package owns the normalized session format,
-Codex import adapters, annotations, HTML renderer, JSON summary, and tests. The
-runner produces that format but does not define a failure-specific viewer
-model.
-
 The judge is read-only and does not receive the installed skill source. This
 keeps evaluation focused on externally visible behavior instead of asking the
 judge to repeat the skill's own claims.
 
+The judge evaluates every declared criterion and returns an exhaustive
+`failedCriteria` list. The report marks each listed criterion as failed and
+each omitted criterion as passed. A criterion remains not evaluated only when
+the run does not produce a valid evaluation.
+
 `CODEX_JUDGE_MODEL` and `CODEX_JUDGE_REASONING_EFFORT` can separate the judge
 from the tested agent. Without those overrides, both roles use the configured
 Codex model.
+
+## Scenario Record And Report
+
+Every agent run creates `report.json` as soon as its output directory exists.
+The runner rewrites the whole document atomically at lifecycle checkpoints and
+before and after every conversation turn. Completed turns remain in later
+checkpoints. If a later turn or checkpoint fails, the last valid document stays
+readable instead of becoming a partially written JSON file.
+
+The versioned document is the source for successful, failed, and interrupted
+runs. It contains the normalized prompts sent to the agent and their criteria,
+each available response, concise tool activity, per-turn unified file diffs,
+the final diff, and the judge result or runtime error. A turn that started but
+did not finish has status `incomplete` when the runner can checkpoint that
+state; later turns remain `pending`. The root status is `running`, `passed`,
+`failed`, or `error`. See the
+[report format](../../agent-e2e-report/docs/report-format.md) for the field
+contract and path semantics. The dependency-free
+`@buresmi7/agent-e2e-report` package owns that contract and its validator. The
+runner depends on the format package but has no browser or viewer dependencies.
+
+The separate [static viewer](../../agent-e2e-report-viewer/README.md) loads a
+local report through the browser File API. Normal passing cleanup removes the
+run directory unless output is retained. Updating snapshots writes the
+completed JSON to the scenario snapshot directory. `inspect.project` is
+reserved for the retained project path; other configured inspection links must
+be repository-relative.
+
+The [format limits](../../agent-e2e-report/docs/report-format.md#default-limits)
+define report payload ceilings and whether excess data fails a checkpoint or
+records an omitted patch. The retained `project/` directory remains available
+when the complete final file is needed.
+
+Judge evidence defaults to 256 KiB per file and 2 MiB in total, with at most
+10,000 discovered project files. Project-state capture defaults to 16 MiB per
+file, 10,000 files, and 256 MiB in total. These producer limits fail the run;
+silently truncating them could hide data from evaluation or diffing.
+
+Passing agent snapshots use the same format in `snapshot/report.json`. A
+snapshot is one recorded passing example, while the criteria in
+`scenario.json` remain the authoritative expectations. The agent snapshot
+directory contains only `report.json`. Refresh refuses unknown entries, writes
+the replacement atomically, and removes only known entries from the earlier
+snapshot layout. Command stdout and stderr snapshots keep their existing
+format.
 
 ## Limits
 
@@ -141,16 +177,16 @@ Codex model.
   trusted fixtures and dependencies.
 - A `workspace:` dependency must already be resolvable from the source
   workspace. Run the workspace install before its E2E scenarios.
-- Skill installation uses `npx` with an isolated cache and therefore needs npm
-  registry access.
+- Skill installation uses `npx` and therefore needs npm registry access.
 - The runner does not impose a process timeout. Apply a CI job timeout when a
   stalled Codex or command process must be terminated automatically.
 - Model-backed outcomes are nondeterministic; criteria are authoritative and
   snapshots are examples of passing runs.
 - User turns are fixed, not conditionally branched.
-- Retained output, HTML reports, snapshots, and local dependency copies may
-  contain fixture content, source files, conversation logs, and executable or
-  script names. Raw retained JSONL also contains command arguments and output.
-  Treat all of it as test data and do not use sensitive fixtures.
+- One scenario contains at most 16 turns.
+- Retained output and snapshots may contain sensitive test data. The
+  [format reference](../../agent-e2e-report/docs/report-format.md#project-changes)
+  defines the limited safeguards applied to diff payloads. Raw retained JSONL
+  also contains command arguments and output. Do not use sensitive fixtures.
 - A model judge should not replace deterministic command scenarios for exit
   codes, exact output, required files, or other mechanical checks.

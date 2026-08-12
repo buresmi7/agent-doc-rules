@@ -3,7 +3,7 @@ export const judgeSchema = {
   additionalProperties: false,
   properties: {
     pass: { type: 'boolean' },
-    score: { type: 'number' },
+    score: { type: 'number', minimum: 0, maximum: 1 },
     failedCriteria: {
       type: 'array',
       items: {
@@ -12,24 +12,8 @@ export const judgeSchema = {
         properties: {
           id: { type: 'string' },
           reason: { type: 'string' },
-          evidence: {
-            type: 'array',
-            items: {
-              type: 'object',
-              additionalProperties: false,
-              properties: {
-                target: {
-                  type: 'string',
-                  enum: ['response', 'file'],
-                },
-                path: { type: 'string' },
-                quote: { type: 'string' },
-              },
-              required: ['target', 'path', 'quote'],
-            },
-          },
         },
-        required: ['id', 'reason', 'evidence'],
+        required: ['id', 'reason'],
       },
     },
     requiredFixes: {

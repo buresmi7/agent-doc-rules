@@ -6,7 +6,9 @@
   "type": "module",
   "packageManager": "pnpm@11.8.0",
   "scripts": {
+    "build:report-viewer": "corepack pnpm --filter @buresmi7/agent-e2e-report-viewer build",
     "changeset": "changeset",
+    "dev:report-viewer": "corepack pnpm --filter @buresmi7/agent-e2e-report-viewer dev",
     "test": "corepack pnpm run test:static",
     "test:agent": "corepack pnpm -r --workspace-concurrency=2 --filter './e2e/*/project' run test:agent",
     "test:audit": "node scripts/check-audit.mjs",
@@ -21,7 +23,8 @@
     "docs:duplicates": "agent-doc-rules-docs-duplicates check",
     "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check",
     "test:skill": "node tools/check-skill-artifact.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-skill test && corepack pnpm --dir packages/agent-doc-rules-skill pack --dry-run",
-    "test:packages": "corepack pnpm run release:metadata && node tools/check-package-artifacts.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-validator test && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-duplicates test && corepack pnpm --filter @buresmi7/agent-e2e-runner test && corepack pnpm --dir packages/docs-validator pack --dry-run && corepack pnpm --dir packages/docs-duplicates pack --dry-run && corepack pnpm --dir packages/agent-e2e-report pack --dry-run && corepack pnpm --dir packages/agent-e2e-runner pack --dry-run",
+    "test:packages": "corepack pnpm run release:metadata && node tools/check-package-artifacts.mjs && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-validator test && corepack pnpm --filter @buresmi7/agent-doc-rules-docs-duplicates test && corepack pnpm --filter @buresmi7/agent-e2e-report test && corepack pnpm --filter @buresmi7/agent-e2e-runner test && corepack pnpm --dir packages/docs-validator pack --dry-run && corepack pnpm --dir packages/docs-duplicates pack --dry-run && corepack pnpm --dir packages/agent-e2e-report pack --dry-run && corepack pnpm --dir packages/agent-e2e-runner pack --dry-run",
+    "test:report-viewer": "corepack pnpm --filter @buresmi7/agent-e2e-report-viewer test && corepack pnpm run build:report-viewer",
     "test:release-tools": "node --test tools/test/*.test.mjs",
     "test:links": "corepack pnpm run docs:links",
     "test:markdown": "corepack pnpm run docs:markdown",
@@ -32,7 +35,7 @@
     "release:metadata": "node tools/check-release-metadata.mjs",
     "release:check": "node tools/check-release-state.mjs",
     "release:tag": "node tools/create-release-tags.mjs",
-    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:security && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:release-tools && corepack pnpm run test:packages && corepack pnpm run test:e2e-tools && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
+    "test:static": "corepack pnpm run test:markdown && corepack pnpm run docs:wording && corepack pnpm run test:security && corepack pnpm run test:links && corepack pnpm run test:skill && corepack pnpm run test:release-tools && corepack pnpm run test:packages && corepack pnpm run test:e2e-tools && corepack pnpm run test:report-viewer && corepack pnpm run test:e2e-command && corepack pnpm run test:audit",
     "verify:release": "corepack pnpm run skills:sync && corepack pnpm run test:install && corepack pnpm test && corepack pnpm run docs:check && corepack pnpm run test:agent"
   },
   "devDependencies": {

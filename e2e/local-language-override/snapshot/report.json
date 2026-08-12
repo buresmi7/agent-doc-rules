@@ -1,0 +1,521 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "local-language-override",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Create the missing project documentation.",
+      "response": "Created the missing project docs:\n\n- [README.md](<project>/README.md:1) with Czech project overview, canonical docs index, verified `npm test` guidance, and documentation safety rule.\n- [AGENTS.md](<project>/AGENTS.md:1) with local agent rules, required shared-rule links, source-of-truth notes, and verification guidance.\n- [project-notes.md](<project>/project-notes.md:1) reduced to pointers so the original facts are not duplicated.\n\nVerification: `npm test` passes, though it currently runs zero tests. I also checked the local documentation links referenced from `AGENTS.md`.",
+      "criteria": [
+        {
+          "id": "request.l1",
+          "source": "scenario.json#/turns/0/criteria/l1",
+          "content": "Creates a useful `README.md` for human contributors.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l2",
+          "source": "scenario.json#/turns/0/criteria/l2",
+          "content": "Creates a concise `AGENTS.md` for always-loaded agent instructions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l3",
+          "source": "scenario.json#/turns/0/criteria/l3",
+          "content": "Writes generated prose in standard Czech with proper Czech diacritics because the project notes define that local documentation rule.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l4",
+          "source": "scenario.json#/turns/0/criteria/l4",
+          "content": "Keeps command names, file paths, package names, and code identifiers unchanged.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l5",
+          "source": "scenario.json#/turns/0/criteria/l5",
+          "content": "Preserves project facts: invoice CSV validation, `npm test`, no real supplier names, no invoice numbers, and no tax IDs in generated docs.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l6",
+          "source": "scenario.json#/turns/0/criteria/l6",
+          "content": "Does not invent accounting systems, cloud services, dependencies, deployment flows, owners, or issue workflows.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.l7",
+          "source": "scenario.json#/turns/0/criteria/l7",
+          "content": "Respects the language override without being told explicitly in the scenario prompt.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            },
+            {
+              "path": "README.md",
+              "kind": "add"
+            },
+            {
+              "path": "project-notes.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 1354
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,32 @@",
+              "+# Faktury CLI - instrukce pro AI agenty",
+              "+",
+              "+Faktury CLI ověřuje CSV soubory s fakturami před jejich importem do účetního",
+              "+systému. Repozitář je dokumentačně malý; držte pravidla krátká a neuvádějte",
+              "+nedoložené příkazy CLI.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- [Pravidla pro `AGENTS.md`](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+- [Pravidla pro `README.md`](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+              "+- [Architektura dokumentace](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+              "+",
+              "+## Lokální pravidla",
+              "+",
+              "+- Perzistentní dokumentaci pište standardní češtinou s českou diakritikou.",
+              "+- Názvy příkazů, cest k souborům a balíčků ponechte beze změny.",
+              "+- Do generované dokumentace nevkládejte skutečné názvy dodavatelů, čísla faktur",
+              "+  ani daňová identifikační čísla.",
+              "+- Nepřidávejte instalační, importní ani CLI postupy, které nejsou doložené",
+              "+  lokálními soubory.",
+              "+",
+              "+## Zdroj pravdy",
+              "+",
+              "+- `package.json` je zdroj pravdy pro dostupné npm skripty.",
+              "+- `README.md` je vstupní dokument pro lidské přispěvatele.",
+              "+- `AGENTS.md` je zdroj pravdy pro pravidla, která mají agenti načítat při každé",
+              "+  úloze.",
+              "+",
+              "+## Ověření",
+              "+",
+              "+- Před změnou validačního chování spusťte `npm test`.",
+              "+- Pokud ověření nelze spustit, uveďte důvod a zbylé riziko v závěrečné odpovědi."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "project-notes.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 584
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 285
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/project-notes.md",
+              "+++ b/project-notes.md",
+              "@@ -1,16 +1,7 @@",
+              "-# Project Notes",
+              "-",
+              "-Faktury CLI validates invoice CSV files before they are imported into the",
+              "-accounting system.",
+              "-",
+              "-Local documentation rule: persisted documentation for this project is written",
+              "-in standard Czech with proper Czech diacritics. Keep command names, file paths,",
+              "-and package names unchanged.",
+              "-",
+              "-Useful facts:",
+              "-",
+              "-- Run `npm test` before changing validation behavior.",
+              "-- Do not include real supplier names, invoice numbers, or tax IDs in generated",
+              "-  documentation.",
+              "-- Human contributors need a short README.",
+              "-- Agents need a short `AGENTS.md` with local rules and verification guidance.",
+              "+# Projektové poznámky",
+              "+",
+              "+Původní poznámky byly přesunuty do kanonických dokumentů:",
+              "+",
+              "+- `README.md` obsahuje lidský přehled projektu a ověřovací příkaz.",
+              "+- `AGENTS.md` obsahuje lokální pravidla pro agenty, jazyk dokumentace,",
+              "+  bezpečnostní hranice a ověřovací pokyny."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "README.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 964
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/README.md",
+              "@@ -0,0 +1,29 @@",
+              "+# Faktury CLI",
+              "+",
+              "+Faktury CLI ověřuje CSV soubory s fakturami před jejich importem do účetního",
+              "+systému. Tento repozitář zatím obsahuje projektový manifest a pravidla pro",
+              "+dokumentaci; konkrétní příkaz CLI není v repozitáři doložený, proto zde není",
+              "+uvedený.",
+              "+",
+              "+## Kanonické dokumenty",
+              "+",
+              "+| Dokument | Obsah |",
+              "+| --- | --- |",
+              "+| `README.md` | Přehled projektu a základní ověření |",
+              "+| `AGENTS.md` | Pravidla pro agenty, lokální jazykové nastavení a bezpečnostní hranice |",
+              "+| `project-notes.md` | Ukazatel na kanonické dokumenty po přesunu původních poznámek |",
+              "+",
+              "+## Ověření",
+              "+",
+              "+Před změnou validačního chování spusťte testy z kořene repozitáře:",
+              "+",
+              "+```sh",
+              "+npm test",
+              "+```",
+              "+",
+              "+Tento příkaz odpovídá skriptu `test` v `package.json`.",
+              "+",
+              "+## Bezpečnost dokumentace",
+              "+",
+              "+Do dokumentace a příkladů nevkládejte skutečné názvy dodavatelů, čísla faktur",
+              "+ani daňová identifikační čísla. Používejte anonymizované nebo smyšlené hodnoty."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 1354
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,32 @@",
+          "+# Faktury CLI - instrukce pro AI agenty",
+          "+",
+          "+Faktury CLI ověřuje CSV soubory s fakturami před jejich importem do účetního",
+          "+systému. Repozitář je dokumentačně malý; držte pravidla krátká a neuvádějte",
+          "+nedoložené příkazy CLI.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- [Pravidla pro `AGENTS.md`](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+- [Pravidla pro `README.md`](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+          "+- [Architektura dokumentace](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+          "+",
+          "+## Lokální pravidla",
+          "+",
+          "+- Perzistentní dokumentaci pište standardní češtinou s českou diakritikou.",
+          "+- Názvy příkazů, cest k souborům a balíčků ponechte beze změny.",
+          "+- Do generované dokumentace nevkládejte skutečné názvy dodavatelů, čísla faktur",
+          "+  ani daňová identifikační čísla.",
+          "+- Nepřidávejte instalační, importní ani CLI postupy, které nejsou doložené",
+          "+  lokálními soubory.",
+          "+",
+          "+## Zdroj pravdy",
+          "+",
+          "+- `package.json` je zdroj pravdy pro dostupné npm skripty.",
+          "+- `README.md` je vstupní dokument pro lidské přispěvatele.",
+          "+- `AGENTS.md` je zdroj pravdy pro pravidla, která mají agenti načítat při každé",
+          "+  úloze.",
+          "+",
+          "+## Ověření",
+          "+",
+          "+- Před změnou validačního chování spusťte `npm test`.",
+          "+- Pokud ověření nelze spustit, uveďte důvod a zbylé riziko v závěrečné odpovědi."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "project-notes.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 584
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 285
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/project-notes.md",
+          "+++ b/project-notes.md",
+          "@@ -1,16 +1,7 @@",
+          "-# Project Notes",
+          "-",
+          "-Faktury CLI validates invoice CSV files before they are imported into the",
+          "-accounting system.",
+          "-",
+          "-Local documentation rule: persisted documentation for this project is written",
+          "-in standard Czech with proper Czech diacritics. Keep command names, file paths,",
+          "-and package names unchanged.",
+          "-",
+          "-Useful facts:",
+          "-",
+          "-- Run `npm test` before changing validation behavior.",
+          "-- Do not include real supplier names, invoice numbers, or tax IDs in generated",
+          "-  documentation.",
+          "-- Human contributors need a short README.",
+          "-- Agents need a short `AGENTS.md` with local rules and verification guidance.",
+          "+# Projektové poznámky",
+          "+",
+          "+Původní poznámky byly přesunuty do kanonických dokumentů:",
+          "+",
+          "+- `README.md` obsahuje lidský přehled projektu a ověřovací příkaz.",
+          "+- `AGENTS.md` obsahuje lokální pravidla pro agenty, jazyk dokumentace,",
+          "+  bezpečnostní hranice a ověřovací pokyny."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "README.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 964
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/README.md",
+          "@@ -0,0 +1,29 @@",
+          "+# Faktury CLI",
+          "+",
+          "+Faktury CLI ověřuje CSV soubory s fakturami před jejich importem do účetního",
+          "+systému. Tento repozitář zatím obsahuje projektový manifest a pravidla pro",
+          "+dokumentaci; konkrétní příkaz CLI není v repozitáři doložený, proto zde není",
+          "+uvedený.",
+          "+",
+          "+## Kanonické dokumenty",
+          "+",
+          "+| Dokument | Obsah |",
+          "+| --- | --- |",
+          "+| `README.md` | Přehled projektu a základní ověření |",
+          "+| `AGENTS.md` | Pravidla pro agenty, lokální jazykové nastavení a bezpečnostní hranice |",
+          "+| `project-notes.md` | Ukazatel na kanonické dokumenty po přesunu původních poznámek |",
+          "+",
+          "+## Ověření",
+          "+",
+          "+Před změnou validačního chování spusťte testy z kořene repozitáře:",
+          "+",
+          "+```sh",
+          "+npm test",
+          "+```",
+          "+",
+          "+Tento příkaz odpovídá skriptu `test` v `package.json`.",
+          "+",
+          "+## Bezpečnost dokumentace",
+          "+",
+          "+Do dokumentace a příkladů nevkládejte skutečné názvy dodavatelů, čísla faktur",
+          "+ani daňová identifikační čísla. Používejte anonymizované nebo smyšlené hodnoty."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 0.98,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The output creates concise Czech README.md and AGENTS.md files, preserves the known project facts and command names, avoids unsupported workflows or sensitive invoice examples, and follows the local language override. Minor note: the AGENTS.md heading \"Shared Rules\" remains in English, but it functions as a routing label rather than substantive generated prose and does not affect the critical criteria."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

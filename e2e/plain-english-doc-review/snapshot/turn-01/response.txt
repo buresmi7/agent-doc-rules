@@ -1,3 +1,0 @@
-Updated [README.md](<project>/README.md) to explain the project plainly, clarify the repository scope, and keep only the supported verification command.
-
-Verified with `npm test`; it passes, though the current test suite contains 0 tests.

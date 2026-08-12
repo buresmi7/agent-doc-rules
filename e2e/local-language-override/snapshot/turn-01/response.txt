@@ -1,7 +1,0 @@
-Created the missing project docs:
-
-- [README.md](<project>/README.md:1) with Czech project overview, canonical docs index, verified `npm test` guidance, and documentation safety rule.
-- [AGENTS.md](<project>/AGENTS.md:1) with local agent rules, required shared-rule links, source-of-truth notes, and verification guidance.
-- [project-notes.md](<project>/project-notes.md:1) reduced to pointers so the original facts are not duplicated.
-
-Verification: `npm test` passes, though it currently runs zero tests. I also checked the local documentation links referenced from `AGENTS.md`.

@@ -15,20 +15,13 @@ test('default judge prompt evaluates the real conversation without seeing the sk
   assert.match(prompt, /real Codex session/);
   assert.match(prompt, /User: Call Jane/);
   assert.match(prompt, /Agent: Which Jane/);
+  assert.match(prompt, /failedCriteria` is exhaustive/);
+  assert.match(prompt, /criterion omitted from this array is recorded as passed/);
   assert.doesNotMatch(prompt, /skillReference/);
   assert.doesNotMatch(prompt, /Installed skill/);
 });
 
-test('judge schema requires exact evidence locations for failed criteria', () => {
-  const failedCriterion = judgeSchema.properties.failedCriteria.items;
-
-  assert.ok(failedCriterion.required.includes('evidence'));
-  assert.deepEqual(
-    failedCriterion.properties.evidence.items.properties.target.enum,
-    ['response', 'file'],
-  );
-  assert.deepEqual(
-    failedCriterion.properties.evidence.items.required,
-    ['target', 'path', 'quote'],
-  );
+test('judge score schema uses the same zero-to-one range as passThreshold', () => {
+  assert.equal(judgeSchema.properties.score.minimum, 0);
+  assert.equal(judgeSchema.properties.score.maximum, 1);
 });

@@ -6,6 +6,10 @@ import {
   writeFile,
 } from 'node:fs/promises';
 import { dirname, extname, join, relative } from 'node:path';
+import {
+  isSensitiveReportContent,
+  isSensitiveReportPath,
+} from '@buresmi7/agent-e2e-report';
 
 const skippedEvidenceDirectories = new Set([
   '.cache',
@@ -40,6 +44,12 @@ const defaultEvidenceFileExtensions = new Set([
 ]);
 
 const defaultReportFileBytes = 256 * 1024;
+const defaultReportDiffBytes = 512 * 1024;
+const defaultReportPatchBytes = 8 * 1024 * 1024;
+const defaultReportChanges = 2000;
+const defaultStateFileBytes = 16 * 1024 * 1024;
+const defaultStateFiles = 10000;
+const defaultStateTotalBytes = 256 * 1024 * 1024;
 
 export async function prepareProjectFixture(projectDir, {
   hiddenPackageScripts = ['test:agent'],
@@ -77,6 +87,7 @@ export async function prepareProjectFixture(projectDir, {
 }
 
 export async function readProjectFiles(projectDir, options = {}) {
+  const maxProjectFiles = options.maxProjectFiles ?? defaultStateFiles;
   const files = await collectProjectFilePaths(
     projectDir,
     projectDir,
@@ -84,6 +95,7 @@ export async function readProjectFiles(projectDir, options = {}) {
       ...skippedEvidenceDirectories,
       ...(options.ignoredDirectoryNames ?? []),
     ]),
+    { maxFiles: maxProjectFiles },
   );
   const chunks = [];
   const evidenceFileNames = new Set(options.evidenceFileNames ?? ['package.json']);
@@ -133,6 +145,20 @@ export async function readProjectFiles(projectDir, options = {}) {
 }
 
 export async function captureProjectState(projectDir, options = {}) {
+  const maxStateFileBytes = options.maxStateFileBytes ?? defaultStateFileBytes;
+  const maxStateFiles = options.maxStateFiles ?? defaultStateFiles;
+  const maxStateBytes = options.maxStateBytes ?? defaultStateTotalBytes;
+
+  for (const [name, value] of [
+    ['maxStateFileBytes', maxStateFileBytes],
+    ['maxStateFiles', maxStateFiles],
+    ['maxStateBytes', maxStateBytes],
+  ]) {
+    if (!Number.isInteger(value) || value < 0) {
+      throw new Error(`${name} must be a non-negative integer.`);
+    }
+  }
+
   const files = await collectProjectFilePaths(
     projectDir,
     projectDir,
@@ -140,16 +166,30 @@ export async function captureProjectState(projectDir, options = {}) {
       ...skippedStateDirectories,
       ...(options.ignoredDirectoryNames ?? []),
     ]),
+    { maxFiles: maxStateFiles },
   );
   const ignoredPaths = new Set(options.ignoredPaths ?? []);
   const ignoredPathPrefixes = options.ignoredPathPrefixes ?? [];
   const state = new Map();
+  let stateBytes = 0;
 
   for (const file of files) {
     const rel = relativePath(projectDir, file);
 
     if (isIgnoredPath(rel, ignoredPaths, ignoredPathPrefixes)) {
       continue;
+    }
+
+    const fileSize = (await stat(file)).size;
+
+    if (fileSize > maxStateFileBytes) {
+      throw new Error(`Project state file exceeds ${maxStateFileBytes} bytes: ${rel}`);
+    }
+
+    stateBytes += fileSize;
+
+    if (stateBytes > maxStateBytes) {
+      throw new Error(`Project state exceeds ${maxStateBytes} bytes while reading: ${rel}`);
     }
 
     state.set(rel, await readFile(file));
@@ -187,9 +227,24 @@ export function diffProjectStates(before, after) {
 
 export function diffProjectStatesForReport(before, after, {
   maxFileBytes = defaultReportFileBytes,
+  maxDiffBytes = defaultReportDiffBytes,
+  maxChanges = defaultReportChanges,
+  budget = { remainingBytes: defaultReportPatchBytes },
 } = {}) {
   if (!Number.isInteger(maxFileBytes) || maxFileBytes < 0) {
     throw new Error('maxReportFileBytes must be a non-negative integer.');
+  }
+
+  if (!Number.isInteger(maxDiffBytes) || maxDiffBytes < 0) {
+    throw new Error('maxReportDiffBytes must be a non-negative integer.');
+  }
+
+  if (!Number.isInteger(maxChanges) || maxChanges < 0) {
+    throw new Error('maxReportChanges must be a non-negative integer.');
+  }
+
+  if (!budget || !Number.isInteger(budget.remainingBytes) || budget.remainingBytes < 0) {
+    throw new Error('report budget must contain a non-negative remainingBytes integer.');
   }
 
   const paths = new Set([...before.keys(), ...after.keys()]);
@@ -203,12 +258,19 @@ export function diffProjectStatesForReport(before, after, {
       continue;
     }
 
-    changes.push({
+    if (changes.length >= maxChanges) {
+      throw new Error(`Report diff exceeds the ${maxChanges}-change limit.`);
+    }
+
+    changes.push(createReportChange({
       path,
       status: !current ? 'deleted' : previous ? 'modified' : 'created',
-      before: previous ? serializeReportContent(previous, maxFileBytes) : null,
-      after: current ? serializeReportContent(current, maxFileBytes) : null,
-    });
+      previous,
+      current,
+      maxFileBytes,
+      maxDiffBytes,
+      budget,
+    }));
   }
 
   return changes;
@@ -316,14 +378,6 @@ export async function assertFile(path) {
   }
 }
 
-export function decodeChangedFile(file) {
-  if (file.encoding === 'base64') {
-    return Buffer.from(file.content, 'base64');
-  }
-
-  return file.content;
-}
-
 async function readProjectFileForPrompt(file, rel, { hiddenPackageScripts }) {
   const content = await readFile(file);
   const serialized = serializeFileContent(content);
@@ -351,7 +405,16 @@ async function readProjectFileForPrompt(file, rel, { hiddenPackageScripts }) {
   return `${JSON.stringify(packageJson, null, 2)}\n`;
 }
 
-async function collectProjectFilePaths(dir, root, skippedDirectories) {
+async function collectProjectFilePaths(
+  dir,
+  root,
+  skippedDirectories,
+  { maxFiles = defaultStateFiles, counter = { value: 0 } } = {},
+) {
+  if (!Number.isInteger(maxFiles) || maxFiles < 0) {
+    throw new Error('maxProjectFiles must be a non-negative integer.');
+  }
+
   const entries = await readdir(dir, { withFileTypes: true });
   const files = [];
 
@@ -371,11 +434,19 @@ async function collectProjectFilePaths(dir, root, skippedDirectories) {
     }
 
     if (entry.isDirectory()) {
-      files.push(...await collectProjectFilePaths(path, root, skippedDirectories));
+      files.push(...await collectProjectFilePaths(path, root, skippedDirectories, {
+        maxFiles,
+        counter,
+      }));
       continue;
     }
 
     if (entry.isFile()) {
+      if (counter.value >= maxFiles) {
+        throw new Error(`Agent E2E project exceeds the ${maxFiles}-file limit.`);
+      }
+
+      counter.value += 1;
       files.push(path);
     }
   }
@@ -419,8 +490,90 @@ function serializeFileContent(buffer) {
   };
 }
 
-function serializeReportContent(buffer, maxFileBytes) {
-  if (buffer.byteLength > maxFileBytes) {
+function createReportChange({
+  path,
+  status,
+  previous,
+  current,
+  maxFileBytes,
+  maxDiffBytes,
+  budget,
+}) {
+  const sensitiveReason = isSensitiveReportPath(path)
+    ? 'sensitive-path'
+    : [previous, current].some((buffer) => (
+        buffer?.byteLength <= maxFileBytes && isSensitiveReportContent(buffer)
+      ))
+      ? 'sensitive-content'
+      : null;
+  const sensitive = sensitiveReason !== null;
+  const before = previous
+    ? serializeReportFileMetadata(previous, maxFileBytes, sensitive)
+    : null;
+  const after = current
+    ? serializeReportFileMetadata(current, maxFileBytes, sensitive)
+    : null;
+  const change = {
+    path,
+    status,
+    before,
+    after,
+    patch: null,
+    omission: null,
+  };
+
+  if (sensitive) {
+    change.omission = { reason: sensitiveReason };
+    return removeReportContent(change);
+  }
+
+  if (
+    (status === 'created' && current?.byteLength === 0)
+    || (status === 'deleted' && previous?.byteLength === 0)
+  ) {
+    change.omission = { reason: 'empty-file' };
+    return removeReportContent(change);
+  }
+
+  if (before?.kind === 'binary' || after?.kind === 'binary') {
+    change.omission = { reason: 'binary' };
+    return removeReportContent(change);
+  }
+
+  if (before?.kind === 'omitted' || after?.kind === 'omitted') {
+    change.omission = { reason: 'file-too-large' };
+    return removeReportContent(change);
+  }
+
+  const lines = createUnifiedPatch(
+    path,
+    before?.content ?? '',
+    after?.content ?? '',
+    status,
+  );
+  const patchBytes = Buffer.byteLength(JSON.stringify(lines), 'utf8');
+
+  if (patchBytes > maxDiffBytes) {
+    change.omission = { reason: 'diff-too-large', byteLength: patchBytes };
+    return removeReportContent(change);
+  }
+
+  if (patchBytes > budget.remainingBytes) {
+    change.omission = { reason: 'report-budget', byteLength: patchBytes };
+    return removeReportContent(change);
+  }
+
+  budget.remainingBytes -= patchBytes;
+  change.patch = {
+    format: 'unified',
+    lines,
+  };
+
+  return removeReportContent(change);
+}
+
+function serializeReportFileMetadata(buffer, maxFileBytes, sensitive) {
+  if (sensitive || buffer.byteLength > maxFileBytes) {
     return {
       kind: 'omitted',
       byteLength: buffer.byteLength,
@@ -441,4 +594,100 @@ function serializeReportContent(buffer, maxFileBytes) {
     content: serialized.content,
     byteLength: buffer.byteLength,
   };
+}
+
+function removeReportContent(change) {
+  for (const version of [change.before, change.after]) {
+    if (version) {
+      delete version.content;
+    }
+  }
+
+  return change;
+}
+
+function createUnifiedPatch(path, beforeContent, afterContent, status) {
+  const beforeLines = splitLines(beforeContent);
+  const afterLines = splitLines(afterContent);
+  let prefix = 0;
+
+  while (
+    prefix < beforeLines.length
+    && prefix < afterLines.length
+    && beforeLines[prefix] === afterLines[prefix]
+  ) {
+    prefix += 1;
+  }
+
+  let suffix = 0;
+
+  while (
+    suffix < beforeLines.length - prefix
+    && suffix < afterLines.length - prefix
+    && beforeLines[beforeLines.length - suffix - 1]
+      === afterLines[afterLines.length - suffix - 1]
+  ) {
+    suffix += 1;
+  }
+
+  const context = 3;
+  const beforeStart = Math.max(0, prefix - context);
+  const afterStart = Math.max(0, prefix - context);
+  const beforeChangeEnd = beforeLines.length - suffix;
+  const afterChangeEnd = afterLines.length - suffix;
+  const beforeEnd = Math.min(beforeLines.length, beforeChangeEnd + context);
+  const afterEnd = Math.min(afterLines.length, afterChangeEnd + context);
+  const lines = [
+    `--- ${status === 'created' ? '/dev/null' : formatDiffPath(`a/${path}`)}`,
+    `+++ ${status === 'deleted' ? '/dev/null' : formatDiffPath(`b/${path}`)}`,
+    `@@ -${formatDiffRange(beforeStart, beforeEnd - beforeStart)}`
+      + ` +${formatDiffRange(afterStart, afterEnd - afterStart)} @@`,
+  ];
+
+  for (const line of beforeLines.slice(beforeStart, prefix)) {
+    appendPatchLine(lines, ' ', line);
+  }
+
+  for (const line of beforeLines.slice(prefix, beforeChangeEnd)) {
+    appendPatchLine(lines, '-', line);
+  }
+
+  for (const line of afterLines.slice(prefix, afterChangeEnd)) {
+    appendPatchLine(lines, '+', line);
+  }
+
+  for (const line of beforeLines.slice(beforeChangeEnd, beforeEnd)) {
+    appendPatchLine(lines, ' ', line);
+  }
+
+  return lines;
+}
+
+function splitLines(value) {
+  if (!value) {
+    return [];
+  }
+
+  return value.match(/[^\n]*\n|[^\n]+$/g) ?? [];
+}
+
+function appendPatchLine(lines, prefix, line) {
+  const hasFinalNewline = line.endsWith('\n');
+  const content = hasFinalNewline ? line.slice(0, -1) : line;
+
+  lines.push(`${prefix}${content}`);
+
+  if (!hasFinalNewline) {
+    lines.push('\\ No newline at end of file');
+  }
+}
+
+function formatDiffRange(start, count) {
+  const line = count === 0 ? start : start + 1;
+
+  return count === 1 ? String(line) : `${line},${count}`;
+}
+
+function formatDiffPath(path) {
+  return /[\u0000-\u001f\u007f"\\]/.test(path) ? JSON.stringify(path) : path;
 }

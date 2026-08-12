@@ -35,7 +35,7 @@ Use these identities for releases governed by the independent model:
 | --- | --- | --- | --- |
 | `@buresmi7/agent-doc-rules-skill` | `Agent Doc Rules Skill` | `agent-doc-rules-skill@VERSION` | `packages/agent-doc-rules-skill/CHANGELOG.md` |
 | `@buresmi7/agent-e2e-runner` | `E2E Runner` | `agent-e2e-runner@VERSION` | `packages/agent-e2e-runner/CHANGELOG.md` |
-| `@buresmi7/agent-e2e-report` | `E2E Report` | `agent-e2e-report@VERSION` | `packages/agent-e2e-report/CHANGELOG.md` |
+| `@buresmi7/agent-e2e-report` | `E2E Report Format` | `agent-e2e-report@VERSION` | `packages/agent-e2e-report/CHANGELOG.md` |
 | `@buresmi7/agent-doc-rules-docs-validator` | `Docs Validator` | `agent-doc-rules-docs-validator@VERSION` | `packages/docs-validator/CHANGELOG.md` |
 | `@buresmi7/agent-doc-rules-docs-duplicates` | `Docs Duplicate Checker` | `agent-doc-rules-docs-duplicates@VERSION` | `packages/docs-duplicates/CHANGELOG.md` |
 
@@ -278,7 +278,7 @@ After [Prepare A Release](#prepare-a-release):
    This confirms that the local and remote annotated tag objects match, the tag
    points to the release commit, and neither npm nor GitHub has the release yet.
 6. Run `npm publish --access public` from only the affected package
-   directories. When the report package and E2E runner are both new releases,
+   directories. When the report format and runner are both new releases,
    publish `@buresmi7/agent-e2e-report` first because the runner depends on it.
 7. Confirm each exact version with `npm view PACKAGE@VERSION version`.
 8. Create one GitHub Release per tag with the

@@ -149,7 +149,6 @@ test('installProjectDependencies resolves workspace dependencies before temporar
   });
 
   const skill = await readProjectSkillDefinition(projectFixtureDir, selectedSkill);
-  let installedSkillSource;
   const result = await installProjectDependencies({
     projectDir,
     projectFixtureDir,
@@ -160,138 +159,16 @@ test('installProjectDependencies resolves workspace dependencies before temporar
       assert.equal(command, 'corepack');
       assert.deepEqual(args, ['pnpm', 'install', '--no-frozen-lockfile']);
       assert.equal(manifest.packageManager, 'pnpm@11.8.0');
-      assert.match(
+      assert.equal(
         manifest.devDependencies['@example/todo-skill'],
-        /^file:.*\/local-packages\/01-example-todo-skill$/,
-      );
-      installedSkillSource = manifest.devDependencies['@example/todo-skill']
-        .slice('file:'.length);
-      assert.equal(
-        await readFile(join(installedSkillSource, 'SKILL.md'), 'utf8'),
-        '# Todo Cleaner\n',
+        `file:${skillDir}`,
       );
       await mkdir(join(cwd, 'node_modules/@example'), { recursive: true });
-      await symlink(
-        installedSkillSource,
-        join(cwd, 'node_modules/@example/todo-skill'),
-        'dir',
-      );
+      await symlink(skillDir, join(cwd, 'node_modules/@example/todo-skill'), 'dir');
     },
   });
 
-  assert.equal(result.skillSource, installedSkillSource);
-});
-
-test('installProjectDependencies closes transitive workspace dependencies locally', async () => {
-  const root = await mkdtemp(join(tmpdir(), 'agent-e2e-workspace-closure-'));
-  const projectFixtureDir = join(root, 'fixture');
-  const projectDir = join(root, 'temporary-project');
-  const runnerDir = join(root, 'packages/runner');
-  const reportDir = join(root, 'packages/report');
-  const skillDir = join(root, 'packages/todo-skill');
-
-  await writeProjectPackage(root, {
-    name: 'example-workspace',
-    private: true,
-    packageManager: 'pnpm@11.8.0',
-  });
-  await Promise.all([
-    mkdir(projectFixtureDir, { recursive: true }),
-    mkdir(runnerDir, { recursive: true }),
-    mkdir(reportDir, { recursive: true }),
-    mkdir(skillDir, { recursive: true }),
-  ]);
-  await writeProjectPackage(runnerDir, {
-    name: '@example/runner',
-    version: '1.0.0',
-    dependencies: {
-      '@example/report': 'workspace:*',
-    },
-  });
-  await writeProjectPackage(reportDir, {
-    name: '@example/report',
-    version: '1.0.0',
-  });
-  await writeProjectPackage(skillDir, {
-    name: '@example/todo-skill',
-    version: '1.0.0',
-  });
-  await writeFile(join(skillDir, 'SKILL.md'), '# Todo Cleaner\n');
-  await writeProjectPackage(projectFixtureDir, {
-    name: 'todo-fixture',
-    version: '0.0.0',
-    private: true,
-    devDependencies: {
-      '@example/runner': 'workspace:*',
-      '@example/todo-skill': 'workspace:*',
-    },
-  });
-
-  for (const [name, source] of [
-    ['runner', runnerDir],
-    ['report', reportDir],
-    ['todo-skill', skillDir],
-  ]) {
-    await Promise.all([
-      mkdir(join(projectFixtureDir, 'node_modules/@example'), {
-        recursive: true,
-      }),
-      mkdir(join(root, 'node_modules/@example'), {
-        recursive: true,
-      }),
-    ]);
-    await symlink(
-      source,
-      join(projectFixtureDir, `node_modules/@example/${name}`),
-      'dir',
-    );
-    await symlink(
-      source,
-      join(root, `node_modules/@example/${name}`),
-      'dir',
-    );
-  }
-
-  await cp(projectFixtureDir, projectDir, {
-    recursive: true,
-    filter: (source) => !source.includes('/node_modules'),
-  });
-
-  const skill = await readProjectSkillDefinition(projectFixtureDir, selectedSkill);
-
-  await installProjectDependencies({
-    projectDir,
-    projectFixtureDir,
-    repoRoot: root,
-    skill,
-    run: async (_command, _args, _input, { cwd }) => {
-      const fixture = JSON.parse(await readFile(join(cwd, 'package.json'), 'utf8'));
-      const runnerSource = fixture.devDependencies['@example/runner']
-        .slice('file:'.length);
-      const skillSource = fixture.devDependencies['@example/todo-skill']
-        .slice('file:'.length);
-      const runner = JSON.parse(
-        await readFile(join(runnerSource, 'package.json'), 'utf8'),
-      );
-      const reportSource = runner.dependencies['@example/report']
-        .slice('file:'.length);
-
-      assert.match(runnerSource, /\/local-packages\/01-example-runner$/);
-      assert.match(reportSource, /\/local-packages\/02-example-report$/);
-      assert.match(skillSource, /\/local-packages\/03-example-todo-skill$/);
-      assert.equal(
-        JSON.parse(await readFile(join(reportSource, 'package.json'), 'utf8')).name,
-        '@example/report',
-      );
-
-      await mkdir(join(cwd, 'node_modules/@example'), { recursive: true });
-      await symlink(
-        skillSource,
-        join(cwd, 'node_modules/@example/todo-skill'),
-        'dir',
-      );
-    },
-  });
+  assert.equal(result.skillSource, skillDir);
 });
 
 async function writeProjectPackage(projectDir, manifest) {

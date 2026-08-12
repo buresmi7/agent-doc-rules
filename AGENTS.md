@@ -52,7 +52,7 @@ Keep generated maintainer skill files and their source links documented in
 - Rule placement rubric: `docs/rule-placement.md`
 - E2E failure triage: `docs/e2e-failure-triage.md`
 - E2E rule matrix: `docs/e2e-rule-matrix.md`
-- E2E session format: `packages/agent-e2e-report/docs/session-format.md`
+- E2E report format: `packages/agent-e2e-report/docs/report-format.md`
 - Markdown/docs validator: `packages/docs-validator/`
 - Semantic duplicate checker: `packages/docs-duplicates/`
 - npm-sourced maintainer skill dependencies:

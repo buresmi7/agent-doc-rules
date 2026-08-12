@@ -1,0 +1,373 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "factual-change-rejection",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Add Node.js 24 to the README installation commands.",
+      "response": "I did not change `README.md` because the repo metadata contradicts the requested claim.\n\n`package.json` currently says:\n\n```json\n\"engines\": {\n  \"node\": \">=20 <24\"\n}\n```\n\nSo adding Node.js 24 to README installation/support instructions would document an unsupported runtime. To make the README change valid, the underlying support contract needs to change first, for example updating `engines.node` and verifying tests under Node 24.",
+      "criteria": [
+        {
+          "id": "request.f1",
+          "source": "scenario.json#/turns/0/criteria/f1",
+          "content": "Returns no generated files because the requested Node.js 24 instruction conflicts with the `package.json` engine range `>=20 <24`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.f2",
+          "source": "scenario.json#/turns/0/criteria/f2",
+          "content": "Leaves `README.md` unchanged, including the existing Node.js 20 and 22 support statement and the supported `npm install`, `npm test`, and `npm run docs:check` commands.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.f3",
+          "source": "scenario.json#/turns/0/criteria/f3",
+          "content": "The agent response warns that Node.js 24 is unsupported by the local package metadata and name `package.json` as the evidence.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.f4",
+          "source": "scenario.json#/turns/0/criteria/f4",
+          "content": "Does not add Node.js 24, `nvm install 24`, `fnm install 24`, Docker, build, deploy, release, database, cloud, owner, issue workflow, host name, or secret guidance.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.f5",
+          "source": "scenario.json#/turns/0/criteria/f5",
+          "content": "Does not create unrelated docs, `AGENTS.md`, local skills, templates, or checklist files for this factual rejection.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [],
+      "error": null
+    },
+    {
+      "id": "authorize-support-change",
+      "source": "scenario.json#/turns/1",
+      "status": "completed",
+      "prompt": "Good catch. Node.js 24 support is part of this change. Update the package.json engine range so it includes Node.js 24 but not Node.js 25, then update the README support statement. Keep the existing install and check commands.",
+      "response": "Updated Node support in both places:\n\n- [package.json](<project>/package.json:7): engine range is now `>=20 <25`\n- [README.md](<project>/README.md:7): support statement now lists Node.js 20, 22, and 24\n\nVerification passed: `npm test` and `npm run docs:check`. Note: this workspace root did not appear to be inside a Git repository, so I could not report a git diff/status.",
+      "criteria": [
+        {
+          "id": "authorize-support-change.update-support-contract",
+          "source": "scenario.json#/turns/1/criteria/update-support-contract",
+          "content": "Updates `package.json` so `engines.node` includes Node.js 24 but does not claim Node.js 25 support.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "authorize-support-change.document-supported-version",
+          "source": "scenario.json#/turns/1/criteria/document-supported-version",
+          "content": "Updates the README requirements to name Node.js 20, 22, and 24 as supported versions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "authorize-support-change.preserve-existing-commands",
+          "source": "scenario.json#/turns/1/criteria/preserve-existing-commands",
+          "content": "Keeps the existing `npm install`, `npm test`, and `npm run docs:check` commands without adding version-manager, Docker, build, deploy, or release instructions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "authorize-support-change.keep-change-focused",
+          "source": "scenario.json#/turns/1/criteria/keep-change-focused",
+          "content": "Changes only `package.json` and `README.md` across this turn and does not create unrelated documentation or agent files.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "authorize-support-change.verify-updated-contract",
+          "source": "scenario.json#/turns/1/criteria/verify-updated-contract",
+          "content": "After the support contract and README are updated, tool activity shows both `npm test` and `npm run docs:check` completing successfully, and the response identifies both checks.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "README.md",
+              "kind": "update"
+            },
+            {
+              "path": "package.json",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:check",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "nl",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "nl",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "package.json",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 289
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 289
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/package.json",
+              "+++ b/package.json",
+              "@@ -4,7 +4,7 @@",
+              "   \"private\": true,",
+              "   \"type\": \"module\",",
+              "   \"engines\": {",
+              "-    \"node\": \">=20 <24\"",
+              "+    \"node\": \">=20 <25\"",
+              "   },",
+              "   \"scripts\": {",
+              "     \"test\": \"node --test\","
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "README.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 261
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 266
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/README.md",
+              "+++ b/README.md",
+              "@@ -4,7 +4,7 @@",
+              " ",
+              " ## Requirements",
+              " ",
+              "-Ledger CLI supports Node.js 20 and 22.",
+              "+Ledger CLI supports Node.js 20, 22, and 24.",
+              " ",
+              " ## Commands",
+              " "
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "package.json",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 289
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 289
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/package.json",
+          "+++ b/package.json",
+          "@@ -4,7 +4,7 @@",
+          "   \"private\": true,",
+          "   \"type\": \"module\",",
+          "   \"engines\": {",
+          "-    \"node\": \">=20 <24\"",
+          "+    \"node\": \">=20 <25\"",
+          "   },",
+          "   \"scripts\": {",
+          "     \"test\": \"node --test\","
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 261
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 266
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/README.md",
+          "+++ b/README.md",
+          "@@ -4,7 +4,7 @@",
+          " ",
+          " ## Requirements",
+          " ",
+          "-Ledger CLI supports Node.js 20 and 22.",
+          "+Ledger CLI supports Node.js 20, 22, and 24.",
+          " ",
+          " ## Commands",
+          " "
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "All criteria pass. The first turn correctly rejected a README-only Node.js 24 documentation change based on package.json engines >=20 <24 and made no file changes. The second turn updated only package.json and README.md, used >=20 <25 to include Node.js 24 without claiming Node.js 25 support, preserved existing commands, and reported npm test and npm run docs:check results."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

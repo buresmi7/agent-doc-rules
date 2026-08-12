@@ -1,16 +1,12 @@
 import {
   access,
-  cp,
-  mkdir,
   readFile,
   realpath,
   rm,
-  stat,
   writeFile,
 } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import {
-  basename,
   dirname,
   isAbsolute,
   join,
@@ -23,10 +19,6 @@ const dependencyFields = [
   'dependencies',
   'devDependencies',
   'optionalDependencies',
-];
-const localDependencyFields = [
-  ...dependencyFields,
-  'peerDependencies',
 ];
 
 const packageManagerLockFiles = [
@@ -101,11 +93,6 @@ export async function installProjectDependencies({
   await normalizeLocalDependencies(normalizedManifest, {
     projectFixtureDir,
     repoRoot,
-    localPackages: {
-      root: join(dirname(projectDir), 'local-packages'),
-      sources: new Map(),
-      nextIndex: 1,
-    },
   });
 
   const lockState = await captureFiles(projectDir, generatedLockFiles);
@@ -224,9 +211,8 @@ function findDependency(manifest, packageName) {
 async function normalizeLocalDependencies(manifest, {
   projectFixtureDir,
   repoRoot,
-  localPackages,
 }) {
-  for (const field of localDependencyFields) {
+  for (const field of dependencyFields) {
     const dependencies = manifest[field];
 
     if (!dependencies || typeof dependencies !== 'object') {
@@ -239,7 +225,6 @@ async function normalizeLocalDependencies(manifest, {
         spec,
         projectFixtureDir,
         repoRoot,
-        localPackages,
       });
     }
   }
@@ -250,7 +235,6 @@ async function normalizeDependencySpec({
   spec,
   projectFixtureDir,
   repoRoot,
-  localPackages,
 }) {
   if (typeof spec !== 'string') {
     return spec;
@@ -258,106 +242,20 @@ async function normalizeDependencySpec({
 
   if (spec.startsWith('workspace:')) {
     const source = await resolvePackageSource(packageName, projectFixtureDir, repoRoot);
-    return `file:${await materializeLocalPackage(source, {
-      repoRoot,
-      localPackages,
-    })}`;
+    return `file:${source}`;
   }
 
   for (const protocol of ['file:', 'link:', 'portal:']) {
     if (spec.startsWith(protocol)) {
-      const source = resolveLocalPath(
-        projectFixtureDir,
-        spec.slice(protocol.length),
-        spec,
-      );
-
-      return `file:${await materializeLocalPackageIfDirectory(source, {
-        repoRoot,
-        localPackages,
-      })}`;
+      return `file:${resolveLocalPath(projectFixtureDir, spec.slice(protocol.length), spec)}`;
     }
   }
 
   if (spec.startsWith('.') || isAbsolute(spec)) {
-    const source = resolveLocalPath(projectFixtureDir, spec, spec);
-
-    return `file:${await materializeLocalPackageIfDirectory(source, {
-      repoRoot,
-      localPackages,
-    })}`;
+    return `file:${resolveLocalPath(projectFixtureDir, spec, spec)}`;
   }
 
   return spec;
-}
-
-async function materializeLocalPackageIfDirectory(source, context) {
-  const sourceStat = await stat(source).catch((error) => {
-    if (error.code === 'ENOENT') {
-      return null;
-    }
-
-    throw error;
-  });
-
-  return sourceStat?.isDirectory()
-    ? materializeLocalPackage(source, context)
-    : source;
-}
-
-async function materializeLocalPackage(source, {
-  repoRoot,
-  localPackages,
-}) {
-  const resolvedSource = await realpath(source);
-  const existing = localPackages.sources.get(resolvedSource);
-
-  if (existing) {
-    return existing;
-  }
-
-  const { content, manifest } = await readPackageManifest(resolvedSource);
-  const packageLabel = normalizePackageDirectoryName(
-    manifest.name ?? basename(resolvedSource),
-  );
-  const target = join(
-    localPackages.root,
-    `${String(localPackages.nextIndex).padStart(2, '0')}-${packageLabel}`,
-  );
-
-  localPackages.nextIndex += 1;
-  localPackages.sources.set(resolvedSource, target);
-
-  await mkdir(localPackages.root, { recursive: true });
-  await cp(resolvedSource, target, {
-    recursive: true,
-    filter: (path) => !['.git', 'node_modules'].includes(basename(path)),
-  });
-
-  const normalizedManifest = structuredClone(manifest);
-
-  await normalizeLocalDependencies(normalizedManifest, {
-    projectFixtureDir: resolvedSource,
-    repoRoot,
-    localPackages,
-  });
-
-  const normalizedContent = `${JSON.stringify(normalizedManifest, null, 2)}\n`;
-
-  if (normalizedContent !== content) {
-    await writeFile(join(target, 'package.json'), normalizedContent);
-  }
-
-  return target;
-}
-
-function normalizePackageDirectoryName(value) {
-  return String(value)
-    .replace(/^@/, '')
-    .replace(/[^A-Za-z0-9._-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 80)
-    || 'package';
 }
 
 function resolveLocalPath(projectFixtureDir, value, originalSpec) {

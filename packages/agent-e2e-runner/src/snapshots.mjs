@@ -1,76 +1,104 @@
-import { mkdir, readdir, rm, writeFile } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
-import { decodeChangedFile } from './project-files.mjs';
+import { lstat, mkdir, readdir, rm } from 'node:fs/promises';
+import { join } from 'node:path';
+import { reportFileName, writeReportFile } from './report-document.mjs';
 
-export function buildSnapshotTurns(turns) {
-  return turns.map((turn, index) => ({
-    id: turn.id,
-    source: turn.source,
-    snapshotDir: turnSnapshotDirName(index),
-    prompt: turn.prompt,
-    activity: turn.activity ?? [],
-    changes: turn.changes,
-    response: turn.response,
-  }));
+const legacySnapshotFileNames = new Set([
+  'turns.json',
+  'changes.json',
+  'metadata.json',
+  'judgment.json',
+  'generated-files.json',
+  'files',
+]);
+const legacyTurnEntryPattern = /^turn-\d+$/u;
+
+export async function writeScenarioSnapshot({
+  scenarioDir,
+  snapshotDirName,
+  report,
+}) {
+  validateSnapshotDirectoryName(snapshotDirName);
+
+  const snapshotDir = join(scenarioDir, snapshotDirName);
+  const snapshotPath = join(snapshotDir, reportFileName);
+  const snapshot = structuredClone(report);
+
+  snapshot.revision = 1;
+  snapshot.stage = 'complete';
+  snapshot.inspect = {};
+
+  await ensureSnapshotDirectory(snapshotDir);
+  const legacyEntries = await findLegacySnapshotEntries(snapshotDir);
+  await writeReportFile(snapshotPath, snapshot);
+  await removeLegacySnapshotEntries(snapshotDir, legacyEntries);
+
+  return snapshotPath;
 }
 
-export function turnSnapshotDirName(index) {
-  return `turn-${String(index + 1).padStart(2, '0')}`;
+export function validateSnapshotDirectoryName(value, label = 'snapshotDirName') {
+  if (
+    typeof value !== 'string'
+    || value.length === 0
+    || value === '.'
+    || value === '..'
+    || value.includes('/')
+    || value.includes('\\')
+    || value.includes('\0')
+  ) {
+    throw new Error(`${label} must be a directory name, got ${JSON.stringify(value)}.`);
+  }
+
+  return value;
 }
 
-export async function writeChangedFileTree(root, files) {
-  await rm(root, { recursive: true, force: true });
-  await mkdir(root, { recursive: true });
+async function ensureSnapshotDirectory(snapshotDir) {
+  let stats;
 
-  for (const file of files) {
-    if (file.status === 'deleted') {
-      continue;
+  try {
+    stats = await lstat(snapshotDir);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') {
+      throw error;
     }
 
-    const target = join(root, file.path);
+    await mkdir(snapshotDir, { recursive: true });
+    stats = await lstat(snapshotDir);
+  }
 
-    await mkdir(dirname(target), { recursive: true });
-    await writeFile(target, decodeChangedFile(file));
+  if (stats.isSymbolicLink()) {
+    throw new Error(`Snapshot directory must not be a symbolic link: ${snapshotDir}`);
+  }
+
+  if (!stats.isDirectory()) {
+    throw new Error(`Snapshot path must be a directory: ${snapshotDir}`);
   }
 }
 
-export async function writeSnapshotTurns(snapshotDir, turns) {
-  const snapshotTurns = buildSnapshotTurns(turns);
+async function findLegacySnapshotEntries(snapshotDir) {
+  const entries = await readdir(snapshotDir, { withFileTypes: true });
+  const unknownEntries = entries.filter(
+    (entry) => entry.name !== reportFileName && !isLegacySnapshotEntry(entry.name),
+  );
 
-  await removeOldTurnDirs(snapshotDir);
-  await writeFile(join(snapshotDir, 'turns.json'), `${JSON.stringify(snapshotTurns, null, 2)}\n`);
+  if (unknownEntries.length > 0) {
+    const names = unknownEntries.map((entry) => entry.name).sort().join(', ');
 
-  for (const turn of snapshotTurns) {
-    const turnDir = join(snapshotDir, turn.snapshotDir);
-
-    await mkdir(turnDir, { recursive: true });
-    await writeFile(join(turnDir, 'turn.json'), `${JSON.stringify(turn, null, 2)}\n`);
-    await writeFile(join(turnDir, 'request.txt'), `${turn.prompt.trim()}\n`);
-    await writeFile(join(turnDir, 'response.txt'), `${turn.response.trim()}\n`);
-    await writeFile(
-      join(turnDir, 'activity.json'),
-      `${JSON.stringify(turn.activity, null, 2)}\n`,
+    throw new Error(
+      `Snapshot directory contains unknown entries; refusing to remove them: ${names}`,
     );
-    await writeFile(
-      join(turnDir, 'changes.json'),
-      `${JSON.stringify(turn.changes, null, 2)}\n`,
-    );
-    await writeChangedFileTree(join(turnDir, 'files'), turn.changes);
   }
 
-  return snapshotTurns;
+  return entries
+    .filter((entry) => isLegacySnapshotEntry(entry.name))
+    .map((entry) => entry.name);
 }
 
-async function removeOldTurnDirs(snapshotDir) {
-  const entries = await readdir(snapshotDir, { withFileTypes: true }).catch((error) => {
-    if (error.code === 'ENOENT') {
-      return [];
-    }
+function isLegacySnapshotEntry(name) {
+  return legacySnapshotFileNames.has(name) || legacyTurnEntryPattern.test(name);
+}
 
-    throw error;
-  });
-
-  await Promise.all(entries
-    .filter((entry) => entry.isDirectory() && /^turn-\d+$/.test(entry.name))
-    .map((entry) => rm(join(snapshotDir, entry.name), { recursive: true, force: true })));
+async function removeLegacySnapshotEntries(snapshotDir, entries) {
+  await Promise.all(entries.map(
+    (entry) => rm(join(snapshotDir, entry), { recursive: true, force: true }),
+  ));
 }

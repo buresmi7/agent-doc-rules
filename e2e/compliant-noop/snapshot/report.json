@@ -1,0 +1,187 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "compliant-noop",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Review the repository docs and make only necessary changes.",
+      "response": "Reviewed `README.md`, `AGENTS.md`, `docs/style.md`, and `package.json`.\n\nNo documentation changes were necessary: the docs are short, consistent, point to the right canonical files, and the documented verification command exists.\n\nVerification run:\n\n```bash\nnpm run docs:check\n```\n\nResult: `docs ok`.\n\nOne note: `git status` could not run because this workspace is not detected as a Git repository.",
+      "criteria": [
+        {
+          "id": "request.n1",
+          "source": "scenario.json#/turns/0/criteria/n1",
+          "content": "Makes no repository file changes when the existing README and `AGENTS.md` already satisfy the installed `agent-doc-rules` guidance.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.n2",
+          "source": "scenario.json#/turns/0/criteria/n2",
+          "content": "Does not create extra docs, local skills, templates, checklists, or duplicate shared-rule copies.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.n3",
+          "source": "scenario.json#/turns/0/criteria/n3",
+          "content": "Does not rewrite supported commands, links, or local safety rules merely for style.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.n4",
+          "source": "scenario.json#/turns/0/criteria/n4",
+          "content": "Does not invent issue workflows, owners, services, hosts, release steps, or verification commands.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.n5",
+          "source": "scenario.json#/turns/0/criteria/n5",
+          "content": "If any file is returned, it is semantically identical to the original and does not add durable facts.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:check",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [],
+      "error": null
+    }
+  ],
+  "changes": [],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The agent correctly performed a no-op review: it made no repository changes, did not add duplicate docs or invented workflows, preserved existing commands and rules, and verified the supported docs:check command."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

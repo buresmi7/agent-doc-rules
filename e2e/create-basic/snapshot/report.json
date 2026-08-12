@@ -1,0 +1,278 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "create-basic",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Create a short root `AGENTS.md` for this repository.",
+      "response": "Created [AGENTS.md](<project>/AGENTS.md) at the repo root.\n\nIt includes the project orientation, required `Shared Rules` link, local rules, source-of-truth pointers, and verification guidance.\n\nVerification: `npm test` passed, with Node reporting 0 tests.",
+      "criteria": [
+        {
+          "id": "request.c1",
+          "source": "scenario.json#/turns/0/criteria/c1",
+          "content": "Creates a complete root `AGENTS.md` for Acme Status Bot.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c2",
+          "source": "scenario.json#/turns/0/criteria/c2",
+          "content": "Includes a shared-rules or skill-reference section that points to the installed `agent-doc-rules` guidance, including `.agents/skills/agent-doc-rules/references/agents-rules.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c3",
+          "source": "scenario.json#/turns/0/criteria/c3",
+          "content": "Includes local rules from the project README: English persisted artifacts, read-only first phase, and no secrets/customer identifiers.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c4",
+          "source": "scenario.json#/turns/0/criteria/c4",
+          "content": "Includes source-of-truth guidance for `README.md`, `docs/runbooks/`, and `docs/decisions/`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c5",
+          "source": "scenario.json#/turns/0/criteria/c5",
+          "content": "Includes verification guidance for `npm test` and documenting residual risk when tests cannot run.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c6",
+          "source": "scenario.json#/turns/0/criteria/c6",
+          "content": "Does not copy the full shared rules into the project `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c7",
+          "source": "scenario.json#/turns/0/criteria/c7",
+          "content": "Does not invent tools, cloud providers, issue workflows, optional skills, Notion usage, worktrees, or task-manager commands.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c8",
+          "source": "scenario.json#/turns/0/criteria/c8",
+          "content": "Is concise and suitable as always-loaded agent instructions.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 828
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,26 @@",
+              "+# Acme Status Bot - AI Agent Instructions",
+              "+",
+              "+Acme Status Bot is a small internal service that reads public status feeds and",
+              "+creates a daily Markdown summary for operators.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Persisted project artifacts are written in English.",
+              "+- The first implementation phase is read-only.",
+              "+- Do not store API tokens, status feed credentials, or customer identifiers in",
+              "+  the repository.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- Product behavior lives in [README.md](README.md).",
+              "+- Operational procedures live in `docs/runbooks/`.",
+              "+- Architecture decisions live in `docs/decisions/`.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` before publishing documentation or template changes.",
+              "+- If tests cannot run, document the reason and remaining risk."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 828
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,26 @@",
+          "+# Acme Status Bot - AI Agent Instructions",
+          "+",
+          "+Acme Status Bot is a small internal service that reads public status feeds and",
+          "+creates a daily Markdown summary for operators.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Persisted project artifacts are written in English.",
+          "+- The first implementation phase is read-only.",
+          "+- Do not store API tokens, status feed credentials, or customer identifiers in",
+          "+  the repository.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- Product behavior lives in [README.md](README.md).",
+          "+- Operational procedures live in `docs/runbooks/`.",
+          "+- Architecture decisions live in `docs/decisions/`.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` before publishing documentation or template changes.",
+          "+- If tests cannot run, document the reason and remaining risk."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The created root AGENTS.md is concise, links to the installed shared rules path, includes all README-derived local rules, source-of-truth guidance, and verification guidance, and does not copy shared rules or invent unsupported workflows."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

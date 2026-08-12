@@ -6,6 +6,7 @@ live in the package changelogs:
 
 - [`@buresmi7/agent-doc-rules-skill`](packages/agent-doc-rules-skill/CHANGELOG.md)
 - [`@buresmi7/agent-e2e-runner`](packages/agent-e2e-runner/CHANGELOG.md)
+- [`@buresmi7/agent-e2e-report`](packages/agent-e2e-report/CHANGELOG.md)
 - [`@buresmi7/agent-doc-rules-docs-validator`](packages/docs-validator/CHANGELOG.md)
 - [`@buresmi7/agent-doc-rules-docs-duplicates`](packages/docs-duplicates/CHANGELOG.md)
 
