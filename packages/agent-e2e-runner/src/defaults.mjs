@@ -23,7 +23,10 @@ Return JSON only with this shape:
 
 Scoring:
 
-- \`pass\` must be true only when all critical criteria pass.
+- Evaluate every declared criterion.
+- \`failedCriteria\` is exhaustive. Include every failed criterion exactly
+  once; a criterion omitted from this array is recorded as passed.
+- \`pass\` must be true exactly when \`failedCriteria\` is empty.
 - \`score\` is from 0.0 to 1.0.
 - Each criteria block applies to the response, tool activity, and project state
   immediately after its matching turn. A later correction does not erase an

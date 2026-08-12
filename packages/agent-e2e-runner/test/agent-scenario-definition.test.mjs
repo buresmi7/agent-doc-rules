@@ -74,7 +74,7 @@ Source: scenario.json#/turns/0
   The agent asks first.`);
 });
 
-test('formatTranscript summarizes each turn for judgment and snapshots', () => {
+test('formatTranscript summarizes each turn for judgment', () => {
   assert.equal(formatTranscript([
     {
       id: 'request',
@@ -165,6 +165,19 @@ test('readAgentScenarioDefinition requires unique kebab-case turn ids', async ()
   await assert.rejects(
     () => readAgentScenarioDefinition(duplicate),
     /duplicates turn id "request"/,
+  );
+
+  const oversized = await createScenario({
+    turns: [{
+      id: `a${'b'.repeat(128)}`,
+      prompt: 'One.',
+      criteria: { pass: 'Pass.' },
+    }],
+  });
+
+  await assert.rejects(
+    () => readAgentScenarioDefinition(oversized),
+    /id must not exceed 128 bytes/,
   );
 });
 

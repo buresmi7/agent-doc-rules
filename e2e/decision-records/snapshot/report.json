@@ -1,0 +1,411 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "decision-records",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "We accepted the in-memory CSV exporter for the pilot even though a streaming exporter would be cleaner long term. Please update the repo so future maintainers do not mistake that choice for an accident.",
+      "response": "Added a durable decision record for the pilot exporter choice at [docs/decisions/in-memory-csv-exporter.md](<project>/docs/decisions/in-memory-csv-exporter.md:1). It records the accepted in-memory CSV exporter, the streaming trade-off, consequences, affected surfaces, and revisit triggers.\n\nUpdated [docs/export-format.md](<project>/docs/export-format.md:6) to link back to that decision so maintainers find the rationale from the export docs.\n\nVerification: `npm test` passed, with the current repo containing 0 test files. Git status was not available because the mounted `.git` metadata is not a usable repository in this workspace.",
+      "criteria": [
+        {
+          "id": "request.c1",
+          "source": "scenario.json#/turns/0/criteria/c1",
+          "content": "Creates or updates a durable decision record under `docs/decisions/` or an existing clear decision-log location.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c2",
+          "source": "scenario.json#/turns/0/criteria/c2",
+          "content": "The record captures the accepted in-memory CSV exporter shortcut with status, date or date placeholder, context, decision, trade-off, consequences, affected surfaces, backlinks, and revisit conditions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c3",
+          "source": "scenario.json#/turns/0/criteria/c3",
+          "content": "Links the decision record from an affected surface such as `docs/export-format.md` or `src/exporter.js`; a decision index alone is not enough.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c4",
+          "source": "scenario.json#/turns/0/criteria/c4",
+          "content": "Presents the decision as revisitable context, not permanent law, and does not blame the user or team for accepting the compromise.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.c5",
+          "source": "scenario.json#/turns/0/criteria/c5",
+          "content": "Keeps unrelated project facts intact and does not invent commands, issue workflows, hosting details, or data fields.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "cat",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "docs/decisions/in-memory-csv-exporter.md",
+              "kind": "add"
+            },
+            {
+              "path": "docs/export-format.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "ls",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "nl",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "nl",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "docs/decisions/in-memory-csv-exporter.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 1099
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/docs/decisions/in-memory-csv-exporter.md",
+              "@@ -0,0 +1,40 @@",
+              "+# Decision: In-Memory CSV Exporter For Pilot",
+              "+",
+              "+Status: Accepted",
+              "+Date: 2026-07-16",
+              "+",
+              "+## Context",
+              "+",
+              "+The first internal pilot exports small invoice datasets. A streaming exporter",
+              "+would scale better and avoid holding the whole CSV output in memory, but it is",
+              "+not required for the current pilot data size.",
+              "+",
+              "+## Decision",
+              "+",
+              "+Use the simpler in-memory CSV exporter for the pilot.",
+              "+",
+              "+## Trade-Off",
+              "+",
+              "+This defers the cleaner streaming design and accepts that export memory use will",
+              "+grow with the number and size of invoices.",
+              "+",
+              "+## Consequences",
+              "+",
+              "+Future maintainers should treat the in-memory exporter as an intentional pilot",
+              "+choice, not an accidental implementation gap. Do not rely on it for larger",
+              "+datasets without checking memory behavior and export latency.",
+              "+",
+              "+## Applies To",
+              "+",
+              "+- `src/exporter.js`",
+              "+- `docs/export-format.md`",
+              "+",
+              "+## Backlinks",
+              "+",
+              "+- `docs/export-format.md` points readers back to this decision.",
+              "+",
+              "+## Revisit When",
+              "+",
+              "+- Pilot invoice datasets grow beyond the current small batch size.",
+              "+- Export latency or memory use becomes visible to finance users.",
+              "+- The exporter becomes part of an external or automated bulk workflow."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "docs/export-format.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 294
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 431
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/docs/export-format.md",
+              "+++ b/docs/export-format.md",
+              "@@ -5,4 +5,6 @@",
+              " ",
+              " The streaming exporter was deferred for the first internal release. The team",
+              " accepted the simpler in-memory implementation for now because invoices are",
+              "-small in the current pilot dataset.",
+              "+small in the current pilot dataset. See",
+              "+[`docs/decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md)",
+              "+for the accepted trade-off and revisit conditions."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "docs/decisions/in-memory-csv-exporter.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 1099
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/docs/decisions/in-memory-csv-exporter.md",
+          "@@ -0,0 +1,40 @@",
+          "+# Decision: In-Memory CSV Exporter For Pilot",
+          "+",
+          "+Status: Accepted",
+          "+Date: 2026-07-16",
+          "+",
+          "+## Context",
+          "+",
+          "+The first internal pilot exports small invoice datasets. A streaming exporter",
+          "+would scale better and avoid holding the whole CSV output in memory, but it is",
+          "+not required for the current pilot data size.",
+          "+",
+          "+## Decision",
+          "+",
+          "+Use the simpler in-memory CSV exporter for the pilot.",
+          "+",
+          "+## Trade-Off",
+          "+",
+          "+This defers the cleaner streaming design and accepts that export memory use will",
+          "+grow with the number and size of invoices.",
+          "+",
+          "+## Consequences",
+          "+",
+          "+Future maintainers should treat the in-memory exporter as an intentional pilot",
+          "+choice, not an accidental implementation gap. Do not rely on it for larger",
+          "+datasets without checking memory behavior and export latency.",
+          "+",
+          "+## Applies To",
+          "+",
+          "+- `src/exporter.js`",
+          "+- `docs/export-format.md`",
+          "+",
+          "+## Backlinks",
+          "+",
+          "+- `docs/export-format.md` points readers back to this decision.",
+          "+",
+          "+## Revisit When",
+          "+",
+          "+- Pilot invoice datasets grow beyond the current small batch size.",
+          "+- Export latency or memory use becomes visible to finance users.",
+          "+- The exporter becomes part of an external or automated bulk workflow."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "docs/export-format.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 294
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 431
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/docs/export-format.md",
+          "+++ b/docs/export-format.md",
+          "@@ -5,4 +5,6 @@",
+          " ",
+          " The streaming exporter was deferred for the first internal release. The team",
+          " accepted the simpler in-memory implementation for now because invoices are",
+          "-small in the current pilot dataset.",
+          "+small in the current pilot dataset. See",
+          "+[`docs/decisions/in-memory-csv-exporter.md`](decisions/in-memory-csv-exporter.md)",
+          "+for the accepted trade-off and revisit conditions."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The session created a durable decision record under docs/decisions, captured the accepted in-memory CSV exporter shortcut with status, date, context, decision, trade-off, consequences, affected surfaces, backlinks, and revisit conditions, and linked it from docs/export-format.md. The language frames the choice as revisitable context without blame and does not introduce unsupported project facts or workflows."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

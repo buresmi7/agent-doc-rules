@@ -9,15 +9,16 @@ Start with the runner output:
 
 - `output:` points to the retained run directory.
 - Agent scenarios also print `score`, failed criteria, `fix:` lines, and
-  `summary:` after the runner sends generated output to the judge.
+  `report:` for the canonical JSON record.
 - Command scenarios print the command, actual exit code, failed expectations,
   stdout, and stderr.
 
-For agent scenarios, open `failure-summary.json` first. It lists generated file
-changes, the actual conversation, judge notes, failed criteria, turn summaries,
-and the maintainer docs to use for triage. Then inspect `project/` inside the
-same output directory to see the generated repository state. For command
-scenarios, inspect `project/` and compare the runner output with `scenario.json`.
+For agent scenarios, drop `report.json` into the
+[static report viewer](../packages/agent-e2e-report-viewer/README.md). It places
+the conversation and expectations beside the project diff from every completed
+or interrupted turn. Inspect `project/` for the full generated repository
+state. For command scenarios, inspect `project/` and compare the runner output
+with `scenario.json`.
 
 ## Classify The Failure
 
@@ -88,4 +89,4 @@ UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
 Review snapshot diffs before committing. A snapshot records an example passing
-run; the criteria remain the authority.
+run in one `snapshot/report.json`; the criteria remain the authority.

@@ -24,21 +24,7 @@ e2e/<scenario>/
     README.md
   scenario.json
   snapshot/
-    turn-01/
-      files/
-        AGENTS.md
-        README.md
-        docs/
-          ...
-      request.txt
-      response.txt
-      activity.json
-      changes.json
-      turn.json
-    turns.json
-    changes.json
-    judgment.json
-    metadata.json
+    report.json
 ```
 
 The config stores prompts and criteria in conversation order:
@@ -116,9 +102,11 @@ corepack pnpm run test:e2e-command
 ```
 
 When a scenario fails, the runner leaves its run directory in place under
-`<scenario>/.agent-e2e-output/`. Agent scenarios also write
-`failure-summary.json` at the output root. Read that summary first, then
-inspect `project/` inside the same directory. Use
+`<scenario>/.agent-e2e-output/`. Agent runs checkpoint `report.json` throughout
+setup and before and after each conversation turn. Drop that file into the
+[static report viewer](../packages/agent-e2e-report-viewer/README.md), then
+inspect `project/` inside the run directory when the full final file is useful.
+Use
 [E2E Failure Triage](../docs/e2e-failure-triage.md) and
 [E2E Rule Matrix](../docs/e2e-rule-matrix.md) before changing rules or
 criteria.
@@ -127,18 +115,11 @@ criteria.
 golden assertion because wording can vary between models and Codex versions.
 The real pass/fail decision comes from the criteria and judge step.
 
-Each agent turn gets a numbered directory such as `snapshot/turn-01/` with that
-turn's request, actual agent response, safe tool-activity summary, and file
-changes. When a turn creates or changes files, the same directory also contains
-a `files/` tree. Turns with no file changes record an empty `changes.json`;
-their empty `files/` directory may exist after a local refresh, but Git does not
-preserve it. This applies when the scenario has only one turn too.
-
-The top-level `changes.json` stores the final file diff as structured data,
-`turns.json` indexes every turn and its snapshot directory,
-`judgment.json` stores the judge result, and `metadata.json` stores the runner,
-agent model, reasoning effort, CLI version, and `skills` CLI version used for
-the snapshot refresh.
+Each agent snapshot is one `snapshot/report.json` document. It contains the
+scenario prompts and criteria, every agent response, concise tool activity,
+per-turn unified diffs, the final diff, the judgment, and runner metadata. This
+is the same versioned format used for a retained run's `report.json`; see the
+[report format](../packages/agent-e2e-report/docs/report-format.md).
 
 Refresh snapshots from a passing run with:
 
@@ -147,8 +128,9 @@ UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent
 ```
 
 The root `test:agent` script runs up to two scenario projects concurrently.
-Projects, Codex homes, skill installer caches, and snapshot directories are
-isolated per run. Package managers may share their normal cache or store. Use
+Projects, Codex homes, and output directories are isolated per run. Package
+managers and the skill installer may share their normal cache or store. Do not
+refresh the same scenario snapshot concurrently. Use
 workspace concurrency one in constrained CI environments
 or when the Codex account hits rate limits:
 

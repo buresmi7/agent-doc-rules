@@ -1,3 +1,5 @@
 packages:
   - "packages/*"
   - "e2e/*/project"
+allowBuilds:
+  esbuild: true

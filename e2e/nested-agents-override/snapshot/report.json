@@ -1,0 +1,392 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "nested-agents-override",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Create concise agent instructions for this repository. Keep directory-specific rules near the directory they govern.",
+      "response": "Created concise agent instructions:\n\n- [AGENTS.md](<project>/AGENTS.md): root workspace orientation, shared rule link, source-of-truth routing, broad verification.\n- [packages/importer/AGENTS.md](<project>/packages/importer/AGENTS.md): importer-specific schema, anonymity, safety, and test rules.\n\nVerification passed:\n\n```bash\nnpm test\nnpm run test:importer\n```\n\nNote: `git status` was not available because this workspace path is not currently inside a Git repository.",
+      "criteria": [
+        {
+          "id": "request.o1",
+          "source": "scenario.json#/turns/0/criteria/o1",
+          "content": "Creates a concise root `AGENTS.md` for the workspace.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.o2",
+          "source": "scenario.json#/turns/0/criteria/o2",
+          "content": "Creates `packages/importer/AGENTS.md` for importer-only rules instead of placing all importer details in the root file.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.o3",
+          "source": "scenario.json#/turns/0/criteria/o3",
+          "content": "The root `AGENTS.md` links to installed `agent-doc-rules` guidance and points to the nested importer instructions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.o4",
+          "source": "scenario.json#/turns/0/criteria/o4",
+          "content": "The nested file preserves supported importer facts: read `packages/importer/docs/schema.md`, keep samples anonymous, and use the importer-specific test command when importer behavior changes.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.o5",
+          "source": "scenario.json#/turns/0/criteria/o5",
+          "content": "Does not create unrelated docs or task-specific skills.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.o6",
+          "source": "scenario.json#/turns/0/criteria/o6",
+          "content": "Does not invent package names, services, owners, hosts, issue workflows, or commands beyond the provided project files.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            },
+            {
+              "path": "packages/importer/AGENTS.md",
+              "kind": "add"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run test:importer",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 1000
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,29 @@",
+              "+# Beacon Workspace - AI Agent Instructions",
+              "+",
+              "+Beacon Workspace is a private Node workspace with a small API notes package and",
+              "+a CSV importer package.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Keep package-specific instructions beside the package they govern.",
+              "+- Before editing `packages/importer/`, read `packages/importer/AGENTS.md`.",
+              "+- Do not commit secrets, private host names, real partner data, or account IDs",
+              "+  in docs, examples, or fixtures.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- `README.md` describes the workspace and package layout.",
+              "+- `packages/api/README.md` describes the API notes package.",
+              "+- `packages/importer/README.md` describes importer behavior.",
+              "+- `packages/importer/docs/schema.md` defines importer input columns and output",
+              "+  fields.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` from the workspace root before finishing broad workspace",
+              "+  changes.",
+              "+- If a relevant check cannot run, say why and note what risk remains."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "packages/importer/AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 562
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/packages/importer/AGENTS.md",
+              "@@ -0,0 +1,17 @@",
+              "+# Beacon Importer - AI Agent Instructions",
+              "+",
+              "+Beacon Importer converts partner CSV files into normalized JSON records.",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Read `packages/importer/docs/schema.md` before changing parser output.",
+              "+- Keep sample rows anonymous.",
+              "+- Do not add real partner data, account IDs, private host names, or secrets to",
+              "+  importer docs, examples, or fixtures.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm run test:importer` from the workspace root before finishing importer",
+              "+  behavior changes.",
+              "+- If the check cannot run, say why and note what importer behavior remains",
+              "+  unverified."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 1000
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,29 @@",
+          "+# Beacon Workspace - AI Agent Instructions",
+          "+",
+          "+Beacon Workspace is a private Node workspace with a small API notes package and",
+          "+a CSV importer package.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Keep package-specific instructions beside the package they govern.",
+          "+- Before editing `packages/importer/`, read `packages/importer/AGENTS.md`.",
+          "+- Do not commit secrets, private host names, real partner data, or account IDs",
+          "+  in docs, examples, or fixtures.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- `README.md` describes the workspace and package layout.",
+          "+- `packages/api/README.md` describes the API notes package.",
+          "+- `packages/importer/README.md` describes importer behavior.",
+          "+- `packages/importer/docs/schema.md` defines importer input columns and output",
+          "+  fields.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` from the workspace root before finishing broad workspace",
+          "+  changes.",
+          "+- If a relevant check cannot run, say why and note what risk remains."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "packages/importer/AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 562
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/packages/importer/AGENTS.md",
+          "@@ -0,0 +1,17 @@",
+          "+# Beacon Importer - AI Agent Instructions",
+          "+",
+          "+Beacon Importer converts partner CSV files into normalized JSON records.",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Read `packages/importer/docs/schema.md` before changing parser output.",
+          "+- Keep sample rows anonymous.",
+          "+- Do not add real partner data, account IDs, private host names, or secrets to",
+          "+  importer docs, examples, or fixtures.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm run test:importer` from the workspace root before finishing importer",
+          "+  behavior changes.",
+          "+- If the check cannot run, say why and note what importer behavior remains",
+          "+  unverified."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The output creates concise root and importer-specific AGENTS.md files, links shared guidance and nested rules, preserves supported importer facts and test command, avoids unrelated docs, and does not introduce unsupported workflows or package/service facts."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

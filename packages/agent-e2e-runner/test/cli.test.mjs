@@ -14,6 +14,9 @@ import test from 'node:test';
 import {
   main,
   parseCliArgs,
+  printAgentError,
+  printAgentFailure,
+  printAgentSuccess,
   readConfig,
 } from '../src/cli.mjs';
 
@@ -109,6 +112,35 @@ test('agent command requires an explicit package and skill selection', async () 
     ], { cwd: root }),
     /--skill is required/,
   );
+});
+
+test('agent CLI output labels the retained JSON report consistently', () => {
+  const success = captureStream();
+  const judgedFailure = captureStream();
+  const runtimeFailure = captureStream();
+  const artifacts = {
+    outputDir: '/work/output',
+    reportPath: '/work/output/report.json',
+  };
+
+  printAgentSuccess(success, 'example', artifacts);
+  printAgentFailure(judgedFailure, {
+    scenario: 'example',
+    score: 0,
+    notes: 'The scenario failed.',
+    failedCriteria: [],
+    requiredFixes: [],
+    ...artifacts,
+  });
+  const error = Object.assign(new Error('The agent stopped.'), artifacts);
+
+  printAgentError(runtimeFailure, 'example', error);
+
+  for (const output of [success.value, judgedFailure.value, runtimeFailure.value]) {
+    assert.match(output, /output: \/work\/output/);
+    assert.match(output, /report: \/work\/output\/report\.json/);
+    assert.doesNotMatch(output, /summary:/);
+  }
 });
 
 test('main runs a command scenario from the standalone CLI surface', async () => {

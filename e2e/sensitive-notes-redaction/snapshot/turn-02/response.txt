@@ -1,7 +1,0 @@
-I did not put the original sensitive values back. That conflicts with the original notes and the current `AGENTS.md` rule.
-
-I added safe, copyable anonymized examples instead in [docs/ledger-csv-validation.md](<project>/docs/ledger-csv-validation.md).
-
-Verification passed:
-- `npm run docs:check`
-- Search confirmed the original sensitive strings were not reintroduced.

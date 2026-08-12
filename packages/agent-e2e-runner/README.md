@@ -26,14 +26,15 @@ need npm registry access.
 
 For each agent scenario, the runner:
 
-1. checks that `--skill-package` names a dependency in `project/package.json`;
+1. validates the scenario, Codex runtime, and selected skill package;
 2. copies `project/` to an isolated run directory without `node_modules`;
 3. installs the isolated project's dependencies;
 4. installs an isolated copy of the selected skill with `skills add --copy`;
 5. starts Codex with write access limited to that project;
 6. sends every prompt in `scenario.json.turns` to the same Codex session;
-7. records each agent response, completed tool activity, and the file changes
-   from that turn;
+7. atomically checkpoints `report.json` during setup and before and after each
+   turn with the prompt, criteria, available response, concise tool activity,
+   and unified file diff;
 8. asks a separate read-only Codex run to judge that evidence and the final
    project against the named criteria beside each prompt.
 
@@ -160,9 +161,10 @@ that turn:
 
 Array order is conversation order. Each turn requires a unique kebab-case `id`,
 a non-empty `prompt`, and at least one criterion. Criterion keys must also use
-kebab-case, and their values must be non-empty strings. A one-turn test uses the
-same shape with one array item. Criteria apply to the response, activity, and
-project state immediately after their turn.
+kebab-case. Turn IDs and criterion keys are limited to 128 bytes. Criterion
+values must be non-empty strings. A one-turn test uses the same shape with one
+array item. Criteria apply to the response, activity, and project state
+immediately after their turn.
 
 Write prompts as normal user messages. Do not tell the agent which skill to use
 or describe the test. Write criteria against visible behavior and repository
@@ -206,8 +208,12 @@ npm --prefix e2e/readme-confirmation/project run test:agent
 ```
 
 A judged failure prints the failed criterion IDs and retains its inspection
-artifacts. Setup and runtime errors print the available error context but may
-occur before a transcript or judgment exists. To record a passing run:
+artifacts. Drop `report.json` into the
+[static report viewer](../agent-e2e-report-viewer/README.md) to inspect the
+conversation, expectations, activity, and project diffs. The runner checkpoints
+the JSON throughout setup and the conversation. If a later turn fails, the
+report keeps every completed earlier turn and marks the active turn as
+incomplete when it can capture that state. To record a passing run:
 
 ```bash
 UPDATE_AGENT_SNAPSHOTS=1 npm --prefix e2e/readme-confirmation/project run test:agent
@@ -235,6 +241,14 @@ unless `--keep-output` or `KEEP_TEST_OUTPUT=1` is set. Failed runs stay in
 place. The runner adds an ignore file to the default output root so retained
 runs do not appear in Git status.
 
+The runner checkpoints `report.json` during every passing run. Normal passing
+cleanup removes that run directory; `--keep-output` retains the report, while
+`--update-snapshots` copies the completed document to `snapshot/report.json`.
+
+Failures that happen before an output directory can be created, such as CLI
+argument errors or a config module that cannot be loaded, are printed by the
+CLI and cannot produce `report.json`.
+
 Use `--output-root <dir>` or `AGENT_E2E_OUTPUT_ROOT` to store run directories
 elsewhere, such as a CI artifact directory. Relative paths resolve from the
 current working directory. The output root must be outside the fixture project.
@@ -243,15 +257,20 @@ next to the fixture to avoid copying a run into itself.
 
 Each run contains a private root manifest and workspace file so dependency
 installation stays inside the run rather than joining a parent workspace.
-Agent failures also retain `failure-summary.json`, `project/`, the Codex event
-log, and judge output.
+`report.json` is the canonical record for passing, failed, and interrupted
+agent runs. Failed runs also retain `project/`, the Codex event log, and judge
+output. Retained artifacts can contain sensitive test data. See
+[Scenario Record And Report](docs/architecture.md#scenario-record-and-report)
+for checkpoint behavior, data safeguards, and snapshot storage. See the
+[report format](../agent-e2e-report/docs/report-format.md) for the JSON field
+contract.
 
 ## Parallel Runs
 
 One CLI invocation runs one scenario. Run independent invocations concurrently
-through your test runner or workspace. Projects, Codex homes, skill installer
-caches, and output directories are isolated per run. Package
-managers may share their normal cache or store. Keep the turns within one
+through your test runner or workspace. Projects, Codex homes, and output
+directories are isolated per run. Package managers and the skill installer may
+share their normal cache or store. Keep the turns within one
 scenario sequential, and start with a concurrency limit of two to avoid API
 rate limits. For example, a pnpm workspace can use:
 
@@ -270,8 +289,8 @@ not the skill under test. A `skill` entry in this file is rejected:
 | `judgePrompt` | Optional custom judge prompt template. |
 | `passThreshold` | Minimum judge score; defaults to `0.8`. |
 | `tempPrefix` | Prefix for unique run directory names. |
-| `projectFileOptions` | Judge evidence selection and ignored paths. |
-| `inspectLinks` | Extra paths written into failure summaries. |
+| `projectFileOptions` | Judge evidence, ignored paths, and report diff limits. |
+| `inspectLinks` | Extra repository-relative report paths; `project` is reserved. |
 
 Custom judge prompts may use:
 
@@ -285,11 +304,20 @@ Custom judge prompts may use:
 tool audit. See [Architecture](docs/architecture.md#evaluation) for the exact
 evidence boundary and retained debugging data.
 
+A custom prompt must tell the judge to evaluate every declared criterion and
+return an exhaustive `failedCriteria` array. The report records every known
+criterion omitted from that array as passed.
+
 `projectFileOptions` supports `evidenceFileNames`, `evidenceFileSuffixes`,
 `evidenceFileExtensions`, `ignoredPaths`, `ignoredPathPrefixes`,
-`ignoredDirectoryNames`, `hiddenPackageScripts`, `maxEvidenceFileBytes`, and
-`maxEvidenceBytes`. Evidence limits fail with a clear error instead of silently
-truncating judge context.
+`ignoredDirectoryNames`, `hiddenPackageScripts`, `maxEvidenceFileBytes`,
+`maxEvidenceBytes`, `maxProjectFiles`, `maxStateFileBytes`, `maxStateFiles`,
+`maxStateBytes`, `maxReportFileBytes`, `maxReportDiffBytes`,
+`maxReportChanges`, and `maxReportPatchBytes`. See
+[Architecture](docs/architecture.md#scenario-record-and-report) for evidence
+and project-state capture behavior. See the
+[report format](../agent-e2e-report/docs/report-format.md#default-limits) for
+report payload defaults and overflow behavior.
 
 ## Command Scenarios
 
@@ -372,8 +400,11 @@ const result = await runAgentScenario({
 
 `runAgentScenario` verifies that `skill.packageName` is a fixture dependency
 and uses its package spec as the source under test. Pass `outputRoot` to place
-run directories outside the scenario.
+run directories outside the scenario. Retained results include `reportPath`
+for `report.json`. Runtime errors expose the same path on the thrown error
+object.
 
 The root export also provides `createCodexSession`, `judgeAgentOutput`,
 `readAgentMetadata`, `readSnapshotDirName`, `main`, `runCommand`, and
-`runCommandScenario`.
+`runCommandScenario`. Validate report documents with the separate
+[`@buresmi7/agent-e2e-report`](../agent-e2e-report/README.md) package.

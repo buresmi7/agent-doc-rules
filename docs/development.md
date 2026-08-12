@@ -120,6 +120,9 @@ independently. The accepted release model is recorded in
 | Check published skill metadata and package links | `corepack pnpm run test:skill` |
 | Check tool package metadata and pack output | `corepack pnpm run test:packages` |
 | Run E2E runner utility tests | `corepack pnpm run test:e2e-tools` |
+| Develop the report viewer | `corepack pnpm run dev:report-viewer` |
+| Build the self-contained report viewer | `corepack pnpm run build:report-viewer` |
+| Test and build the report viewer | `corepack pnpm run test:report-viewer` |
 | Run deterministic prose wording checks | `corepack pnpm run docs:wording` |
 | Run deterministic documentation security checks | `corepack pnpm run docs:security` |
 | Run AI sentence-level style review | `corepack pnpm run docs:style` |
@@ -132,7 +135,7 @@ independently. The accepted release model is recorded in
 | Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
 
 See the [E2E workspace guide](../e2e/README.md) for runner configuration and
-snapshot metadata.
+the single-file agent snapshot format.
 
 ## Repository Map
 
@@ -150,6 +153,8 @@ snapshot metadata.
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`packages/agent-e2e-runner/`](../packages/agent-e2e-runner/) | Reusable CLI and library for agent and command E2E scenarios. |
+| [`packages/agent-e2e-report/`](../packages/agent-e2e-report/) | Public browser-safe contract and validator for `report.json`. |
+| [`packages/agent-e2e-report-viewer/`](../packages/agent-e2e-report-viewer/) | Private static React application for viewing a local report. |
 | [`e2e/`](../e2e/) | Agent and command E2E scenarios for documentation and context placement behavior. |
 | [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | Maintainer workflow for diagnosing failed agent E2E scenarios. |
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |

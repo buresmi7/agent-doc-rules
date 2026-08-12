@@ -1,0 +1,397 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "repair-bloated",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Repair the existing root `AGENTS.md`. Keep the useful project-specific rules, remove copied or invented workflow text, and make it concise.",
+      "response": "Repaired [AGENTS.md](<project>/AGENTS.md:1). It now keeps the README-backed project orientation, English/docs-only constraints, financial-data safety rule, source-of-truth pointers, and verification guidance.\n\nRemoved the copied shared architecture text and unsupported workflow/tool recommendations like Notion, `tm`, private worktrees, and vague “maybe run tests” guidance.\n\nVerification: checked the file for the required `Shared Rules` section and confirmed the removed workflow terms are gone. No Markdown/package check was run because `package.json` defines no scripts, and the available `agent-doc-rules-skill` binary is only an installer.",
+      "criteria": [
+        {
+          "id": "request.r1",
+          "source": "scenario.json#/turns/0/criteria/r1",
+          "content": "Rewrites the existing root `AGENTS.md` into a concise navigation layer.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r2",
+          "source": "scenario.json#/turns/0/criteria/r2",
+          "content": "Preserves project-specific facts from the README: English documentation and commit messages, documentation-only scope, and financial-data secrecy.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r3",
+          "source": "scenario.json#/turns/0/criteria/r3",
+          "content": "Points to installed `agent-doc-rules` guidance, including `.agents/skills/agent-doc-rules/references/agents-rules.md`, instead of copying the shared rules into the project `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r4",
+          "source": "scenario.json#/turns/0/criteria/r4",
+          "content": "Preserves source-of-truth guidance for `README.md` and `docs/decisions/`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r5",
+          "source": "scenario.json#/turns/0/criteria/r5",
+          "content": "Preserves verification guidance for Markdown checks.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r6",
+          "source": "scenario.json#/turns/0/criteria/r6",
+          "content": "Removes the copied shared documentation architecture prose.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r7",
+          "source": "scenario.json#/turns/0/criteria/r7",
+          "content": "Removes Notion, optional skill recommendations, `tm` commands, and worktree/task lifecycle instructions.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r8",
+          "source": "scenario.json#/turns/0/criteria/r8",
+          "content": "Does not invent tools, cloud providers, package managers, or issue workflows.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.r9",
+          "source": "scenario.json#/turns/0/criteria/r9",
+          "content": "Is shorter and clearer than the original `AGENTS.md`.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 129,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "agent-doc-rules-skill",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "ls",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "node -e",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "wc",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 1000
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 853
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/AGENTS.md",
+              "+++ b/AGENTS.md",
+              "@@ -1,32 +1,25 @@",
+              " # Ledger Notes Agent Instructions",
+              " ",
+              "-This repository uses AI agents. The agent should be helpful and should always",
+              "-follow all possible documentation rules.",
+              "-",
+              "-## Full Shared Documentation Architecture Copy",
+              "-",
+              "-Each fact has one canonical home. Other files link to it.",
+              "-",
+              "-If the same rule needs to appear in more than one place, keep the rule in the",
+              "-lowest shared document and link to it from the others.",
+              "-",
+              "-`AGENTS.md` is always-loaded. Nested `AGENTS.md` files are directory-specific.",
+              "-Rules go in `rules/`. References go in `references/`. Templates are reusable",
+              "-issue bodies, comments, prompts, reports, or agent docs. Move detail out when an",
+              "-always-loaded section grows past roughly ten lines. Prefer links over copied",
+              "-text.",
+              "-",
+              "-## Tool Recommendations",
+              "-",
+              "-- Use Notion for knowledge capture.",
+              "-- Use optional Codex skills for README writing.",
+              "-- Use tm new and tm close for task lifecycle.",
+              "-- Use private worktrees for every task.",
+              "-",
+              "-## Local Rules",
+              "-",
+              "-- Never commit secrets.",
+              "-",
+              "-## Commands",
+              "-",
+              "-- Maybe run tests if they exist.",
+              "+Ledger Notes stores Markdown notes for personal bookkeeping experiments. This",
+              "+repository is documentation-only for now.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Write documentation and commit messages in English.",
+              "+- Do not commit bank data, real account numbers, exported statements, tokens, or",
+              "+  screenshots containing financial details.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- `README.md` describes the current project scope and constraints.",
+              "+- `docs/decisions/` stores accepted decisions when that directory exists.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run Markdown checks before release when a checker is available.",
+              "+- No package verification script is currently defined in `package.json`.",
+              "+- If verification is skipped, say why and note the remaining risk."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 1000
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 853
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/AGENTS.md",
+          "+++ b/AGENTS.md",
+          "@@ -1,32 +1,25 @@",
+          " # Ledger Notes Agent Instructions",
+          " ",
+          "-This repository uses AI agents. The agent should be helpful and should always",
+          "-follow all possible documentation rules.",
+          "-",
+          "-## Full Shared Documentation Architecture Copy",
+          "-",
+          "-Each fact has one canonical home. Other files link to it.",
+          "-",
+          "-If the same rule needs to appear in more than one place, keep the rule in the",
+          "-lowest shared document and link to it from the others.",
+          "-",
+          "-`AGENTS.md` is always-loaded. Nested `AGENTS.md` files are directory-specific.",
+          "-Rules go in `rules/`. References go in `references/`. Templates are reusable",
+          "-issue bodies, comments, prompts, reports, or agent docs. Move detail out when an",
+          "-always-loaded section grows past roughly ten lines. Prefer links over copied",
+          "-text.",
+          "-",
+          "-## Tool Recommendations",
+          "-",
+          "-- Use Notion for knowledge capture.",
+          "-- Use optional Codex skills for README writing.",
+          "-- Use tm new and tm close for task lifecycle.",
+          "-- Use private worktrees for every task.",
+          "-",
+          "-## Local Rules",
+          "-",
+          "-- Never commit secrets.",
+          "-",
+          "-## Commands",
+          "-",
+          "-- Maybe run tests if they exist.",
+          "+Ledger Notes stores Markdown notes for personal bookkeeping experiments. This",
+          "+repository is documentation-only for now.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- Follow the shared [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md).",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Write documentation and commit messages in English.",
+          "+- Do not commit bank data, real account numbers, exported statements, tokens, or",
+          "+  screenshots containing financial details.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- `README.md` describes the current project scope and constraints.",
+          "+- `docs/decisions/` stores accepted decisions when that directory exists.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run Markdown checks before release when a checker is available.",
+          "+- No package verification script is currently defined in `package.json`.",
+          "+- If verification is skipped, say why and note the remaining risk."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The final AGENTS.md is concise, routes shared guidance by link, preserves README-backed project constraints, source-of-truth and verification guidance, and removes unsupported copied workflow/tool prose without inventing new workflows."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

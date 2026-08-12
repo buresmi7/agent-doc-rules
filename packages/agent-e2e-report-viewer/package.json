@@ -1,0 +1,25 @@
+{
+  "name": "@buresmi7/agent-e2e-report-viewer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Static browser viewer for agent-e2e report documents",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && node scripts/build-single-file.mjs",
+    "preview": "vite preview",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@buresmi7/agent-e2e-report": "workspace:*",
+    "@mantine/core": "9.5.1",
+    "@mantine/hooks": "9.5.1",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.1.1",
+    "vite": "7.2.4"
+  }
+}

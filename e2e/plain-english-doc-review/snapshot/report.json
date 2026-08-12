@@ -1,0 +1,317 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "plain-english-doc-review",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Improve the README so it is easier for a new contributor to understand.",
+      "response": "Updated [README.md](<project>/README.md) to explain the project plainly, clarify the repository scope, and keep only the supported verification command.\n\nVerified with `npm test`; it passes, though the current test suite contains 0 tests.",
+      "criteria": [
+        {
+          "id": "request.p1",
+          "source": "scenario.json#/turns/0/criteria/p1",
+          "content": "Updates `README.md` while preserving the supported facts: in-memory recent event signals, lookup helper, `npm test`, no deploy script, and no cloud cache.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p2",
+          "source": "scenario.json#/turns/0/criteria/p2",
+          "content": "Replaces generic marketing or AI-style phrasing with direct repository facts.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p3",
+          "source": "scenario.json#/turns/0/criteria/p3",
+          "content": "Removes or avoids words such as robust, comprehensive, ecosystem, seamlessly, empowers, leverage, landscape, holistic, pathway, and navigating when a plainer phrase works.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p4",
+          "source": "scenario.json#/turns/0/criteria/p4",
+          "content": "Keeps the README concise and useful as a human entry point.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p5",
+          "source": "scenario.json#/turns/0/criteria/p5",
+          "content": "Does not invent setup commands, deployment steps, cloud services, architecture, owners, issue workflows, or runtime dependencies.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p6",
+          "source": "scenario.json#/turns/0/criteria/p6",
+          "content": "Does not create unrelated docs or agent skills for this simple rewrite.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.p7",
+          "source": "scenario.json#/turns/0/criteria/p7",
+          "content": "Uses plain English without being told explicitly in the scenario prompt.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "README.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "README.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 784
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 401
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/README.md",
+              "+++ b/README.md",
+              "@@ -1,28 +1,17 @@",
+              " # Signal Cache",
+              " ",
+              "-Signal Cache is a robust and comprehensive data acceleration ecosystem that",
+              "-seamlessly empowers teams to leverage a dynamic cache landscape for event",
+              "-signals.",
+              "-",
+              "-## Overview",
+              "-",
+              "-This repository is designed to unlock a powerful developer experience by",
+              "-providing a holistic pathway for navigating signal hydration in a scalable and",
+              "-future-ready manner.",
+              "-",
+              "-The actual service stores recent event signals in memory and exposes a lookup",
+              "-helper used by tests.",
+              "-",
+              "-## Getting Started",
+              "-",
+              "-In order to get started, it is important to note that contributors should run",
+              "-the following command:",
+              "-",
+              "-```bash",
+              "-npm test",
+              "-```",
+              "-",
+              "-## Additional Information",
+              "-",
+              "-This project does not include a deploy script. It does not connect to a cloud",
+              "-cache. Do not add those details unless the repository adds them first.",
+              "+Signal Cache is a small in-memory cache for recent event signals. The project",
+              "+currently exposes a lookup helper used by tests.",
+              "+",
+              "+## Repository Scope",
+              "+",
+              "+This repository does not include deployment code or a cloud cache integration.",
+              "+Do not document those workflows unless the repository adds them first.",
+              "+",
+              "+## Verification",
+              "+",
+              "+Run the test script from the repository root:",
+              "+",
+              "+```bash",
+              "+npm test",
+              "+```"
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 784
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 401
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/README.md",
+          "+++ b/README.md",
+          "@@ -1,28 +1,17 @@",
+          " # Signal Cache",
+          " ",
+          "-Signal Cache is a robust and comprehensive data acceleration ecosystem that",
+          "-seamlessly empowers teams to leverage a dynamic cache landscape for event",
+          "-signals.",
+          "-",
+          "-## Overview",
+          "-",
+          "-This repository is designed to unlock a powerful developer experience by",
+          "-providing a holistic pathway for navigating signal hydration in a scalable and",
+          "-future-ready manner.",
+          "-",
+          "-The actual service stores recent event signals in memory and exposes a lookup",
+          "-helper used by tests.",
+          "-",
+          "-## Getting Started",
+          "-",
+          "-In order to get started, it is important to note that contributors should run",
+          "-the following command:",
+          "-",
+          "-```bash",
+          "-npm test",
+          "-```",
+          "-",
+          "-## Additional Information",
+          "-",
+          "-This project does not include a deploy script. It does not connect to a cloud",
+          "-cache. Do not add those details unless the repository adds them first.",
+          "+Signal Cache is a small in-memory cache for recent event signals. The project",
+          "+currently exposes a lookup helper used by tests.",
+          "+",
+          "+## Repository Scope",
+          "+",
+          "+This repository does not include deployment code or a cloud cache integration.",
+          "+Do not document those workflows unless the repository adds them first.",
+          "+",
+          "+## Verification",
+          "+",
+          "+Run the test script from the repository root:",
+          "+",
+          "+```bash",
+          "+npm test",
+          "+```"
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The README rewrite preserves the supported project facts, removes generic marketing language, stays concise, documents only npm test, and avoids inventing setup, deployment, cloud, or workflow details."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

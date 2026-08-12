@@ -3,7 +3,7 @@ export const judgeSchema = {
   additionalProperties: false,
   properties: {
     pass: { type: 'boolean' },
-    score: { type: 'number' },
+    score: { type: 'number', minimum: 0, maximum: 1 },
     failedCriteria: {
       type: 'array',
       items: {

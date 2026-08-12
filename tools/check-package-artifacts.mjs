@@ -44,6 +44,17 @@ const packages = [
       'agent-e2e-runner command',
     ],
   },
+  {
+    dir: 'packages/agent-e2e-report',
+    name: '@buresmi7/agent-e2e-report',
+    bin: {},
+    files: ['docs', 'src', 'README.md'],
+    readmeTerms: [
+      '@buresmi7/agent-e2e-report',
+      'report.json',
+      'validateScenarioReport',
+    ],
+  },
 ];
 
 for (const packageInfo of packages) {

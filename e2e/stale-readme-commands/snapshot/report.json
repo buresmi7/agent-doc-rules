@@ -1,0 +1,410 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "stale-readme-commands",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "packages/agent-doc-rules-skill",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Repair the README and create a concise root `AGENTS.md`.",
+      "response": "Updated [README.md](<project>/README.md) to remove unsupported `npm install`, `npm run lint`, and deploy guidance, and keep only the commands present in `package.json`.\n\nCreated a concise root [AGENTS.md](<project>/AGENTS.md) with project orientation, shared-rule links, local documentation rules, source-of-truth pointers, and verification guidance.\n\nVerified:\n- `npm test`\n- `npm run docs:check`\n\nNote: `git status` could not run because this directory is not inside a Git repository.",
+      "criteria": [
+        {
+          "id": "request.t1",
+          "source": "scenario.json#/turns/0/criteria/t1",
+          "content": "Repairs `README.md` so verified commands match `package.json`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.t2",
+          "source": "scenario.json#/turns/0/criteria/t2",
+          "content": "Removes `npm run deploy` and `npm run lint` as supported commands because they are absent from `package.json`.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.t3",
+          "source": "scenario.json#/turns/0/criteria/t3",
+          "content": "Preserves supported commands: `npm test` for tests and `npm run docs:check` for documentation checks.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.t4",
+          "source": "scenario.json#/turns/0/criteria/t4",
+          "content": "Creates a concise root `AGENTS.md` with shared-rule links, source-of-truth guidance, and verification rules.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.t5",
+          "source": "scenario.json#/turns/0/criteria/t5",
+          "content": "Does not invent deployment steps, cloud services, owners, issue workflows, host names, or package scripts.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.t6",
+          "source": "scenario.json#/turns/0/criteria/t6",
+          "content": "Does not create unrelated docs or local skills.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 128,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "test",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "AGENTS.md",
+              "kind": "add"
+            },
+            {
+              "path": "README.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:check",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm test",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [
+        {
+          "path": "AGENTS.md",
+          "status": "created",
+          "before": null,
+          "after": {
+            "kind": "text",
+            "byteLength": 820
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- /dev/null",
+              "+++ b/AGENTS.md",
+              "@@ -0,0 +1,25 @@",
+              "+# Metric Cards - AI Agent Instructions",
+              "+",
+              "+Metric Cards renders Markdown snippets for dashboard metric definitions.",
+              "+",
+              "+## Shared Rules",
+              "+",
+              "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+              "+",
+              "+## Local Rules",
+              "+",
+              "+- Keep project documentation focused on the commands and files visible in this",
+              "+  repository.",
+              "+- Do not add setup, lint, deploy, hosting, or release instructions unless the",
+              "+  supporting command or canonical doc exists.",
+              "+",
+              "+## Source Of Truth",
+              "+",
+              "+- `README.md` is the human entry point and verified command index.",
+              "+- `package.json` is the source of truth for npm scripts.",
+              "+",
+              "+## Verification",
+              "+",
+              "+- Run `npm test` and `npm run docs:check` after documentation changes.",
+              "+- If a check cannot run, report why and state the remaining risk."
+            ]
+          },
+          "omission": null
+        },
+        {
+          "path": "README.md",
+          "status": "modified",
+          "before": {
+            "kind": "text",
+            "byteLength": 281
+          },
+          "after": {
+            "kind": "text",
+            "byteLength": 439
+          },
+          "patch": {
+            "format": "unified",
+            "lines": [
+              "--- a/README.md",
+              "+++ b/README.md",
+              "@@ -2,16 +2,20 @@",
+              " ",
+              " Metric Cards renders Markdown snippets for dashboard metric definitions.",
+              " ",
+              "-## Commands",
+              "-",
+              "-Install dependencies, run checks, and deploy:",
+              "-",
+              "-```bash",
+              "-npm install",
+              "-npm run lint",
+              "-npm test",
+              "-npm run docs:check",
+              "-npm run deploy",
+              "-```",
+              "-",
+              "-The project does not have production hosting yet.",
+              "+## Source Of Truth",
+              "+",
+              "+| Document | Purpose |",
+              "+| --- | --- |",
+              "+| `README.md` | Project overview and verified commands |",
+              "+| `AGENTS.md` | Project-specific agent instructions |",
+              "+",
+              "+## Verification",
+              "+",
+              "+Run the checks defined in `package.json`:",
+              "+",
+              "+```bash",
+              "+npm test",
+              "+npm run docs:check",
+              "+```",
+              "+",
+              "+The project is private and does not document a production deployment workflow."
+            ]
+          },
+          "omission": null
+        }
+      ],
+      "error": null
+    }
+  ],
+  "changes": [
+    {
+      "path": "AGENTS.md",
+      "status": "created",
+      "before": null,
+      "after": {
+        "kind": "text",
+        "byteLength": 820
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- /dev/null",
+          "+++ b/AGENTS.md",
+          "@@ -0,0 +1,25 @@",
+          "+# Metric Cards - AI Agent Instructions",
+          "+",
+          "+Metric Cards renders Markdown snippets for dashboard metric definitions.",
+          "+",
+          "+## Shared Rules",
+          "+",
+          "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+- [README rules](.agents/skills/agent-doc-rules/references/readme-rules.md)",
+          "+",
+          "+## Local Rules",
+          "+",
+          "+- Keep project documentation focused on the commands and files visible in this",
+          "+  repository.",
+          "+- Do not add setup, lint, deploy, hosting, or release instructions unless the",
+          "+  supporting command or canonical doc exists.",
+          "+",
+          "+## Source Of Truth",
+          "+",
+          "+- `README.md` is the human entry point and verified command index.",
+          "+- `package.json` is the source of truth for npm scripts.",
+          "+",
+          "+## Verification",
+          "+",
+          "+- Run `npm test` and `npm run docs:check` after documentation changes.",
+          "+- If a check cannot run, report why and state the remaining risk."
+        ]
+      },
+      "omission": null
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "before": {
+        "kind": "text",
+        "byteLength": 281
+      },
+      "after": {
+        "kind": "text",
+        "byteLength": 439
+      },
+      "patch": {
+        "format": "unified",
+        "lines": [
+          "--- a/README.md",
+          "+++ b/README.md",
+          "@@ -2,16 +2,20 @@",
+          " ",
+          " Metric Cards renders Markdown snippets for dashboard metric definitions.",
+          " ",
+          "-## Commands",
+          "-",
+          "-Install dependencies, run checks, and deploy:",
+          "-",
+          "-```bash",
+          "-npm install",
+          "-npm run lint",
+          "-npm test",
+          "-npm run docs:check",
+          "-npm run deploy",
+          "-```",
+          "-",
+          "-The project does not have production hosting yet.",
+          "+## Source Of Truth",
+          "+",
+          "+| Document | Purpose |",
+          "+| --- | --- |",
+          "+| `README.md` | Project overview and verified commands |",
+          "+| `AGENTS.md` | Project-specific agent instructions |",
+          "+",
+          "+## Verification",
+          "+",
+          "+Run the checks defined in `package.json`:",
+          "+",
+          "+```bash",
+          "+npm test",
+          "+npm run docs:check",
+          "+```",
+          "+",
+          "+The project is private and does not document a production deployment workflow."
+        ]
+      },
+      "omission": null
+    }
+  ],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "All critical criteria pass: README commands now match package.json, unsupported lint/deploy commands were removed, supported verification commands remain, AGENTS.md is concise and links shared rules, and no unrelated docs, skills, or unsupported workflows were added."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@buresmi7/agent-e2e-report",
+  "version": "0.0.0",
+  "private": false,
+  "description": "Browser-safe contract and validation for Agent E2E report documents",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/buresmi7/agent-doc-rules/tree/master/packages/agent-e2e-report#readme",
+  "bugs": {
+    "url": "https://github.com/buresmi7/agent-doc-rules/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buresmi7/agent-doc-rules.git",
+    "directory": "packages/agent-e2e-report"
+  },
+  "exports": "./src/index.mjs",
+  "files": [
+    "docs",
+    "src",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

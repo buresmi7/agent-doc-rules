@@ -132,7 +132,7 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
     packageName: readRequiredOption(options.skill_package, '--skill-package'),
     name: readRequiredOption(options.skill, '--skill'),
   };
-  const runtime = await buildAgentRuntimeFromEnv(env);
+  const runtime = { runner: 'codex' };
   const keepOutput = options.keep_output ?? env.KEEP_TEST_OUTPUT === '1';
   const updateSnapshots = options.update_snapshots ?? env.UPDATE_AGENT_SNAPSHOTS === '1';
   const snapshotDirName = options.snapshot_dir ?? readSnapshotDirName(env);
@@ -143,9 +143,6 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
   });
 
   try {
-    await validateAgentRuntime(runtime);
-
-    const agentMetadata = await readAgentMetadata(runtime);
     const result = await runAgentScenario({
       scenarioName,
       scenarioDir,
@@ -158,7 +155,6 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
       skill,
       skillsCliVersion,
       judgePromptTemplate,
-      agentMetadata,
       snapshotDirName,
       updateSnapshots,
       keepOutput,
@@ -169,6 +165,11 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
       projectFileOptions: config.projectFileOptions ?? {},
       env,
       onProgress: (event) => printAgentProgress(stdout, scenarioName, event),
+      prepareAgentRuntime: async (configuredRuntime) => {
+        Object.assign(configuredRuntime, await buildAgentRuntimeFromEnv(env));
+        await validateAgentRuntime(configuredRuntime);
+        return readAgentMetadata(configuredRuntime);
+      },
     });
 
     if (!result.pass) {
@@ -176,20 +177,11 @@ export async function runAgentCommand({ options, cwd, env, stdout, stderr }) {
       return 1;
     }
 
-    stdout.write(`Agent E2E test passed for ${scenarioName}.\n`);
-
-    if (result.outputDir) {
-      stdout.write(`output: ${result.outputDir}\n`);
-    }
+    printAgentSuccess(stdout, scenarioName, result);
 
     return 0;
   } catch (error) {
-    stderr.write(`Agent E2E test failed for ${scenarioName}.\n`);
-    stderr.write(`${error.stack ?? error.message}\n`);
-
-    if (configPath) {
-      stderr.write(`config: ${configPath}\n`);
-    }
+    printAgentError(stderr, scenarioName, error, configPath);
 
     return 1;
   }
@@ -309,7 +301,27 @@ async function readJudgePrompt({ config, configDir }) {
   return readFile(resolvePath(configDir, config.judgePrompt), 'utf8');
 }
 
-function printAgentFailure(stderr, result) {
+export function printAgentSuccess(stdout, scenarioName, result) {
+  stdout.write(`Agent E2E test passed for ${scenarioName}.\n`);
+
+  printAgentArtifactPaths(stdout, result);
+}
+
+export function printAgentError(stderr, scenarioName, error, configPath = null) {
+  stderr.write(`Agent E2E test failed for ${scenarioName}.\n`);
+  stderr.write(`${error.stack ?? error.message}\n`);
+  printAgentArtifactPaths(stderr, error);
+
+  for (const warning of error.artifactWriteErrors ?? []) {
+    stderr.write(`artifact warning: ${warning}\n`);
+  }
+
+  if (configPath) {
+    stderr.write(`config: ${configPath}\n`);
+  }
+}
+
+export function printAgentFailure(stderr, result) {
   stderr.write('Agent E2E tests failed:\n');
   stderr.write(`\n## ${result.scenario}\n`);
   stderr.write(`score: ${result.score ?? 'n/a'}\n`);
@@ -331,13 +343,22 @@ function printAgentFailure(stderr, result) {
     stderr.write(`transcript:\n${result.transcript}\n`);
   }
 
+  printAgentArtifactPaths(stderr, result);
+
+  for (const warning of result.artifactWriteErrors ?? []) {
+    stderr.write(`artifact warning: ${warning}\n`);
+  }
+}
+
+function printAgentArtifactPaths(stream, result) {
   if (result.outputDir) {
-    stderr.write(`output: ${result.outputDir}\n`);
+    stream.write(`output: ${result.outputDir}\n`);
   }
 
-  if (result.failureSummaryPath) {
-    stderr.write(`summary: ${result.failureSummaryPath}\n`);
+  if (result.reportPath) {
+    stream.write(`report: ${result.reportPath}\n`);
   }
+
 }
 
 function printAgentProgress(stdout, scenarioName, event) {

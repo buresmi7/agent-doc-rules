@@ -1,9 +1,0 @@
-Updated [README.md](<project>/README.md) to remove unsupported `npm install`, `npm run lint`, and deploy guidance, and keep only the commands present in `package.json`.
-
-Created a concise root [AGENTS.md](<project>/AGENTS.md) with project orientation, shared-rule links, local documentation rules, source-of-truth pointers, and verification guidance.
-
-Verified:
-- `npm test`
-- `npm run docs:check`
-
-Note: `git status` could not run because this directory is not inside a Git repository.

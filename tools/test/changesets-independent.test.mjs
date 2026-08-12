@@ -23,6 +23,7 @@ const changesetsCli = require.resolve('@changesets/cli/bin.js');
 const publicPackages = [
   ['@buresmi7/agent-doc-rules-skill', 'agent-doc-rules-skill'],
   ['@buresmi7/agent-e2e-runner', 'agent-e2e-runner'],
+  ['@buresmi7/agent-e2e-report', 'agent-e2e-report'],
   ['@buresmi7/agent-doc-rules-docs-validator', 'docs-validator'],
   ['@buresmi7/agent-doc-rules-docs-duplicates', 'docs-duplicates'],
 ];

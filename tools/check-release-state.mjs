@@ -76,12 +76,13 @@ async function checkPackage(entry, repository, phase) {
       errors.push(`${entry.name}@${entry.version} already exists on npm.`);
     }
 
-    if (npmLatest === null
-      || !parseSemver(npmLatest)
-      || compareSemver(entry.version, npmLatest) <= 0) {
+    if (npmLatest !== null && (
+      !parseSemver(npmLatest)
+      || compareSemver(entry.version, npmLatest) <= 0
+    )) {
       errors.push(
         `${entry.name} manifest version ${entry.version} must be newer than npm latest`
-        + ` ${npmLatest ?? 'missing'}.`,
+        + ` ${npmLatest}.`,
       );
     }
   }
