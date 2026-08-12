@@ -111,6 +111,14 @@ async function checkPackage(packageInfo) {
     await assertPath(join(packageDir, file), `${packageInfo.dir}/${file} must exist.`);
   }
 
+  for (const entry of packageJson.files ?? []) {
+    const normalizedEntry = entry.replaceAll('\\', '/').replace(/^\.\//, '');
+
+    if (/^(?:e2e|test)(?:\/|$)/.test(normalizedEntry)) {
+      errors.push(`${packageInfo.dir}/package.json files must not publish ${entry}.`);
+    }
+  }
+
   const readme = await readFile(join(packageDir, 'README.md'), 'utf8');
 
   for (const term of packageInfo.readmeTerms) {

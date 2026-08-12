@@ -3,8 +3,7 @@
     "include": [
       "*.md",
       "docs/**/*.md",
-      "packages/**/*.md",
-      "e2e/**/*.md"
+      "packages/**/*.md"
     ],
     "exclude": [
       "node_modules/**",
@@ -26,7 +25,7 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "e2e/**/snapshot*/**"
+        "packages/*/e2e/**/snapshot*/**"
       ],
       "skip": [
         "^https://"
@@ -51,9 +50,9 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "e2e/**/snapshot/**",
-        "e2e/docs-wording-command-fail/**",
-        "e2e/plain-english-doc-review/**",
+        "packages/*/e2e/**/snapshot/**",
+        "packages/docs-validator/e2e/docs-wording-command-fail/**",
+        "packages/agent-doc-rules-skill/e2e/plain-english-doc-review/**",
         "packages/agent-doc-rules-skill/references/writing-style.md"
       ],
       "forbiddenTerms": [],
@@ -69,8 +68,8 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "e2e/docs-security-command-fail/**",
-        "e2e/docs-security-command-pass/**"
+        "packages/docs-validator/e2e/docs-security-command-fail/**",
+        "packages/docs-validator/e2e/docs-security-command-pass/**"
       ],
       "allow": []
     },
@@ -85,7 +84,7 @@
         "repos/**",
         "worktrees/**",
         "CHANGELOG.md",
-        "e2e/**"
+        "packages/*/e2e/**"
       ],
       "includeReferences": false,
       "maxUnits": 80,
@@ -102,7 +101,7 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "e2e/**/snapshot*/**"
+        "packages/*/e2e/**/snapshot*/**"
       ],
       "includeReferences": false,
       "includeSameFile": false,
@@ -113,17 +112,17 @@
       "maxCandidates": 25,
       "ignorePairs": [
         {
-          "left": "^e2e/",
-          "right": "^e2e/",
+          "left": "^packages/(agent-doc-rules-skill|docs-validator)/e2e/",
+          "right": "^packages/(agent-doc-rules-skill|docs-validator)/e2e/",
           "reason": "E2E fixture documents intentionally repeat scenario facts."
         },
         {
-          "left": "^e2e/create-basic/project/README\\.md$",
+          "left": "^packages/agent-doc-rules-skill/e2e/create-basic/project/README\\.md$",
           "right": "^docs/project-cleanup\\.md$",
           "reason": "The create-basic fixture intentionally includes skipped-check residual-risk guidance."
         },
         {
-          "left": "^e2e/local-language-override/project/project-notes\\.md$",
+          "left": "^packages/agent-doc-rules-skill/e2e/local-language-override/project/project-notes\\.md$",
           "right": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
           "reason": "The local-language fixture intentionally mirrors the recipe rule it exercises."
         },
@@ -148,7 +147,7 @@
           "reason": "The development guide intentionally records the npm artifact boundary for maintainers while the README states it for users."
         },
         {
-          "left": "^e2e/README\\.md$",
+          "left": "^packages/agent-doc-rules-skill/e2e/README\\.md$",
           "right": "^packages/agent-doc-rules-skill/docs/adoption\\.md$",
           "reason": "Both workflows intentionally remind maintainers to review generated or refreshed diffs before committing."
         },

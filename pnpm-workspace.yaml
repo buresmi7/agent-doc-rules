@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
-  - "e2e/*/project"
+  - "packages/agent-doc-rules-skill/e2e/*/project"
+  - "packages/docs-validator/e2e/*/project"
 allowBuilds:
   esbuild: true

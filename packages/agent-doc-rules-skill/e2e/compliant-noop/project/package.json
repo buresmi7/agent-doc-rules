@@ -1,0 +1,13 @@
+{
+  "name": "tidy-guides",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:check": "echo docs ok",
+    "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  }
+}

@@ -25,6 +25,7 @@ test('installs the skill into the default project path', async (t) => {
   await assertPath(join(target, 'README.md'));
   await assertPath(join(target, 'references/security-review.md'));
   await assertPath(join(target, 'assets/templates/AGENTS.project.md'));
+  await assert.rejects(stat(join(target, 'e2e')), { code: 'ENOENT' });
   await assert.rejects(stat(join(target, 'test')), { code: 'ENOENT' });
 });
 

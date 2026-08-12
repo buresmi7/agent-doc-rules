@@ -61,8 +61,8 @@ Keep generated maintainer skill files and their source links documented in
 - Maintainer skill sync procedure: `docs/maintainer-skills.md`
 - Project cleanup checklist: `docs/project-cleanup.md`
 - Generated project-scoped maintainer skills: `.agents/skills/`
-- E2E workspace projects: `e2e/*/project/`
-- Command E2E scenario configs: `e2e/*/scenario.json`
+- Skill E2E scenarios: `packages/agent-doc-rules-skill/e2e/`
+- Validator command E2E scenarios: `packages/docs-validator/e2e/`
 - Monorepo support scripts: `tools/`
 
 ## Rules
@@ -84,8 +84,10 @@ Keep generated maintainer skill files and their source links documented in
   `agentDocRules.projectSkills`.
 - Keep all external project skills locked in `skills-lock.json`; restore them
   with `corepack pnpm run skills:sync`.
-- Keep each E2E scenario's `project/` directory as a standalone workspace
+- Keep each agent E2E scenario's `project/` directory as a standalone workspace
   project that installs its skill dependency through `npx skills add`.
+- Keep E2E scenarios beside the package whose behavior they test. Shared runner
+  unit tests and examples remain in `packages/agent-e2e-runner/`.
 - When an E2E scenario fails, use `docs/e2e-failure-triage.md` and
   `docs/rule-placement.md` before changing skill rules or criteria.
 

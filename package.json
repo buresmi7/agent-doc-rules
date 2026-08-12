@@ -10,11 +10,11 @@
     "changeset": "changeset",
     "dev:report-viewer": "corepack pnpm --filter @buresmi7/agent-e2e-report-viewer dev",
     "test": "corepack pnpm run test:static",
-    "test:agent": "corepack pnpm -r --workspace-concurrency=2 --filter './e2e/*/project' run test:agent",
+    "test:agent": "corepack pnpm --dir packages/agent-doc-rules-skill run test:e2e",
     "test:audit": "node scripts/check-audit.mjs",
     "test:install": "node tools/check-skill-install.mjs",
     "test:e2e-tools": "corepack pnpm --filter @buresmi7/agent-e2e-report test && corepack pnpm --filter @buresmi7/agent-e2e-runner test",
-    "test:e2e-command": "node tools/run-command-e2e-all.mjs",
+    "test:e2e-command": "corepack pnpm --dir packages/docs-validator run test:e2e",
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:wording": "agent-doc-rules-docs wording",
     "docs:security": "agent-doc-rules-docs security",
@@ -42,7 +42,6 @@
     "@buresmi7/agent-doc-rules-docs-duplicates": "workspace:*",
     "@buresmi7/agent-doc-rules-docs-validator": "workspace:*",
     "@buresmi7/agent-doc-rules-skill": "workspace:*",
-    "@buresmi7/agent-e2e-runner": "workspace:*",
     "@changesets/cli": "2.31.0"
   }
 }

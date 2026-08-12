@@ -21,7 +21,8 @@
     "access": "public"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "cd ../.. && corepack pnpm --recursive --workspace-concurrency=2 --filter './packages/agent-doc-rules-skill/e2e/*/project' --fail-if-no-match run test:agent"
   },
   "files": [
     "README.md",
@@ -33,6 +34,8 @@
     "references"
   ],
   "devDependencies": {
+    "@buresmi7/agent-e2e-report": "workspace:*",
+    "@buresmi7/agent-e2e-runner": "workspace:*",
     "docmd-skills": "1.1.0",
     "skill-meta-skill": "0.1.0"
   },

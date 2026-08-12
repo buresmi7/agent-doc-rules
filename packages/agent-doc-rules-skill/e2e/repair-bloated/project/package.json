@@ -1,0 +1,11 @@
+{
+  "name": "ledger-notes",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  }
+}
