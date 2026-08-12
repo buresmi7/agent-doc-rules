@@ -53,9 +53,9 @@ file. It should report the contradiction and name the evidence instead. The
 canonical rule lives in
 [factual-review.md](../packages/agent-doc-rules-skill/references/factual-review.md).
 The E2E scenario for this rule is
-[factual-change-rejection](../e2e/factual-change-rejection/scenario.json). It asks
-the agent to add Node.js 24 to the README while `package.json` only supports
-`>=20 <24`. The expected output is no file changes and a clear warning.
+[factual-change-rejection](../packages/agent-doc-rules-skill/e2e/factual-change-rejection/scenario.json).
+It asks the agent to add Node.js 24 to the README while `package.json` only
+supports `>=20 <24`. The expected output is no file changes and a clear warning.
 
 ### Documentation Validation Tools
 
@@ -79,13 +79,12 @@ simplified or split, and test evidence.
 
 ### E2E Scenarios
 
-The [e2e/](../e2e/) workspace runs tests against prepared fixture projects with
-either an AI agent or a command runner. Both use `scenario.json`: agent
-scenarios define ordered prompts and named criteria, while command scenarios
-define a command and deterministic expectations. Each scenario also has a
-fixture project and may have snapshots.
-See [e2e/README.md](../e2e/README.md) for runner configuration and snapshot
-refresh rules.
+Each E2E suite lives beside the package whose behavior it tests. The
+[skill E2E suite](../packages/agent-doc-rules-skill/e2e/README.md) runs AI-agent
+scenarios with ordered prompts and named criteria. The
+[validator E2E suite](../packages/docs-validator/e2e/README.md) runs
+deterministic command scenarios. Both use prepared fixture projects and
+`scenario.json` files.
 
 Related references: `docs/e2e-failure-triage.md` for failed runs and
 `docs/e2e-rule-matrix.md` for rule coverage.
@@ -134,8 +133,8 @@ independently. The accepted release model is recorded in
 | Run the full release verification gate | `corepack pnpm run verify:release` |
 | Refresh passing agent snapshots after intended behavior changes | `UPDATE_AGENT_SNAPSHOTS=1 corepack pnpm run test:agent` |
 
-See the [E2E workspace guide](../e2e/README.md) for runner configuration and
-the single-file agent snapshot format.
+See the [skill E2E guide](../packages/agent-doc-rules-skill/e2e/README.md) for
+runner configuration and the single-file agent snapshot format.
 
 ## Repository Map
 
@@ -150,12 +149,13 @@ the single-file agent snapshot format.
 | [`packages/agent-doc-rules-skill/docs/recipes.md`](../packages/agent-doc-rules-skill/docs/recipes.md) | E2E-backed examples for common documentation repairs. |
 | [`packages/agent-doc-rules-skill/references/`](../packages/agent-doc-rules-skill/references/) | Canonical reusable rules loaded by the skill. |
 | [`packages/agent-doc-rules-skill/assets/templates/`](../packages/agent-doc-rules-skill/assets/templates/) | Starter templates shipped with the skill. |
+| [`packages/agent-doc-rules-skill/e2e/`](../packages/agent-doc-rules-skill/e2e/) | Agent scenarios that test the published skill behavior. |
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
+| [`packages/docs-validator/e2e/`](../packages/docs-validator/e2e/) | Command scenarios that test the documentation validator CLI. |
 | [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`packages/agent-e2e-runner/`](../packages/agent-e2e-runner/) | Reusable CLI and library for agent and command E2E scenarios. |
 | [`packages/agent-e2e-report/`](../packages/agent-e2e-report/) | Public browser-safe contract and validator for `report.json`. |
 | [`packages/agent-e2e-report-viewer/`](../packages/agent-e2e-report-viewer/) | Private static React application for viewing a local report. |
-| [`e2e/`](../e2e/) | Agent and command E2E scenarios for documentation and context placement behavior. |
 | [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | Maintainer workflow for diagnosing failed agent E2E scenarios. |
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Scenario-to-rule coverage map for the agent E2E suite. |
 | [`docs/rule-placement.md`](rule-placement.md) | Rubric for deciding whether a behavior belongs in `SKILL.md`, references, docs, criteria, fixtures, or tooling. |
@@ -164,7 +164,7 @@ the single-file agent snapshot format.
 | [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Decision to end lockstep package versions after `v0.11.0`. |
 | [`.changeset/`](../.changeset/) | Checked-in package release intent and independent-version configuration. |
 | [`release-packages.json`](../release-packages.json) | Public package directories, tag prefixes, and repository identity used by release checks. |
-| [`tools/`](../tools/) | Monorepo support scripts and E2E wrappers for this repository. |
+| [`tools/`](../tools/) | Monorepo support scripts for this repository. |
 | [`docs/maintainer-skills.md`](maintainer-skills.md) | Maintainer skill sync model and update procedure. |
 
 ## Canonical Docs

@@ -49,13 +49,13 @@ Common classifications:
 2. Run the targeted scenario:
 
    ```bash
-   corepack pnpm --filter './e2e/<scenario>/project' run test:agent
+   corepack pnpm --filter './packages/agent-doc-rules-skill/e2e/<scenario>/project' run test:agent
    ```
 
    For command scenarios, run:
 
    ```bash
-   SCENARIO_DIR=e2e/<scenario>/project node tools/run-command-e2e-scenario.mjs
+   corepack pnpm --filter './packages/docs-validator/e2e/<scenario>/project' run test:command
    ```
 
 3. If the scenario passed after a skill or reference change, run:

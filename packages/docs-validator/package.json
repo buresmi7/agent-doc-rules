@@ -23,7 +23,8 @@
     "README.md"
   ],
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/*.test.mjs",
+    "test:e2e": "node e2e/run-all.mjs"
   },
   "publishConfig": {
     "access": "public"
@@ -33,5 +34,8 @@
     "linkinator": "^7.6.1",
     "markdownlint-cli2": "^0.22.1",
     "write-good": "^1.0.8"
+  },
+  "devDependencies": {
+    "@buresmi7/agent-e2e-runner": "workspace:*"
   }
 }

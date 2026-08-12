@@ -1,0 +1,14 @@
+{
+  "name": "beacon-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo all tests ok",
+    "test:importer": "echo importer tests ok",
+    "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  }
+}

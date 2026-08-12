@@ -1,0 +1,17 @@
+{
+  "name": "ledger-scrubber",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "echo parser tests ok",
+    "docs:check": "markdownlint-cli2 \"*.md\" \"docs/**/*.md\"",
+    "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "^0.22.1"
+  }
+}

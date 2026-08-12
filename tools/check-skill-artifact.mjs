@@ -8,6 +8,8 @@ const expectedSkillName = 'agent-doc-rules';
 const expectedPackageName = '@buresmi7/agent-doc-rules-skill';
 const expectedBinName = 'agent-doc-rules-skill';
 const errors = [];
+const packageJson = JSON.parse(await readFile(join(skillDir, 'package.json'), 'utf8'));
+const publishedSkillEntries = packageJson.files ?? [];
 
 await assertFile(join(skillDir, 'SKILL.md'));
 await assertFile(join(skillDir, 'README.md'));
@@ -120,7 +122,6 @@ async function checkSkillFrontmatter() {
 }
 
 async function checkPackageFiles() {
-  const packageJson = JSON.parse(await readFile(join(skillDir, 'package.json'), 'utf8'));
   const requiredFiles = ['README.md', 'SKILL.md', 'agents', 'assets', 'bin', 'docs', 'references'];
 
   if (packageJson.name !== expectedPackageName) {
@@ -146,6 +147,14 @@ async function checkPackageFiles() {
 
     await assertPath(join(skillDir, file));
   }
+
+  for (const entry of publishedSkillEntries) {
+    const normalizedEntry = entry.replaceAll('\\', '/').replace(/^\.\//, '');
+
+    if (/^(?:e2e|test)(?:\/|$)/.test(normalizedEntry)) {
+      errors.push(`package.json files must not publish ${entry}.`);
+    }
+  }
 }
 
 async function checkOpenAiMetadata() {
@@ -157,7 +166,7 @@ async function checkOpenAiMetadata() {
 }
 
 async function checkMarkdownLinks() {
-  const markdownFiles = await findFiles(skillDir, (path) => extname(path) === '.md');
+  const markdownFiles = await findPublishedFiles((path) => extname(path) === '.md');
 
   for (const file of markdownFiles) {
     const content = stripFencedCodeBlocks(await readFile(file, 'utf8'));
@@ -285,7 +294,9 @@ async function checkFactualReviewContract() {
 }
 
 async function checkForbiddenText() {
-  const files = await findFiles(skillDir, (path) => ['.md', '.yaml', '.json'].includes(extname(path)));
+  const files = await findPublishedFiles(
+    (path) => ['.md', '.yaml', '.json'].includes(extname(path)),
+  );
   const forbiddenPatterns = [
     { pattern: /\bTODO\b/i, message: 'TODO marker' },
     { pattern: /rules\/readme\.md/, message: 'stale rules/readme.md path' },
@@ -302,6 +313,24 @@ async function checkForbiddenText() {
       }
     }
   }
+}
+
+async function findPublishedFiles(predicate) {
+  const packageManifest = join(skillDir, 'package.json');
+  const files = predicate(packageManifest) ? [packageManifest] : [];
+
+  for (const entry of publishedSkillEntries) {
+    const path = join(skillDir, entry);
+    const info = await stat(path).catch(() => undefined);
+
+    if (info?.isDirectory()) {
+      files.push(...await findFiles(path, predicate));
+    } else if (info?.isFile() && predicate(path)) {
+      files.push(path);
+    }
+  }
+
+  return files;
 }
 
 async function findFiles(root, predicate) {
