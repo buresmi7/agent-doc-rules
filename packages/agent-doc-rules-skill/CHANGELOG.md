@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.2
+
+### Patch Changes
+
+- Require shortcut disclosures to name a concrete, evidence-backed repair path
+  before requesting confirmation, including the canonical documentation target
+  and cleanup needed to remove duplicate-documentation suppressions.
+- d1be9da: Keep each package's E2E scenarios, launchers, and test commands beside the
+  behavior they cover while excluding fixtures and tests from published files.
+
 ## 0.11.1 - 2026-07-30
 
 ### Patch Changes

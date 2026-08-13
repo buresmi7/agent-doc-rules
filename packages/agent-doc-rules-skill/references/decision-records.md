@@ -13,6 +13,13 @@ rule, or creates hidden debt, tell the user before proceeding. Explain the
 trade-off, consequences, remaining risk, and repair path. Continue only after
 explicit user confirmation.
 
+Make the repair path concrete and evidence-backed. Name the work that will
+remove the compromise and the affected files or systems. Saying that cleanup
+can happen later is not a repair path. For duplicate-documentation
+suppressions, identify the canonical page, the files that will replace
+duplicated text with links to it, and the validation exception that will then
+be removed.
+
 For validation suppressions, name the exact finding the tool will stop
 reporting and the drift or defect that may grow while the suppression is active.
 

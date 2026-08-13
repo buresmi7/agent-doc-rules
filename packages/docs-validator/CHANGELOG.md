@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.2
+
+### Patch Changes
+
+- d1be9da: Keep each package's E2E scenarios, launchers, and test commands beside the
+  behavior they cover while excluding fixtures and tests from published files.
+- 59bdb3d: Store E2E run output under each scenario by default, with CLI and environment
+  overrides for another output root. Keep the skill installer cache within the
+  run directory and exclude generated run directories from documentation input.
+
 ## 0.11.1 - 2026-07-30
 
 ### Patch Changes

@@ -14,7 +14,7 @@ The package provides two commands:
 ## Install
 
 ```bash
-npm install --save-dev @buresmi7/agent-e2e-runner
+npm install --save-dev @buresmi7/agent-e2e-runner@0.12.0
 ```
 
 Agent scenarios require an installed and authenticated `codex` CLI.
@@ -122,7 +122,7 @@ normal dependencies:
   "private": true,
   "devDependencies": {
     "@acme/my-skill": "file:../../..",
-    "@buresmi7/agent-e2e-runner": "^0.11.0"
+    "@buresmi7/agent-e2e-runner": "^0.12.0"
   }
 }
 ```
