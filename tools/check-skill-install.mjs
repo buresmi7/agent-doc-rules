@@ -9,6 +9,7 @@ import {
   localWorkspaceSkill,
   skillsCliVersion,
 } from './project-skills.mjs';
+import { computeVersionedDirectoryHash } from './versioned-directory-hash.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const skillPackage = localWorkspaceSkill.packageName;
@@ -17,12 +18,13 @@ const requireFromRoot = createRequire(join(repoRoot, 'package.json'));
 const skillPackageJson = requireFromRoot.resolve(`${skillPackage}/package.json`);
 const skillDir = dirname(skillPackageJson);
 const expectedSource = relative(repoRoot, skillDir).replaceAll('\\', '/');
+const expectedHash = await computeVersionedDirectoryHash(repoRoot, skillDir);
 
 await assertFile(join(skillDir, 'SKILL.md'));
 await assertFile(join(repoRoot, '.agents/skills', skillName, 'SKILL.md'));
 await assertAgentSkillSymlink(skillDir);
 const skillsLock = JSON.parse(await readFile(join(repoRoot, 'skills-lock.json'), 'utf8'));
-await assertSkillsLock(skillsLock, expectedSource);
+await assertSkillsLock(skillsLock, expectedSource, expectedHash);
 await assertExternalProjectSkills(skillsLock);
 await assertSkillsDiscovery(skillDir);
 
@@ -56,7 +58,7 @@ async function assertSkillsDiscovery(sourceDir) {
   }
 }
 
-async function assertSkillsLock(lock, expectedSourcePath) {
+async function assertSkillsLock(lock, expectedSourcePath, expectedComputedHash) {
   const entry = lock.skills?.[skillName];
 
   if (!entry) {
@@ -65,6 +67,10 @@ async function assertSkillsLock(lock, expectedSourcePath) {
 
   if (entry.source !== expectedSourcePath) {
     throw new Error(`Expected skills-lock source ${expectedSourcePath}, got ${entry.source}`);
+  }
+
+  if (entry.computedHash !== expectedComputedHash) {
+    throw new Error(`Expected ${skillName} computedHash ${expectedComputedHash}, got ${entry.computedHash}`);
   }
 }
 
@@ -90,6 +96,10 @@ async function assertExternalProjectSkills(lock) {
 
     if (skill.sourceType !== 'node_modules' && entry.skillPath !== skill.skillPath) {
       throw new Error(`Expected ${skill.name} skillPath ${skill.skillPath}, got ${entry.skillPath}`);
+    }
+
+    if (entry.revision !== skill.revision) {
+      throw new Error(`Expected ${skill.name} revision ${skill.revision}, got ${entry.revision}`);
     }
 
     if (!entry.computedHash) {

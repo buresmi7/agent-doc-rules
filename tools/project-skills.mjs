@@ -30,6 +30,7 @@ export const externalProjectSkills = Object.entries(skillsLock.skills ?? {})
     sourceType: entry.sourceType,
     skillPath: entry.skillPath,
     computedHash: entry.computedHash,
+    revision: entry.revision,
   }));
 
 assertProjectSkillManifest();
@@ -67,6 +68,10 @@ function assertProjectSkillManifest() {
       throw new Error(`Invalid project skill lock entry for ${skill.name} in ${skillsLockPath}`);
     }
 
+    if (skill.revision && (skill.sourceType !== 'github' || !/^[0-9a-f]{40}$/.test(skill.revision))) {
+      throw new Error(`Invalid project skill revision for ${skill.name} in ${skillsLockPath}`);
+    }
+
     if (skill.sourceType === 'node_modules') {
       assertNodeModulesSkillIsConfigured(skill);
     } else if (!skill.skillPath) {
@@ -93,12 +98,13 @@ function groupExternalProjectSkills() {
   const sources = new Map();
 
   for (const skill of externalProjectSkills.filter((entry) => entry.sourceType !== 'node_modules')) {
-    const key = `${skill.sourceType}:${skill.source}`;
+    const key = `${skill.sourceType}:${skill.source}:${skill.revision ?? ''}`;
 
     if (!sources.has(key)) {
       sources.set(key, {
         source: skill.source,
         sourceType: skill.sourceType,
+        revision: skill.revision,
         skills: [],
       });
     }

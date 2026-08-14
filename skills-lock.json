@@ -4,7 +4,7 @@
     "agent-doc-rules": {
       "source": "packages/agent-doc-rules-skill",
       "sourceType": "local",
-      "computedHash": "e9218f1646c7b744673e8aff8a665a544681f6b1dc2c69d47d9d2fd1cfbfd02a"
+      "computedHash": "72095f348f9e1f75f0e809927a301a0f9130e9b0e9584a97800b36eef640475f"
     },
     "doc-coauthoring": {
       "source": "anthropics/skills",
@@ -32,7 +32,8 @@
       "source": "b1rdmania/claude-plain-english-skill",
       "sourceType": "github",
       "skillPath": "SKILL.md",
-      "computedHash": "5431616a7624b310091be6867d9c37bef8b48b0f354ce60792b7f06b2e1b27d7"
+      "computedHash": "5431616a7624b310091be6867d9c37bef8b48b0f354ce60792b7f06b2e1b27d7",
+      "revision": "cf89519102a1bb4a99f8996b5b2881b7b3939ad1"
     },
     "skill-creator": {
       "source": "anthropics/skills",
@@ -44,7 +45,7 @@
       "source": "github/awesome-copilot",
       "sourceType": "github",
       "skillPath": "skills/update-markdown-file-index/SKILL.md",
-      "computedHash": "35de8831a898abe88c0ddd092be44e2ef1c13a404a21af9eb10ddf14a406fef4"
+      "computedHash": "c1a435b99ca6984cdac1880460e353d331b23ade70cfcbf61d8cfd3b24f49ad3"
     }
   }
 }

@@ -8,9 +8,9 @@ as consuming projects. Those skills are local development tools.
 
 | Source | Declared In | Installed By |
 | --- | --- | --- |
-| Local skill workspace | `packages/agent-doc-rules-skill/package.json` | Symlinked by `tools/sync-project-skills.mjs` |
+| Local skill workspace | `packages/agent-doc-rules-skill/package.json` | Hashed and symlinked by `tools/sync-project-skills.mjs` |
 | npm-compatible skills | `packages/agent-doc-rules-skill/package.json` | Wrapped `skills experimental_sync` |
-| GitHub skills | `skills-lock.json` | `skills add <source> --skill <name>` |
+| GitHub skills | `skills-lock.json` | `skills add <source> --skill <name>` or a pinned checkout |
 
 Generated copies under `.agents/skills/` are ignored by Git, except for the
 `agent-doc-rules` symlink. See the root `AGENTS.md` maintenance rules for the
@@ -21,6 +21,10 @@ commit boundary.
 These links identify the skill sources this project restores or uses as direct
 inspiration. Review upstream changes before accepting a new `computedHash` in
 `skills-lock.json`.
+
+GitHub entries can include a full commit SHA in `revision`. Use a revision when
+the accepted skill must stay on immutable content. The sync wrapper checks out
+that commit before it calls the skills CLI.
 
 | Skill | Source | Link |
 | --- | --- | --- |
@@ -49,8 +53,11 @@ package, not as direct root dependencies.
 5. It copies only the npm skills listed in
    `agentDocRules.projectSkills` into root `.agents/skills/`.
 6. It verifies each copied skill against the hash stored in `skills-lock.json`.
-7. It installs `agent-doc-rules` through `skills add`, then replaces the copy
-   with a symlink to the workspace package.
+7. It hashes versioned and non-ignored `agent-doc-rules` source files, then
+   symlinks the workspace package into the project skills directory.
+
+The install check separately uses `skills add --list` to verify that the local
+workspace remains discoverable by the pinned skills CLI.
 
 This keeps the dependency ownership close to the local skill package while the
 root project still gets a normal project-scoped `.agents/skills/` directory.
@@ -110,6 +117,7 @@ Use this path for skills that are not published as npm-compatible packages.
 
 2. Review the generated `.agents/skills/<name>/SKILL.md`.
 3. Keep the generated `skills-lock.json` entry.
+   Add a full commit SHA in `revision` when the source must be immutable.
 4. Run:
 
    ```bash

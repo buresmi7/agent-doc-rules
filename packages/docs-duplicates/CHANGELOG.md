@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+### Minor Changes
+
+- 716bdcb: Use a compatible explicit or `PATH` Codex CLI before an opt-in project-local
+  fallback, without installing Codex as a package dependency.
+
 ## 0.11.1 - 2026-07-30
 
 ### Patch Changes

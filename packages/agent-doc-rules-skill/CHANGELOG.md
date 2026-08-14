@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.3
+
+### Patch Changes
+
+- 716bdcb: Document the external Codex CLI requirement and executable configuration for
+  AI documentation checks.
+
 ## 0.11.2
 
 ### Patch Changes

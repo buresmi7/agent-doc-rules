@@ -11,6 +11,7 @@ import {
   nodeModulesProjectSkills,
   skillsCliVersion,
 } from './project-skills.mjs';
+import { computeVersionedDirectoryHash } from './versioned-directory-hash.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const skillPackage = localWorkspaceSkill.packageName;
@@ -24,60 +25,97 @@ const lockPath = join(repoRoot, 'skills-lock.json');
 const originalLockContent = await readFile(lockPath, 'utf8').catch(() => undefined);
 
 await mkdir(targetParent, { recursive: true });
-await syncExternalProjectSkills();
-await assertExternalSkillsLockUnchanged();
+await syncExternalProjectSkillsSafely();
 await syncNodeModulesProjectSkills();
-await assertFile(join(skillDir, 'SKILL.md'));
-await rm(targetDir, { recursive: true, force: true });
-
-await run('npx', [
-  '-y',
-  `skills@${skillsCliVersion}`,
-  'add',
-  skillDir,
-  '--skill',
-  skillName,
-  '-a',
-  'codex',
-  '-y',
-  '--copy',
-], {
-  cwd: repoRoot,
-  env: {
-    ...process.env,
-    CI: '1',
-    NO_COLOR: '1',
-  },
-});
-
-await rm(targetDir, { recursive: true, force: true });
-await symlink(relative(targetParent, skillDir), targetDir, process.platform === 'win32' ? 'junction' : 'dir');
-await normalizeSkillsLock();
-await assertFile(join(targetDir, 'SKILL.md'));
+await syncLocalWorkspaceSkill();
 
 console.log(`Synced ${skillPackage} and ${externalProjectSkills.length} external project skills.`);
 
 async function syncExternalProjectSkills() {
   for (const source of externalProjectSkillSources) {
-    await run('npx', [
-      '-y',
-      `skills@${skillsCliVersion}`,
-      'add',
-      source.source,
-      ...source.skills.flatMap((skill) => ['--skill', skill.name]),
-      '-a',
-      'codex',
-      '-y',
-      '--copy',
-    ], {
-      cwd: repoRoot,
-      env: {
-        ...process.env,
-        CI: '1',
-        NO_COLOR: '1',
-      },
-    });
+    let checkoutDir;
+
+    try {
+      checkoutDir = await checkoutExternalProjectSkillSource(source);
+
+      await run('npx', [
+        '-y',
+        `skills@${skillsCliVersion}`,
+        'add',
+        checkoutDir ?? source.source,
+        ...source.skills.flatMap((skill) => ['--skill', skill.name]),
+        '-a',
+        'codex',
+        '-y',
+        '--copy',
+      ], {
+        cwd: repoRoot,
+        env: {
+          ...process.env,
+          CI: '1',
+          NO_COLOR: '1',
+        },
+      });
+    } finally {
+      if (checkoutDir) {
+        await rm(checkoutDir, { recursive: true, force: true });
+      }
+    }
   }
+}
+
+async function syncExternalProjectSkillsSafely() {
+  try {
+    await syncExternalProjectSkills();
+    await assertExternalSkillsLockUnchanged();
+  } finally {
+    if (originalLockContent) {
+      await writeFile(lockPath, originalLockContent);
+    }
+  }
+}
+
+async function checkoutExternalProjectSkillSource(source) {
+  if (!source.revision) {
+    return undefined;
+  }
+
+  const checkoutDir = await mkdtemp(join(tmpdir(), 'agent-doc-rules-github-skill-'));
+
+  try {
+    await run('git', ['init', '--quiet', checkoutDir], { cwd: repoRoot });
+    await run('git', [
+      '-C',
+      checkoutDir,
+      'fetch',
+      '--quiet',
+      '--depth',
+      '1',
+      githubRepositoryUrl(source.source),
+      source.revision,
+    ], { cwd: repoRoot });
+    await run('git', ['-C', checkoutDir, 'checkout', '--quiet', '--detach', 'FETCH_HEAD'], { cwd: repoRoot });
+    return checkoutDir;
+  } catch (error) {
+    await rm(checkoutDir, { recursive: true, force: true });
+    throw error;
+  }
+}
+
+function githubRepositoryUrl(source) {
+  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(source)) {
+    throw new Error(`Pinned GitHub skill source must use owner/repository syntax: ${source}`);
+  }
+
+  return `https://github.com/${source}.git`;
+}
+
+async function syncLocalWorkspaceSkill() {
+  await assertFile(join(skillDir, 'SKILL.md'));
+  await rm(targetDir, { recursive: true, force: true });
+  await symlink(relative(targetParent, skillDir), targetDir, directorySymlinkType());
+  await normalizeSkillsLock();
+  await assertFile(join(targetDir, 'SKILL.md'));
 }
 
 async function syncNodeModulesProjectSkills() {
@@ -170,6 +208,7 @@ async function normalizeSkillsLock() {
   lock.skills[skillName] ??= {};
   lock.skills[skillName].source = relativeSource;
   lock.skills[skillName].sourceType = 'local';
+  lock.skills[skillName].computedHash = await computeVersionedDirectoryHash(repoRoot, skillDir);
 
   await writeFile(lockPath, `${JSON.stringify(lock, null, 2)}\n`);
 }
@@ -185,12 +224,10 @@ async function assertExternalSkillsLockUnchanged() {
     const entry = lock.skills?.[skill.name];
 
     if (!entry) {
-      await writeFile(lockPath, originalLockContent);
       throw new Error(`skills-lock.json lost external skill ${skill.name}`);
     }
 
     if (entry.computedHash !== skill.computedHash) {
-      await writeFile(lockPath, originalLockContent);
       throw new Error(
         `External skill ${skill.name} changed upstream. Review the skill and update skills-lock.json intentionally.`,
       );
