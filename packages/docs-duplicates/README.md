@@ -20,8 +20,56 @@ agent-doc-rules-docs-duplicates style
 `check` and `duplicates` run semantic duplicate review. `style` runs AI review
 for Markdown sentences.
 
-The command resolves the bundled `@openai/codex` binary from this package. It
-does not rely on `codex` being present in `PATH`.
+## Codex CLI Requirement
+
+`check` and `style` require Codex CLI 0.142.0 or later. The selected executable
+must report a compatible version through `codex --version`. This package does
+not install Codex by default or download an executable at runtime.
+
+The command selects an executable in this order:
+
+1. An explicit `--codex-bin`, `docs.duplicates.codexBin`, or
+   `docs.style.codexBin` value. The CLI flag overrides the matching config
+   value.
+2. A compatible `codex` executable from `PATH`.
+3. A compatible project-local `@openai/codex` installation.
+
+Install Codex on `PATH`:
+
+```bash
+npm install --global @openai/codex
+```
+
+Run the same command to update an existing npm installation. To opt into the
+project-local fallback instead, install Codex in the project that runs the
+review:
+
+```bash
+pnpm add -D @openai/codex
+```
+
+Authenticate the selected CLI before running a review, then check its status.
+These commands assume that the executable is on `PATH`:
+
+```bash
+codex login
+codex login status
+```
+
+For the project-local fallback, replace `codex` with `pnpm exec codex`. For an
+explicit executable path, run the same subcommands through that executable.
+
+Codex also supports API-key authentication. See the
+[Codex authentication documentation](https://developers.openai.com/codex/auth)
+for the supported sign-in methods.
+
+The authenticated account must have access to the configured model. Both
+review commands require outbound access to the configured model provider,
+consume model usage, and can incur API charges.
+
+Both commands invoke `codex exec` with a read-only sandbox and an ephemeral
+session. This keeps agent actions read-only and avoids persisted session files;
+it does not remove the model-provider network requirement.
 
 Default model settings for both AI checks:
 

@@ -116,5 +116,5 @@ Options:
   --max-units <number>          Maximum sentence units sent to Codex for style review.
   --model <model>               Codex model. Defaults to gpt-5-nano.
   --reasoning-effort <effort>   Codex reasoning effort. Defaults to low.
-  --codex-bin <path>            Override Codex binary for local debugging.`;
+  --codex-bin <path>            Explicit Codex executable; overrides config, PATH, and local fallback.`;
 }

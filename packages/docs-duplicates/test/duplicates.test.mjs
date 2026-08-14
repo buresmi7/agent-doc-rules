@@ -250,6 +250,7 @@ test('CLI flags override config defaults', async () => {
     docs: {
       include: ['docs/**/*.md'],
       duplicates: {
+        codexBin: 'configured-codex',
         model: 'configured-model',
         warnScore: 0.5,
         ignorePairs: [
@@ -263,12 +264,30 @@ test('CLI flags override config defaults', async () => {
     },
   }));
 
-  const options = await resolveDuplicateOptions({
-    ...parseArgs(['check', '--root', root, '--include', '*.md', '--model', 'flag-model', '--warn-score', '0.8']),
+  const configuredOptions = await resolveDuplicateOptions({
+    ...parseArgs(['check', '--root', root]),
   });
 
+  const options = await resolveDuplicateOptions({
+    ...parseArgs([
+      'check',
+      '--root',
+      root,
+      '--include',
+      '*.md',
+      '--model',
+      'flag-model',
+      '--warn-score',
+      '0.8',
+      '--codex-bin',
+      'flag-codex',
+    ]),
+  });
+
+  assert.equal(configuredOptions.codexBin, 'configured-codex');
   assert.deepEqual(options.include, ['*.md']);
   assert.equal(options.model, 'flag-model');
+  assert.equal(options.codexBin, 'flag-codex');
   assert.equal(options.warnScore, 0.8);
   assert.deepEqual(options.ignorePairs, [
     {
@@ -285,18 +304,37 @@ test('style CLI flags override config defaults', async () => {
     docs: {
       include: ['docs/**/*.md'],
       style: {
+        codexBin: 'configured-codex',
         model: 'configured-model',
         maxUnits: 10,
       },
     },
   }));
 
-  const options = await resolveStyleOptions({
-    ...parseArgs(['style', '--root', root, '--include', '*.md', '--model', 'flag-model', '--max-units', '3']),
+  const configuredOptions = await resolveStyleOptions({
+    ...parseArgs(['style', '--root', root]),
   });
 
+  const options = await resolveStyleOptions({
+    ...parseArgs([
+      'style',
+      '--root',
+      root,
+      '--include',
+      '*.md',
+      '--model',
+      'flag-model',
+      '--max-units',
+      '3',
+      '--codex-bin',
+      'flag-codex',
+    ]),
+  });
+
+  assert.equal(configuredOptions.codexBin, 'configured-codex');
   assert.deepEqual(options.include, ['*.md']);
   assert.equal(options.model, 'flag-model');
+  assert.equal(options.codexBin, 'flag-codex');
   assert.equal(options.maxUnits, 3);
 });
 
