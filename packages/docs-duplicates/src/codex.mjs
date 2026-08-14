@@ -1,11 +1,17 @@
-import { spawn } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
-import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
-import { dirname, join } from 'node:path';
+import { join } from 'node:path';
+import crossSpawn from 'cross-spawn';
+import { resolveCodexExecutable } from './codex-executable.mjs';
 
-const require = createRequire(import.meta.url);
+export {
+  minimumCodexVersion,
+  probeCodexExecutable,
+  resolveCodexBin,
+  resolveCodexExecutable,
+  resolveLocalCodexExecutable,
+  resolvePackageJsonPaths,
+} from './codex-executable.mjs';
 
 export const codexOutputSchema = {
   type: 'object',
@@ -61,7 +67,8 @@ export async function runCodexClassifier(candidates, {
   model,
   reasoningEffort,
   codexBin,
-} = {}) {
+} = {}, dependencies = {}) {
+  const codexExecutable = resolveCodexExecutable({ codexBin, root }, dependencies);
   const tempDir = await mkdtemp(join(tmpdir(), 'docs-duplicates-codex-'));
   const schemaFile = join(tempDir, 'schema.json');
   const outputFile = join(tempDir, 'last-message.json');
@@ -73,12 +80,12 @@ export async function runCodexClassifier(candidates, {
       root,
       model,
       reasoningEffort,
-      codexBin,
+      codexExecutable,
       schemaFile,
       outputFile,
     });
 
-    await runCodex(invocation, prompt);
+    await runCodex(invocation, prompt, dependencies.spawn);
     return parseCodexResponse(await readFile(outputFile, 'utf8'));
   } finally {
     await rm(tempDir, { recursive: true, force: true });
@@ -90,7 +97,8 @@ export async function runCodexStyleReviewer(units, {
   model,
   reasoningEffort,
   codexBin,
-} = {}) {
+} = {}, dependencies = {}) {
+  const codexExecutable = resolveCodexExecutable({ codexBin, root }, dependencies);
   const tempDir = await mkdtemp(join(tmpdir(), 'docs-style-codex-'));
   const schemaFile = join(tempDir, 'schema.json');
   const outputFile = join(tempDir, 'last-message.json');
@@ -102,12 +110,12 @@ export async function runCodexStyleReviewer(units, {
       root,
       model,
       reasoningEffort,
-      codexBin,
+      codexExecutable,
       schemaFile,
       outputFile,
     });
 
-    await runCodex(invocation, prompt);
+    await runCodex(invocation, prompt, dependencies.spawn);
     return parseCodexResponse(await readFile(outputFile, 'utf8'));
   } finally {
     await rm(tempDir, { recursive: true, force: true });
@@ -187,6 +195,7 @@ export function buildCodexInvocation({
   root,
   model,
   reasoningEffort,
+  codexExecutable,
   codexBin,
   schemaFile,
   outputFile,
@@ -213,75 +222,15 @@ export function buildCodexInvocation({
     '-',
   ];
 
-  if (codexBin) {
-    return { command: codexBin, args };
-  }
+  const executable = codexExecutable ?? {
+    command: codexBin ?? 'codex',
+    args: [],
+  };
 
   return {
-    command: process.execPath,
-    args: [resolveCodexBin(), ...args],
+    command: executable.command,
+    args: [...executable.args, ...args],
   };
-}
-
-export function resolveCodexBin() {
-  for (const packageJsonPath of resolvePackageJsonPaths('@openai/codex')) {
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8'));
-    const bin = typeof packageJson.bin === 'string'
-      ? packageJson.bin
-      : packageJson.bin?.codex;
-
-    if (!bin) {
-      continue;
-    }
-
-    const binPath = join(dirname(packageJsonPath), bin);
-
-    if (existsSync(binPath)) {
-      return binPath;
-    }
-  }
-
-  throw new Error('@openai/codex does not expose a codex binary.');
-}
-
-export function resolvePackageJsonPaths(packageName) {
-  const packageJsonPaths = [];
-
-  try {
-    packageJsonPaths.push(require.resolve(`${packageName}/package.json`));
-  } catch (error) {
-    if (error.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
-      throw error;
-    }
-  }
-
-  if (packageJsonPaths.length > 0) {
-    return [...new Set(packageJsonPaths)];
-  }
-
-  let directory = dirname(require.resolve(packageName));
-
-  while (true) {
-    const candidate = join(directory, 'package.json');
-
-    if (existsSync(candidate)) {
-      const packageJson = JSON.parse(readFileSync(candidate, 'utf8'));
-
-      if (packageJson.name === packageName) {
-        packageJsonPaths.push(candidate);
-      }
-    }
-
-    const parent = dirname(directory);
-
-    if (parent === directory) {
-      break;
-    }
-
-    directory = parent;
-  }
-
-  return [...new Set(packageJsonPaths)];
 }
 
 export function parseCodexResponse(text) {
@@ -296,15 +245,17 @@ export function parseCodexResponse(text) {
       return JSON.parse(fenced[1]);
     }
 
-    throw new Error('Codex did not return valid duplicate-check JSON.');
+    throw new Error('Codex did not return valid documentation-review JSON.');
   }
 }
 
-function runCodex({ command, args }, prompt) {
+function runCodex({ command, args }, prompt, spawnProcess = crossSpawn) {
   return new Promise((resolve, reject) => {
     let stdout = '';
     let stderr = '';
-    const child = spawn(command, args, {
+    let stdinError;
+    let settled = false;
+    const child = spawnProcess(command, args, {
       stdio: ['pipe', 'pipe', 'pipe'],
       env: {
         ...process.env,
@@ -318,16 +269,51 @@ function runCodex({ command, args }, prompt) {
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
     });
-    child.on('error', reject);
-    child.on('close', (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        const detail = [stderr.trim(), stdout.trim()].filter(Boolean).join('\n');
-        reject(new Error(`Codex duplicate review failed with exit code ${code ?? 1}.\n${detail}`));
+    child.stdin.on('error', (error) => {
+      stdinError = error;
+    });
+    child.on('error', (error) => {
+      settle(reject, new Error(
+        `Codex documentation review could not be started (${error.message}).`,
+        { cause: error },
+      ));
+    });
+    child.on('close', (code, signal) => {
+      if (code === 0 && !stdinError) {
+        settle(resolve);
+        return;
       }
+
+      const outcome = signal
+        ? `was terminated by signal ${signal}`
+        : code === 0
+          ? 'failed while writing the prompt'
+          : `failed with exit code ${code ?? 'unknown'}`;
+      const detail = [
+        stdinError ? `Prompt input error: ${stdinError.message}` : '',
+        stderr.trim(),
+        stdout.trim(),
+      ].filter(Boolean).join('\n');
+      const suffix = detail ? `\n${detail}` : '';
+      settle(reject, new Error(`Codex documentation review ${outcome}.${suffix}`));
     });
 
-    child.stdin.end(prompt);
+    try {
+      child.stdin.end(prompt);
+    } catch (error) {
+      settle(reject, new Error(
+        `Codex documentation review failed while writing the prompt (${error.message}).`,
+        { cause: error },
+      ));
+    }
+
+    function settle(callback, value) {
+      if (settled) {
+        return;
+      }
+
+      settled = true;
+      callback(value);
+    }
   });
 }

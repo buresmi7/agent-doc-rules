@@ -46,6 +46,9 @@ Install optional documentation validation tools:
 pnpm add -D @buresmi7/agent-doc-rules-docs-validator @buresmi7/agent-doc-rules-docs-duplicates
 ```
 
+The AI checks require a separately installed and authenticated Codex CLI. See
+the [duplicate checker requirements](https://github.com/buresmi7/agent-doc-rules/tree/master/packages/docs-duplicates#codex-cli-requirement).
+
 Recommended scripts:
 
 ```json

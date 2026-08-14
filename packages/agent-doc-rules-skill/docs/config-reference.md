@@ -147,6 +147,12 @@ Use `docs.security.allow` only for intentional fixture content or safety docs
 that need to show a risky pattern. Prefer rewriting examples so they do not look
 like instructions an agent should execute.
 
+## Codex Execution
+
+The [Codex CLI requirement](https://github.com/buresmi7/agent-doc-rules/tree/master/packages/docs-duplicates#codex-cli-requirement)
+documents executable resolution, installation, authentication, and network access.
+`--codex-bin` overrides the command-specific config value.
+
 ## AI Style Keys
 
 `docs.style` configures `agent-doc-rules-docs-duplicates style`.
@@ -161,6 +167,7 @@ like instructions an agent should execute.
 | `docs.style.maxUnits` | number | Maximum sentence units sent to Codex. |
 | `docs.style.model` | string | Codex model for style review. |
 | `docs.style.reasoningEffort` | string | Codex reasoning effort. |
+| `docs.style.codexBin` | string | Explicit Codex executable for style review. |
 
 ## Duplicate Keys
 
@@ -180,6 +187,7 @@ like instructions an agent should execute.
 | `docs.duplicates.ignorePairs` | object array | File-pair regexes that should be ignored before AI review. |
 | `docs.duplicates.model` | string | Codex model for classification. |
 | `docs.duplicates.reasoningEffort` | string | Codex reasoning effort. |
+| `docs.duplicates.codexBin` | string | Explicit Codex executable for duplicate review. |
 
 The duplicate checker skips code blocks and short noise before it builds
 candidates. It sends only candidate pairs to Codex.
