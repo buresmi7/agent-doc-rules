@@ -8,7 +8,7 @@ and file results.
 ## Install
 
 ```bash
-npm install --save-dev @buresmi7/agent-e2e-runner@0.12.0
+npm install --save-dev @buresmi7/agent-e2e-runner@0.12.1
 ```
 
 Agent scenarios require an installed and authenticated `codex` CLI. The runner

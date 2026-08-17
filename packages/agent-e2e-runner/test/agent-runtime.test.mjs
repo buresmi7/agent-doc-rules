@@ -144,6 +144,10 @@ test('summarizeCodexCommand keeps verification names without shell arguments', (
   );
   assert.equal(
     summarizeCodexCommand('/bin/bash -lc \'python3 /tmp/quick_validate.py .agents/skills/example\''),
+    'python3',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'python3 /tmp/quick_validate.py\''),
     'python3 quick_validate.py',
   );
   assert.equal(
@@ -157,6 +161,238 @@ test('summarizeCodexCommand keeps verification names without shell arguments', (
   assert.equal(
     summarizeCodexCommand('/bin/bash -lc \'echo "npm test"\''),
     'echo',
+  );
+  assert.equal(
+    summarizeCodexCommand(
+      '/bin/bash -lc \'npm test && npm run docs:check && git diff -- README.md\'',
+    ),
+    'npm test && npm run docs:check',
+  );
+  assert.equal(
+    summarizeCodexCommand(
+      '/bin/bash -lc \'corepack pnpm test && corepack pnpm run docs:check\'',
+    ),
+    'pnpm test && pnpm run docs:check',
+  );
+  assert.equal(
+    summarizeCodexCommand(
+      '/bin/bash -lc \'git diff -- README.md package.json && npm test && npm run docs:check\'',
+    ),
+    'npm test && npm run docs:check',
+  );
+  assert.equal(
+    summarizeCodexCommand(
+      '/bin/bash -lc \'git status --short -- README.md && node --test\'',
+    ),
+    'node --test',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'echo "safe && npm run docs:check"\''),
+    'echo',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test || true\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm testing\''),
+    'npm',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'node --test-reporter=spec --version\''),
+    'node',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'node --title=private-token-value -e "0"\''),
+    'node',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'python3 --password=private-token-value\''),
+    'python3',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'python3 /tmp/quick_validate.py''-noop'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npx vitest''-noop'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'python3 /tmp/quick_validate.py\\ -noop'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npx vitest\\ -noop'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'FOO=bar\\ npm test 1 = 1'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'git\\ -fake'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npx --package=private-token-value\''),
+    'npx',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npx vitest\''),
+    'npx vitest',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npm''-noop test'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npm\u00a0test'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test | tee test.log\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test & true\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test\nnpm run docs:check\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test &&\nnpm run docs:check\''),
+    'npm test && npm run docs:check',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test &>/tmp/private-token-value && npm run docs:check\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test &>>/tmp/private-token-value\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test >| /tmp/private-token-value\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test # skipped && npm run docs:check\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'cat <<EOF\nnpm test && npm run docs:check\nEOF\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'(npm test && npm run docs:check)\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'echo "$(npm test && npm run docs:check)"\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'echo `npm test`\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc `npm test && npm run docs:check`'),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'[[ -n value || npm test ]]\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("echo $'npm test && npm run docs:check'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc npm test'),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc python3 private-token-value'),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test\' ignored'),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("FOO='bar npm test ' true"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("FOO='bar corepack pnpm test ' true"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test --help\''),
+    'npm',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm run docs:check --help\''),
+    'npm',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm_config_script_shell=/bin/true npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'if false\nthen\nnpm test\nfi\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'while false\ndo\nnpm run docs:check\ndone\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'exit 0 && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'true && exec true && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'set -n && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'hash -p /bin/true npm && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'export npm_config_script_shell=/bin/true && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'cd /tmp && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'git diff --output=/tmp/result && npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'npm test && export npm_config_script_shell=/bin/true && npm run docs:check\''),
+    'npm test',
+  );
+  assert.equal(
+    summarizeCodexCommand('/bin/bash -lc \'true || npm test\''),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npm test\rtrue'"),
+    'shell command',
+  );
+  assert.equal(
+    summarizeCodexCommand("/bin/bash -lc 'npm test\r\ntrue'"),
+    'shell command',
   );
 });
 
@@ -236,6 +472,10 @@ test('prepareIsolatedCodexHome copies auth without copying local config or rules
   const isolatedConfig = await readFile(join(isolatedCodexHome, 'config.toml'), 'utf8');
   assert.match(isolatedConfig, /model = "gpt-test"/);
   assert.match(isolatedConfig, /sandbox_mode = "workspace-write"/);
+  assert.match(
+    isolatedConfig,
+    /project_root_markers = \["package\.json", "pnpm-workspace\.yaml"\]/,
+  );
   assert.doesNotMatch(isolatedConfig, /local-model/);
 
   await assert.rejects(

@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- b1c084e: Move human-facing guides outside the installed skill, tighten
+  progressive-disclosure routing, and expand artifact checks for skill structure
+  and metadata.
+- Preserve distinct project-owned source-of-truth mappings in root `AGENTS.md`
+  files instead of collapsing them into one umbrella README link.
+- Preserve locally evidenced privacy and security categories in `AGENTS.md`
+  instead of replacing them with a generic anonymization rule.
+
 ## 1.0.0
 
 ### Major Changes

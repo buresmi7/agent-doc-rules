@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.1
+
+### Patch Changes
+
+- b1c084e: Replace copied validator configuration guidance with links to the canonical
+  reference and document how validation exclusions preserve their remaining
+  risk.
+
 ## 1.0.0
 
 ### Major Changes

@@ -76,8 +76,10 @@ the session so the test harness does not leak into project context.
 Each scenario receives an isolated `CODEX_HOME`. The runner copies only Codex
 authentication, writes a minimal model config, and does not copy user rules or
 home-directory instructions. The session is persistent only inside its run
-directory. Authentication is removed before the
-runner returns, including when failed output is retained.
+directory. The config treats the fixture manifest and the run workspace file as
+project-root markers, so runs inside another repository do not inherit that
+repository's `AGENTS.md` files. Authentication is removed before the runner
+returns, including when failed output is retained.
 
 The Codex process still inherits the runner environment, and `workspace-write`
 limits writes rather than providing container isolation. Run only trusted

@@ -4,7 +4,7 @@
     "agent-doc-rules": {
       "source": "packages/agent-doc-rules-skill/skills/agent-doc-rules",
       "sourceType": "local",
-      "computedHash": "d95f69ebf7ce848efc9a6b39bc522c05b35414ae924ca0cbf1776b8339ee0ddc"
+      "computedHash": "28df9d5747abd8175cac4302b0aa25cf19463d7daff004ba574c0127e3df03cf"
     },
     "docs-duplicate-review": {
       "source": "packages/agent-doc-rules-skill/skills/docs-duplicate-review",

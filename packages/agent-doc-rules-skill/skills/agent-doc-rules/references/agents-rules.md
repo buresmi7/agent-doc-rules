@@ -3,6 +3,15 @@
 Use this rule when creating or maintaining `AGENTS.md` files. For review, also
 use [AGENTS.md review rubric](agents-rubric.md).
 
+## Contents
+
+- [Purpose](#purpose)
+- [Core Rules](#core-rules)
+- [Recommended Root Structure](#recommended-root-structure)
+- [What To Include](#what-to-include)
+- [What To Avoid](#what-to-avoid)
+- [Local Override Rule](#local-override-rule)
+
 ## Purpose
 
 `AGENTS.md` is an always-loaded entry point for AI agents. It should provide
@@ -28,6 +37,10 @@ It is a navigation layer, not full documentation.
   constraints, source-of-truth links, and verification guidance. Preserve
   supported local invariants and project-owned canonical links; brevity does
   not justify dropping them.
+- When local evidence assigns different content to distinct canonical
+  locations, preserve each mapping as a compact direct route. One umbrella
+  README link does not replace routes to runbooks, decisions, or component
+  docs.
 - State local overrides explicitly.
 - Prefer nested `AGENTS.md` files for directory-specific rules.
 - When adding a nested `AGENTS.md`, keep the root file short but point agents to
@@ -68,6 +81,9 @@ and document the remaining risk.
 - Local language, safety, security, or workflow overrides.
 - Project-specific privacy categories supported by local evidence. Do not
   broaden them with generic examples from this reference or the skill.
+- Preserve every locally evidenced privacy or security category in the rule.
+  Do not replace an evidenced category list with only a general instruction to
+  anonymize examples.
 - Project-specific verification commands.
 - A short rule that makes skipped verification visible. Existing local wording
   such as "say what remained unchecked" satisfies this; do not rewrite it only

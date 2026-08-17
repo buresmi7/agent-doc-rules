@@ -43,7 +43,7 @@ Keep deterministic validation separate from semantic review:
 The `agent-doc-rules` tool packages follow this split:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.1
 ```
 
 Recommended scripts:
