@@ -9,6 +9,9 @@ import {
 import { normalizeIgnorePairs } from './duplicate-candidates.mjs';
 import { validateRepoRelativeGlobs } from './duplicate-markdown.mjs';
 
+const retiredWarnScoreDefault = 0.78;
+const retiredCandidateThresholdCap = 0.72;
+
 export async function loadDocsConfig({ root = process.cwd(), configPath } = {}) {
   const resolvedRoot = resolve(root);
   const resolvedConfigPath = configPath
@@ -140,8 +143,9 @@ function validateRemovedAiConfig(config) {
   if (Object.hasOwn(config, 'duplicates')) {
     throw new Error(
       'docs.duplicates was removed. Move deterministic settings to '
-      + 'docs.duplicateCandidates, rename warnScore to minSimilarity, and remove '
-      + 'provider settings and failScore.',
+      + 'docs.duplicateCandidates. '
+      + `${duplicateThresholdMigrationGuidance(config.duplicates)} `
+      + 'Remove provider settings and failScore.',
     );
   }
 
@@ -171,8 +175,8 @@ function validateDuplicateCandidateConfig(config) {
   ]);
   if (Object.hasOwn(config, 'warnScore')) {
     throw new Error(
-      'docs.duplicateCandidates.warnScore was renamed to '
-      + 'docs.duplicateCandidates.minSimilarity.',
+      'docs.duplicateCandidates.warnScore was removed. '
+      + duplicateThresholdMigrationGuidance(config),
     );
   }
 
@@ -261,6 +265,26 @@ function validateDuplicateCandidateConfig(config) {
       + 'deterministic candidate settings are accepted.',
     );
   }
+}
+
+function duplicateThresholdMigrationGuidance(config) {
+  const configuredWarnScore = config && typeof config === 'object'
+    ? config.warnScore
+    : undefined;
+  const hasUsableWarnScore = configuredWarnScore !== undefined
+    && configuredWarnScore !== null
+    && !Number.isNaN(Number(configuredWarnScore));
+  const warnScore = hasUsableWarnScore
+    ? Number(configuredWarnScore)
+    : retiredWarnScoreDefault;
+  const minSimilarity = Math.min(warnScore, retiredCandidateThresholdCap);
+  const source = hasUsableWarnScore
+    ? `Configured warnScore ${warnScore}`
+    : `The old default warnScore ${retiredWarnScoreDefault}`;
+
+  return 'Preserve the old candidate threshold with '
+    + 'minSimilarity = Math.min(warnScore, 0.72). '
+    + `${source} maps to minSimilarity ${minSimilarity}.`;
 }
 
 function validateDuplicateCandidateOptions(options) {

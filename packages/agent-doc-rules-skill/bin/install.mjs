@@ -10,7 +10,15 @@ import {
   rm,
   stat,
 } from 'node:fs/promises';
-import { basename, dirname, join, resolve } from 'node:path';
+import {
+  basename,
+  dirname,
+  isAbsolute,
+  join,
+  relative,
+  resolve,
+  sep,
+} from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const packageRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,8 +42,10 @@ async function main() {
 
   const packageJson = JSON.parse(await readFile(join(packageRoot, 'package.json'), 'utf8'));
   const skillNames = validateSkillNames(packageJson.agentDocRules?.localSkills);
-  const target = resolve(process.cwd(), options.target ?? defaultTarget);
-  assertSkillsDirectoryTarget(target);
+  const projectRoot = await realpath(process.cwd());
+  const requestedTarget = resolve(process.cwd(), options.target ?? defaultTarget);
+  assertSkillsDirectoryTarget(requestedTarget);
+  let target = await resolveContainedTarget(requestedTarget, projectRoot);
   await validateSources(skillNames);
 
   const existingRoot = await pathInfo(target);
@@ -62,12 +72,19 @@ async function main() {
   if (options.dryRun) {
     console.log(
       `Would install ${packageJson.name}@${packageJson.version} skills ` +
-      `${skillNames.join(', ')} to ${target}`,
+      `${skillNames.join(', ')} to ${requestedTarget}`,
     );
     return;
   }
 
   await mkdir(target, { recursive: true });
+  const verifiedTarget = await resolveContainedTarget(requestedTarget, projectRoot);
+
+  if (verifiedTarget !== target) {
+    throw new Error(`Skills target changed while preparing the installation: ${requestedTarget}`);
+  }
+
+  target = verifiedTarget;
   const { cleanupWarning } = await installTransaction({ conflicts, skillNames, target });
 
   if (cleanupWarning) {
@@ -76,7 +93,7 @@ async function main() {
 
   console.log(
     `Installed ${packageJson.name}@${packageJson.version} skills ` +
-    `${skillNames.join(', ')} to ${target}`,
+    `${skillNames.join(', ')} to ${requestedTarget}`,
   );
 }
 
@@ -291,6 +308,66 @@ function assertSkillsDirectoryTarget(target) {
   if (basename(target) !== 'skills') {
     throw new Error('--target must be a parent directory named "skills".');
   }
+}
+
+async function resolveContainedTarget(target, projectRoot) {
+  const resolvedTarget = await resolveFromNearestExistingAncestor(target);
+
+  if (!isPathWithin(projectRoot, resolvedTarget)) {
+    throw new Error(`Skills target must resolve within the current project: ${target}`);
+  }
+
+  return resolvedTarget;
+}
+
+async function resolveFromNearestExistingAncestor(target) {
+  let ancestor = target;
+  const missingSegments = [];
+
+  while (true) {
+    const entry = await lstat(ancestor).catch((error) => {
+      if (error?.code === 'ENOENT' || error?.code === 'ENOTDIR') {
+        return undefined;
+      }
+
+      throw error;
+    });
+
+    if (entry) {
+      let resolvedAncestor;
+
+      try {
+        resolvedAncestor = await realpath(ancestor);
+      } catch (error) {
+        if (error?.code === 'ENOENT' || error?.code === 'ENOTDIR' || error?.code === 'ELOOP') {
+          throw new Error(`Skills target cannot resolve target path: ${ancestor}`);
+        }
+
+        throw error;
+      }
+
+      return resolve(resolvedAncestor, ...missingSegments);
+    }
+
+    const parent = dirname(ancestor);
+
+    if (parent === ancestor) {
+      throw new Error(`Skills target cannot resolve target path: ${target}`);
+    }
+
+    missingSegments.unshift(basename(ancestor));
+    ancestor = parent;
+  }
+}
+
+function isPathWithin(parent, child) {
+  const pathFromParent = relative(parent, child);
+
+  return pathFromParent === '' || (
+    pathFromParent !== '..'
+    && !pathFromParent.startsWith(`..${sep}`)
+    && !isAbsolute(pathFromParent)
+  );
 }
 
 async function isDirectExecution() {

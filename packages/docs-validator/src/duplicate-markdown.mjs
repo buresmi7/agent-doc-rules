@@ -1,4 +1,4 @@
-import { readFile, realpath } from 'node:fs/promises';
+import { readFile, realpath, stat } from 'node:fs/promises';
 import {
   isAbsolute,
   posix,
@@ -37,12 +37,14 @@ async function resolveDuplicateFileEntries({
   const realRoot = await realpath(resolve(root));
   const normalizedInclude = include.map(normalizeGlobPattern);
   const normalizedExclude = exclude.map(normalizeGlobPattern);
+  await validateGlobSearchPrefixes(realRoot, normalizedInclude);
   const files = await fastGlob(normalizedInclude, {
     cwd: realRoot,
     dot: true,
     ignore: expandExcludePatterns(normalizedExclude),
-    onlyFiles: true,
-    followSymbolicLinks: true,
+    // Match file symlinks for containment checks without traversing symlinked directories.
+    onlyFiles: false,
+    followSymbolicLinks: false,
     unique: true,
   });
   const entries = [];
@@ -54,13 +56,27 @@ async function resolveDuplicateFileEntries({
       continue;
     }
 
-    const verifiedRealPath = await realpath(resolve(realRoot, ...file.split('/')));
+    let verifiedRealPath;
+
+    try {
+      verifiedRealPath = await realpath(resolve(realRoot, ...file.split('/')));
+    } catch (error) {
+      if (isMissingPathError(error)) {
+        continue;
+      }
+
+      throw error;
+    }
 
     if (!isPathInside(realRoot, verifiedRealPath)) {
       throw new Error(
         `Matched Markdown path ${JSON.stringify(file)} resolves outside repository root `
         + `${JSON.stringify(realRoot)}. Remove the path or replace the escaping symlink.`,
       );
+    }
+
+    if (!(await stat(verifiedRealPath)).isFile()) {
+      continue;
     }
 
     entries.push({ file, realPath: verifiedRealPath });
@@ -72,6 +88,43 @@ async function resolveDuplicateFileEntries({
 
 function normalizeGlobPattern(pattern) {
   return pattern.replaceAll('\\', '/').replace(/^\.\//, '');
+}
+
+async function validateGlobSearchPrefixes(realRoot, patterns) {
+  const bases = fastGlob.generateTasks(patterns)
+    .map((task) => normalizeGlobPattern(task.base))
+    .filter((base) => base !== '.' && base !== '');
+
+  for (const base of new Set(bases)) {
+    const normalizedBase = normalizeRepoRelativePath(base, 'Glob search prefix');
+    const segments = normalizedBase.split('/');
+
+    for (let length = 1; length <= segments.length; length += 1) {
+      const prefix = segments.slice(0, length).join('/');
+      let verifiedPrefix;
+
+      try {
+        verifiedPrefix = await realpath(resolve(realRoot, ...segments.slice(0, length)));
+      } catch (error) {
+        if (isMissingPathError(error)) {
+          break;
+        }
+
+        throw error;
+      }
+
+      if (!isPathInside(realRoot, verifiedPrefix)) {
+        throw new Error(
+          `Glob search prefix ${JSON.stringify(prefix)} resolves outside repository root `
+          + `${JSON.stringify(realRoot)}. Remove the path or replace the escaping symlink.`,
+        );
+      }
+    }
+  }
+}
+
+function isMissingPathError(error) {
+  return error?.code === 'ENOENT' || error?.code === 'ENOTDIR';
 }
 
 export async function resolveFocusFiles({
@@ -128,7 +181,7 @@ export function extractMarkdownUnits({ file, content, minWords = 6, minChars = 4
 
     for (const sentence of splitIntoUnits(text)) {
       const normalized = normalizeForDuplicateCheck(sentence);
-      const words = normalized.split(' ').filter(Boolean);
+      const words = tokenizeNormalizedText(normalized);
 
       if (isUsefulUnit({ text: sentence, normalized, words, minWords, minChars })) {
         units.push({
@@ -169,7 +222,7 @@ export function validateRepoRelativeGlobs(patterns, label = 'glob') {
       );
     }
 
-    if (pathPattern.split('/').some((segment) => segment.includes('..'))) {
+    if (pathPattern.split('/').some((segment) => segment === '..')) {
       throw new Error(
         `${label} glob ${JSON.stringify(pattern)} must not contain parent-directory traversal.`,
       );
@@ -223,9 +276,35 @@ function isUsefulUnit({ text, normalized, words, minWords, minChars }) {
     return false;
   }
 
-  const alphaNumericCount = (text.match(/[a-z0-9]/gi) ?? []).length;
+  const alphaNumericCount = (text.match(/[\p{Letter}\p{Number}]/gu) ?? []).length;
   return alphaNumericCount / Math.max(text.length, 1) >= 0.45;
 }
+
+function tokenizeNormalizedText(text) {
+  return text.split(' ').flatMap((token) => {
+    if (!CJK_CHARACTER_PATTERN.test(token)) {
+      return token ? [token] : [];
+    }
+
+    return token.split(CJK_SPLIT_PATTERN).flatMap((part) => {
+      if (CJK_CHARACTER_PATTERN.test(part)) {
+        return [part];
+      }
+
+      return part.match(UNICODE_WORD_PATTERN) ?? [];
+    });
+  });
+}
+
+const CJK_SCRIPT_SOURCE = [
+  String.raw`\p{Script=Han}`,
+  String.raw`\p{Script=Hiragana}`,
+  String.raw`\p{Script=Katakana}`,
+  String.raw`\p{Script=Hangul}`,
+].join('');
+const CJK_CHARACTER_PATTERN = new RegExp(`[${CJK_SCRIPT_SOURCE}]`, 'u');
+const CJK_SPLIT_PATTERN = new RegExp(`([${CJK_SCRIPT_SOURCE}])`, 'gu');
+const UNICODE_WORD_PATTERN = /[\p{Letter}\p{Mark}\p{Number}]+/gu;
 
 function sliceNodeContent(content, node) {
   const start = node.position?.start?.offset;

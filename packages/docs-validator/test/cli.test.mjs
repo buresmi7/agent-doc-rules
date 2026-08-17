@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import test from 'node:test';
 import { parseArgs, runCommand } from '../src/cli.mjs';
-import { resolveDocsOptions } from '../src/config.mjs';
+import { resolveDocsOptions, resolveDuplicateCandidateOptions } from '../src/config.mjs';
 import {
   buildLinkinatorArgs,
   buildMarkdownlintArgs,
@@ -564,4 +564,35 @@ test('init command can print without writing files', async () => {
     readFile(join(root, 'agent-doc-rules.config.json'), 'utf8'),
     /ENOENT/,
   );
+});
+
+test('stale duplicate thresholds report behavior-preserving migration values', async () => {
+  const cases = [
+    {
+      config: { docs: { duplicates: {} } },
+      expected: /old default warnScore 0\.78 maps to minSimilarity 0\.72/i,
+    },
+    {
+      config: { docs: { duplicates: { warnScore: 0.65 } } },
+      expected: /configured warnScore 0\.65 maps to minSimilarity 0\.65/i,
+    },
+    {
+      config: { docs: { duplicateCandidates: { warnScore: 0.9 } } },
+      expected: /configured warnScore 0\.9 maps to minSimilarity 0\.72/i,
+    },
+  ];
+
+  for (const { config, expected } of cases) {
+    const root = await mkdtemp(join(tmpdir(), 'docs-validator-threshold-migration-'));
+    await writeFile(join(root, 'agent-doc-rules.config.json'), JSON.stringify(config));
+
+    await assert.rejects(
+      resolveDuplicateCandidateOptions({ root }),
+      (error) => {
+        assert.match(error.message, /minSimilarity = Math\.min\(warnScore, 0\.72\)/);
+        assert.match(error.message, expected);
+        return true;
+      },
+    );
+  }
 });

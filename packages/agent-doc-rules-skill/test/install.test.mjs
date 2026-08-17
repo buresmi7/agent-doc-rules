@@ -70,6 +70,78 @@ test('installs both skills into the default project path', async (t) => {
   await assert.rejects(stat(join(rulesTarget, 'test')), { code: 'ENOENT' });
 });
 
+test('rejects a default skills symlink that escapes the current project', async (t) => {
+  const fixtureRoot = await mkdtemp(join(tmpdir(), 'agent-doc-rules-install-'));
+  const projectDir = join(fixtureRoot, 'project');
+  const outsideSkills = join(fixtureRoot, 'outside-skills');
+  t.after(() => rm(fixtureRoot, { recursive: true, force: true }));
+  await mkdir(join(projectDir, '.agents'), { recursive: true });
+  await writeMarker(join(outsideSkills, 'team-skill'), 'keep unrelated\n');
+  await symlink(outsideSkills, join(projectDir, '.agents/skills'));
+
+  const result = await runInstaller([], projectDir);
+
+  assert.equal(result.code, 1);
+  assert.match(result.stderr, /must resolve within the current project/);
+  assert.equal(
+    await readFile(join(outsideSkills, 'team-skill/marker.txt'), 'utf8'),
+    'keep unrelated\n',
+  );
+  await assert.rejects(stat(join(outsideSkills, 'agent-doc-rules')), { code: 'ENOENT' });
+  await assert.rejects(stat(join(outsideSkills, 'docs-duplicate-review')), { code: 'ENOENT' });
+});
+
+test('rejects an explicit target whose existing ancestor escapes the current project', async (t) => {
+  const fixtureRoot = await mkdtemp(join(tmpdir(), 'agent-doc-rules-install-'));
+  const projectDir = join(fixtureRoot, 'project');
+  const outsideDir = join(fixtureRoot, 'outside');
+  const target = join(projectDir, 'vendor/skills');
+  t.after(() => rm(fixtureRoot, { recursive: true, force: true }));
+  await mkdir(projectDir, { recursive: true });
+  await mkdir(outsideDir, { recursive: true });
+  await symlink(outsideDir, join(projectDir, 'vendor'));
+
+  const result = await runInstaller(['--target', target], projectDir);
+
+  assert.equal(result.code, 1);
+  assert.match(result.stderr, /must resolve within the current project/);
+  await assert.rejects(stat(join(outsideDir, 'skills')), { code: 'ENOENT' });
+});
+
+test('rejects a broken target ancestor symlink without replacing it', async (t) => {
+  const projectDir = await mkdtemp(join(tmpdir(), 'agent-doc-rules-install-'));
+  const agentsLink = join(projectDir, '.agents');
+  t.after(() => rm(projectDir, { recursive: true, force: true }));
+  await symlink('missing-agents', agentsLink);
+
+  const result = await runInstaller([], projectDir);
+
+  assert.equal(result.code, 1);
+  assert.match(result.stderr, /cannot resolve target path/);
+  assert.ok((await lstat(agentsLink)).isSymbolicLink());
+  await assert.rejects(stat(join(projectDir, 'missing-agents')), { code: 'ENOENT' });
+});
+
+test('allows an in-project target symlink and preserves unrelated skills', async (t) => {
+  const projectDir = await mkdtemp(join(tmpdir(), 'agent-doc-rules-install-'));
+  const actualAgents = join(projectDir, 'config/agents');
+  const skillsRoot = join(actualAgents, 'skills');
+  const unrelatedTarget = join(skillsRoot, 'team-skill');
+  t.after(() => rm(projectDir, { recursive: true, force: true }));
+  await writeMarker(unrelatedTarget, 'keep unrelated\n');
+  await symlink(actualAgents, join(projectDir, '.agents'));
+
+  const result = await runInstaller([], projectDir);
+
+  assert.equal(result.code, 0, result.stderr);
+  await assertPath(join(skillsRoot, 'agent-doc-rules/SKILL.md'));
+  await assertPath(join(skillsRoot, 'docs-duplicate-review/SKILL.md'));
+  assert.equal(
+    await readFile(join(unrelatedTarget, 'marker.txt'), 'utf8'),
+    'keep unrelated\n',
+  );
+});
+
 test('runs through a package-bin style symlink', async (t) => {
   const projectDir = await mkdtemp(join(tmpdir(), 'agent-doc-rules-install-'));
   t.after(() => rm(projectDir, { recursive: true, force: true }));

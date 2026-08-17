@@ -56,6 +56,37 @@ Tiny.
   ]);
 });
 
+test('Markdown extraction keeps Cyrillic and CJK prose with useful Unicode tokens', () => {
+  const units = extractMarkdownUnits({
+    file: 'docs/international.md',
+    minWords: 6,
+    minChars: 20,
+    content: `# International documentation
+
+Проверяйте документацию перед изменением общих правил проекта.
+
+更新共享规则之前请检查项目文档以保持内容一致。
+`,
+  });
+
+  assert.deepEqual(units.map((unit) => unit.text), [
+    'Проверяйте документацию перед изменением общих правил проекта.',
+    '更新共享规则之前请检查项目文档以保持内容一致。',
+  ]);
+  assert.deepEqual(units[0].words, [
+    'проверяйте',
+    'документацию',
+    'перед',
+    'изменением',
+    'общих',
+    'правил',
+    'проекта',
+  ]);
+  assert.ok(units[1].words.length >= 6);
+  assert.ok(units[1].words.every((word) => /^\p{Letter}$/u.test(word)));
+  assert.equal(units[1].words.join(''), '更新共享规则之前请检查项目文档以保持内容一致');
+});
+
 test('reference directories are excluded unless explicitly included', async () => {
   const root = await mkdtemp(join(tmpdir(), 'docs-validator-duplicate-files-'));
   await mkdir(join(root, 'docs'), { recursive: true });
@@ -110,6 +141,94 @@ test('duplicate Markdown globs stay repository-relative and normalize to POSIX p
     }),
     /parent-directory traversal/i,
   );
+});
+
+test('duplicate Markdown globs allow safe double-dot filenames', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-double-dot-file-'));
+  await mkdir(join(root, 'docs'), { recursive: true });
+  await writeFile(join(root, 'docs/v1..v2.md'), '# Version range\n');
+
+  assert.deepEqual(await resolveDuplicateFiles({
+    root,
+    include: ['docs/v1..v2.md'],
+    exclude: [],
+    includeReferences: true,
+  }), ['docs/v1..v2.md']);
+
+  await assert.rejects(
+    resolveDuplicateFiles({
+      root,
+      include: ['docs/../outside.md'],
+      exclude: [],
+      includeReferences: true,
+    }),
+    /parent-directory traversal/i,
+  );
+});
+
+test('duplicate Markdown globs do not traverse directory symlinks', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'docs-validator-symlink-directory-'));
+  const root = join(parent, 'repo');
+  const outside = join(parent, 'outside');
+  await mkdir(root);
+  await mkdir(outside);
+  await writeFile(join(outside, 'guide.md'), '# Outside\n');
+  await symlink(outside, join(root, 'linked-docs'));
+
+  assert.deepEqual(await resolveDuplicateFiles({
+    root,
+    include: ['**/*.md'],
+    exclude: [],
+    includeReferences: true,
+  }), []);
+});
+
+test('static glob prefixes reject escaping directory symlinks before file discovery', async () => {
+  const parent = await mkdtemp(join(tmpdir(), 'docs-validator-static-symlink-directory-'));
+  const root = join(parent, 'repo');
+  const outside = join(parent, 'outside');
+  await mkdir(root);
+  await mkdir(outside);
+  await writeFile(join(outside, 'secret.txt'), 'This file does not match the Markdown glob.\n');
+  await symlink(outside, join(root, 'docs'));
+
+  await assert.rejects(
+    resolveDuplicateFiles({
+      root,
+      include: ['docs/**/*.md'],
+      exclude: [],
+      includeReferences: true,
+    }),
+    /glob search prefix "docs" resolves outside repository root.*escaping symlink/i,
+  );
+});
+
+test('matched file symlinks inside the repository remain valid', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-safe-file-symlink-'));
+  await mkdir(join(root, 'docs'));
+  await writeFile(join(root, 'docs/canonical.md'), '# Canonical guide\n');
+  await symlink(join('docs', 'canonical.md'), join(root, 'guide.md'));
+
+  assert.deepEqual(await resolveDuplicateFiles({
+    root,
+    include: ['guide.md'],
+    exclude: [],
+    includeReferences: true,
+  }), ['guide.md']);
+});
+
+test('dangling Markdown file symlinks are skipped for broad and exact globs', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'docs-validator-dangling-file-symlink-'));
+  await symlink('missing.md', join(root, 'dangling.md'));
+
+  for (const include of [['**/*.md'], ['dangling.md']]) {
+    assert.deepEqual(await resolveDuplicateFiles({
+      root,
+      include,
+      exclude: [],
+      includeReferences: true,
+    }), []);
+  }
 });
 
 test('matched symlinks cannot escape the repository root', async () => {

@@ -132,10 +132,12 @@ The old `docs.style` and `docs.duplicates` sections are unsupported. Remove the
 `@buresmi7/agent-doc-rules-docs-duplicates` dependency and its `docs:style` and
 `docs:duplicates` scripts. Also remove `@openai/codex` when it was installed
 only as that checker's project-local fallback. Move deterministic settings to
-`docs.duplicateCandidates`, rename `warnScore` to `minSimilarity`, and remove
-`model`, `reasoningEffort`, `codexBin`, and `failScore`. Keep `docs:check` as
-`agent-doc-rules-docs check`. The CLI reports stale config instead of silently
-ignoring it. See the skill package's
+`docs.duplicateCandidates`. Set `minSimilarity` to
+`Math.min(previous warnScore, 0.72)` to preserve the retired checker's candidate
+threshold; its default `warnScore` of `0.78` maps to `minSimilarity: 0.72`.
+Remove `model`, `reasoningEffort`, `codexBin`, and `failScore`. Keep
+`docs:check` as `agent-doc-rules-docs check`. The CLI reports stale config
+instead of silently ignoring it. See the skill package's
 [migration guide](../agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker)
 for the full replacement path.
 

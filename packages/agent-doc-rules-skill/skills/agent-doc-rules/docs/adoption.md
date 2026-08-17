@@ -131,9 +131,12 @@ Keep it when another project workflow still owns that dependency.
 Then replace `docs:style` and `docs:duplicates` scripts with
 `docs:duplicate-candidates`, and keep `docs:check` as
 `agent-doc-rules-docs check`. Move deterministic duplicate settings from
-`docs.duplicates` to `docs.duplicateCandidates`, rename `warnScore` to
-`minSimilarity`, and remove `failScore`, `model`, `reasoningEffort`, and
-`codexBin`. Remove `docs.style`; `$agent-doc-rules` now owns style judgment.
+`docs.duplicates` to `docs.duplicateCandidates`. The retired checker selected
+candidates at `Math.min(warnScore, 0.72)`, so set `minSimilarity` to that
+effective value instead of copying `warnScore` directly. Its default
+`warnScore` of `0.78` maps to `minSimilarity: 0.72`. Remove `failScore`,
+`model`, `reasoningEffort`, and `codexBin`. Remove `docs.style`;
+`$agent-doc-rules` now owns style judgment.
 
 Use the [Config Reference](config-reference.md) for the supported schema. Run
 `docs:check` and one complete `$docs-duplicate-review` after the migration.
