@@ -519,10 +519,17 @@ test('init command writes a starter config', async () => {
   assert.deepEqual(config.docs.security, {
     allow: [],
   });
-  assert.equal(config.docs.style.model, 'gpt-5-nano');
-  assert.equal(config.docs.style.maxUnits, 80);
-  assert.equal(config.docs.duplicates.model, 'gpt-5-nano');
-  assert.deepEqual(config.docs.duplicates.ignorePairs, []);
+  assert.equal('style' in config.docs, false);
+  assert.equal('duplicates' in config.docs, false);
+  assert.deepEqual(config.docs.duplicateCandidates, {
+    includeReferences: false,
+    includeSameFile: false,
+    minSimilarity: 0.72,
+    minWords: 6,
+    minChars: 40,
+    maxCandidates: 50,
+    ignorePairs: [],
+  });
 });
 
 test('init command refuses to overwrite existing config without force', async () => {
@@ -548,7 +555,9 @@ test('init command can print without writing files', async () => {
 
   assert.equal(code, 0);
   assert.match(stdout, /"docs"/);
-  assert.match(stdout, /"docs:style"/);
+  assert.match(stdout, /"docs:duplicate-candidates"/);
+  assert.doesNotMatch(stdout, /"docs:style"/);
+  assert.doesNotMatch(stdout, /agent-doc-rules-docs-duplicates/);
   assert.match(stdout, /"docs:check"/);
 
   await assert.rejects(

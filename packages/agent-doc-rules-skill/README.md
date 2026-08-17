@@ -1,53 +1,97 @@
-# Agent Doc Rules Skill
+# Agent Doc Rules Skills
 
-`agent-doc-rules` is an Agent Skill for repository documentation and agent
-context architecture.
+This package provides two Agent Skills for repository documentation:
 
-Use it when a project needs to decide what belongs in human documentation, what
-belongs in always-loaded agent instructions, and what should become a
-task-specific skill for agents.
+- `agent-doc-rules` owns documentation architecture, `AGENTS.md`, README,
+  factual and security review, and plain-English style review.
+- `docs-duplicate-review` classifies semantic overlap from deterministic
+  duplicate candidates and chooses a canonical owner.
 
-## What It Does
-
-- Keeps `AGENTS.md` short, local, and useful for agent routing.
-- Shapes `README.md` as a human entry point, not a full manual.
-- Separates long-lived docs from task-specific agent workflows.
-- Reviews repository docs for false, contradictory, unsupported, stale, or
-  misleading claims.
-- Reviews agent-facing docs for data leaks, prompt-injection language,
-  validation bypasses, and backdoor-style guidance.
-- Applies plain-English writing rules to repository documentation.
-- Keeps prompts, task narration, and tool traces out of durable
-  documentation without dropping supported project facts and decisions.
-- Uses progressive disclosure so detailed rules live in references, not in the
-  always-loaded skill entry point.
+The agent already working in the repository performs both judgment-based
+reviews. Beyond that host agent, the skills do not start another AI CLI or
+require a separate AI login, model configuration, or model-provider service.
 
 ## Install
 
-Install from npm into the current Codex project:
+Install both skills from npm into the current project:
 
 ```bash
 npx @buresmi7/agent-doc-rules-skill
 ```
 
-Replace an existing project install:
+Replace existing copies of these two skills:
 
 ```bash
 npx @buresmi7/agent-doc-rules-skill install --force
 ```
 
-The npm installer copies only the skill artifact into
-`.agents/skills/agent-doc-rules/`. It does not copy this monorepo's E2E
-fixtures, support scripts, generated maintainer skills, or root docs.
+The installer writes only:
 
-Install optional documentation validation tools:
-
-```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator @buresmi7/agent-doc-rules-docs-duplicates
+```text
+.agents/skills/
+├── agent-doc-rules/
+└── docs-duplicate-review/
 ```
 
-The AI checks require a separately installed and authenticated Codex CLI. See
-the [duplicate checker requirements](https://github.com/buresmi7/agent-doc-rules/tree/master/packages/docs-duplicates#codex-cli-requirement).
+It preserves every unrelated directory under `.agents/skills/`. It checks both
+destinations before writing and attempts to restore both owned skills if
+installation fails. If restoration is incomplete, it retains the backups and
+reports their recovery paths.
+
+Preview the operation without writing files:
+
+```bash
+npx @buresmi7/agent-doc-rules-skill install --dry-run
+```
+
+The package also follows standard skill discovery. From a repository checkout
+or unpacked package root, list or install its skills with the `skills` CLI:
+
+```bash
+npx skills add . --list
+npx skills add . --skill agent-doc-rules --skill docs-duplicate-review -y --copy
+```
+
+## Use The Skills
+
+Apply documentation architecture and style rules:
+
+```text
+Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
+```
+
+```text
+Use $agent-doc-rules to review this README for unsupported claims and plain-English style.
+```
+
+```text
+Use $agent-doc-rules to review these docs for factual accuracy, contradictions,
+and unsupported claims.
+```
+
+Review semantic duplication:
+
+```text
+Use $docs-duplicate-review to classify semantic duplication in the changed documentation.
+```
+
+`agent-doc-rules` loads detailed references only when the task needs them. Its
+plain-English review lives in
+[`writing-style.md`](skills/agent-doc-rules/references/writing-style.md).
+
+`docs-duplicate-review` first uses deterministic candidate evidence, then asks
+the host agent to inspect both passages and classify them with the
+[`classification rubric`](skills/docs-duplicate-review/references/classification-rubric.md).
+A similarity score ranks candidates; it never becomes the verdict.
+
+## Deterministic Validation
+
+Install the validator for Markdown, wording, security, links, and
+duplicate-candidate generation:
+
+```bash
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator
+```
 
 Recommended scripts:
 
@@ -57,180 +101,35 @@ Recommended scripts:
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:wording": "agent-doc-rules-docs wording",
     "docs:security": "agent-doc-rules-docs security",
-    "docs:style": "agent-doc-rules-docs-duplicates style",
     "docs:links": "agent-doc-rules-docs links",
-    "docs:duplicates": "agent-doc-rules-docs-duplicates check",
-    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check"
+    "docs:duplicate-candidates": "agent-doc-rules-docs duplicate-candidates --format json",
+    "docs:check": "agent-doc-rules-docs check"
   }
 }
 ```
 
-## Usage
+The validator is optional for other `agent-doc-rules` workflows, but a complete
+`docs-duplicate-review` requires its deterministic candidate command.
 
-Ask the agent to use the skill by name.
+`docs:check` is a deterministic CI gate. Finding duplicate candidates does not
+fail CI because semantic ownership requires repository context. Run the
+candidate command as evidence for `$docs-duplicate-review`:
 
-Main examples:
-
-```text
-Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
+```bash
+pnpm run docs:duplicate-candidates
 ```
 
-```text
-Use $agent-doc-rules to review this README for stale commands and duplicated rules.
-```
+Existing users of the retired duplicate checker should follow the
+[migration steps](skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker).
 
-```text
-Use $agent-doc-rules to review these docs for factual accuracy, contradictions,
-and unsupported claims.
-```
+## Documentation
 
-```text
-Use $agent-doc-rules to decide whether this note belongs in README.md,
-AGENTS.md, docs/, or a task-specific skill.
-```
-
-```text
-Use $agent-doc-rules to add a project-specific documentation overlay.
-```
-
-Common tasks:
-
-- create or repair `AGENTS.md`,
-- write or review a README,
-- decide whether information belongs in docs, `AGENTS.md`, or a skill,
-- add a project-specific documentation overlay,
-- review agent-facing docs for security risks,
-- review docs for factual accuracy, plain English, and duplicated rules.
-
-## Adoption And Tools
-
-- [Adoption Guide](docs/adoption.md) shows the smallest setup for consuming
-  repositories.
-- [Tool Map](docs/tool-map.md) maps common documentation tasks to the right
-  skill reference or CLI.
-- [Config Reference](docs/config-reference.md) documents
-  `agent-doc-rules.config.json`.
-- [Recipes](docs/recipes.md) gives before-and-after patterns based on the E2E
-  scenarios.
-
-## Feature Guide
-
-- [Agent Instructions](#agent-instructions)
-- [README Shaping](#readme-shaping)
-- [Documentation Placement](#documentation-placement)
-- [Decision Records](#decision-records)
-- [Documentation Repair](#documentation-repair)
-- [Factual Documentation Review](#factual-documentation-review)
-- [Documentation Security Review](#documentation-security-review)
-- [Plain-English Cleanup](#plain-english-cleanup)
-- [Validation Tools](#validation-tools)
-- [Starter Templates](#starter-templates)
-- [Adoption Docs](#adoption-docs)
-
-### Agent Instructions
-
-Create or repair `AGENTS.md` files so agents get a brief project orientation,
-short routing rules, local constraints, nested instruction pointers, and
-verification commands. The detailed rules live in
-[`references/agents-rules.md`](references/agents-rules.md), with review checks
-in [`references/agents-rubric.md`](references/agents-rubric.md).
-
-### README Shaping
-
-Keep README files useful as human entry points. The skill trims runbooks,
-removes stale commands, and links to deeper docs instead of copying detail into
-the README. See [`references/readme-rules.md`](references/readme-rules.md) and
-[`references/readme-rubric.md`](references/readme-rubric.md).
-
-### Documentation Placement
-
-Decide whether a fact belongs in `README.md`, `docs/`, `AGENTS.md`, a skill,
-or a skill reference. The compact rule set is
-[`references/documentation-architecture.md`](references/documentation-architecture.md);
-the fuller guide is [`docs/context-placement.md`](docs/context-placement.md).
-
-### Decision Records
-
-Record lasting accepted trade-offs, rule exceptions, and user-approved
-shortcuts. Future maintainers should find the reason near the affected work.
-The rule lives in [`references/decision-records.md`](references/decision-records.md),
-and the starter format lives in
-[`assets/templates/decision-record.md`](assets/templates/decision-record.md).
-
-### Documentation Repair
-
-Move bloated, stale, duplicated, or inbox-style documentation into the right
-canonical home. The audit workflow lives in
-[`references/doc-audit.md`](references/doc-audit.md).
-
-### Factual Documentation Review
-
-Check documentation claims against project evidence before editing. If a
-requested change conflicts with local manifests, source files, configs, tests,
-or canonical docs, the skill tells the agent to report the conflict instead of
-writing unsupported text. See
-[`references/factual-review.md`](references/factual-review.md).
-
-### Documentation Security Review
-
-Review agent-facing docs as instructions that can influence future edits. The
-security checklist covers data exfiltration, remote execution, credential
-handling, prompt-injection language, validation bypasses, backdoor-style
-guidance, remote tracking assets, and encoded payloads. See
-[`references/security-review.md`](references/security-review.md).
-
-### Plain-English Cleanup
-
-Rewrite repository documentation in direct, specific language. The skill cuts
-padding, avoids generic AI phrasing, and keeps the reader's task first. See
-[`references/writing-style.md`](references/writing-style.md).
-
-### Validation Tools
-
-Use the optional CLIs to check Markdown, deterministic prose wording,
-deterministic security patterns, AI sentence style, local links, and likely
-duplicate documentation passages. Duplicate review supports
-`docs.duplicates.ignorePairs` for narrow, documented overlaps such as E2E
-criteria repeating the rule under test. The validation guidance lives in
-[`references/validation.md`](references/validation.md).
-
-### Starter Templates
-
-Start new agent instruction files from the templates in
-[`assets/templates/`](assets/templates/) instead of copying unrelated project
-rules.
-
-### Adoption Docs
-
-Use the product docs when rolling the skill into another repository:
-
-- [Adoption Guide](docs/adoption.md)
-- [Tool Map](docs/tool-map.md)
-- [Config Reference](docs/config-reference.md)
-- [Recipes](docs/recipes.md)
-
-## Context Placement
-
-Context placement decides the durable home for each project fact.
-
-Use:
-
-- `README.md` for human orientation and first useful commands,
-- `docs/` for long-lived explanations, how-to guides, references, and runbooks,
-- `docs/decisions/` or an existing decision log for lasting accepted
-  trade-offs that are linked from affected surfaces,
-- `AGENTS.md` for short always-loaded agent routing and local invariants,
-- `.agents/skills/<name>/` for repeated task workflows that agents should load
-  only when relevant,
-- `references/` inside a skill for detailed rules loaded on demand,
-- `assets/` inside a skill for templates and reusable output material.
-
-See [Context Placement](docs/context-placement.md) for the full model.
-
-## Influences
-
-See [Influences And Attribution](references/influences.md) for attribution,
-design influences, and duplicate-review provenance.
+- [Adoption Guide](skills/agent-doc-rules/docs/adoption.md)
+- [Tool Map](skills/agent-doc-rules/docs/tool-map.md)
+- [Config Reference](skills/agent-doc-rules/docs/config-reference.md)
+- [Context Placement](skills/agent-doc-rules/docs/context-placement.md)
+- [Recipes](skills/agent-doc-rules/docs/recipes.md)
+- [Validation Guidance](skills/agent-doc-rules/references/validation.md)
 
 ## Development
 
@@ -243,7 +142,7 @@ corepack pnpm run test:install
 corepack pnpm test
 ```
 
-Run agent E2E tests only when an agent runner is configured:
+Run agent E2E tests only when the configured host-agent runner is available:
 
 ```bash
 corepack pnpm run test:agent

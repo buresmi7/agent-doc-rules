@@ -26,12 +26,8 @@
   },
   "files": [
     "README.md",
-    "SKILL.md",
-    "agents",
-    "assets",
     "bin",
-    "docs",
-    "references"
+    "skills"
   ],
   "devDependencies": {
     "@buresmi7/agent-e2e-report": "workspace:*",
@@ -40,6 +36,10 @@
     "skill-meta-skill": "0.1.0"
   },
   "agentDocRules": {
+    "localSkills": [
+      "agent-doc-rules",
+      "docs-duplicate-review"
+    ],
     "projectSkills": [
       {
         "name": "docmd-writer",

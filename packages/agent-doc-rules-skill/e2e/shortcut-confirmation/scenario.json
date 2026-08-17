@@ -12,8 +12,8 @@
       "id": "confirm",
       "prompt": "Yes, accept the temporary validation workaround for this review.",
       "criteria": {
-        "add-narrow-workaround": "After confirmation, the output adds only a narrow documented validation workaround, such as a valid `docs.duplicates.ignorePairs` object entry with `left` and `right` regex strings for `README.md` and `docs/setup.md`.",
-        "preserve-validation-scope": "The change preserves the existing config shape, keeps `docs:check` and duplicate review active, keeps excludes narrow, and leaves unrelated docs in scope.",
+        "add-narrow-workaround": "After confirmation, the output adds only a narrow documented validation workaround, such as a valid `docs.duplicateCandidates.ignorePairs` object entry with `left` and `right` regex strings for `README.md` and `docs/setup.md`.",
+        "preserve-validation-scope": "The change preserves the existing config shape, keeps deterministic `docs:check` and duplicate-candidate generation active, keeps excludes narrow, and leaves unrelated docs in scope.",
         "record-decision": "The output creates or updates a durable decision record under `docs/decisions/` or an existing clear decision-log location. The record captures the temporary nature, rationale, consequence, affected surfaces, and revisit condition.",
         "link-active-decision": "An affected surface links to the active decision record. A decision index alone is not enough.",
         "preserve-project-facts": "The output preserves project facts and does not invent commands, hosts, issue workflows, owners, or services."

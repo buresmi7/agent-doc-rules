@@ -5,9 +5,9 @@ These scenarios run real Codex conversations against fixture projects to test
 state against the criteria in `scenario.json`.
 
 Each fixture project declares the local skill package as a `workspace:*`
-dependency. Its `test:agent` script selects that package and the
-`agent-doc-rules` skill. The workspace install makes the dependency resolvable,
-and the runner installs an isolated copy of the skill in each run directory.
+dependency. Its `test:agent` script selects that package and the skill under
+test. The workspace install makes the dependency resolvable, and the runner
+installs an isolated copy of the selected skill in each run directory.
 
 ## Scenario Layout
 

@@ -1,0 +1,145 @@
+{
+  "format": "agent-e2e-report",
+  "formatVersion": 1,
+  "revision": 1,
+  "status": "passed",
+  "stage": "complete",
+  "scenario": {
+    "name": "structured-style-review",
+    "source": "scenario.json"
+  },
+  "runner": "codex",
+  "agent": {
+    "name": "codex",
+    "command": "codex",
+    "cliVersion": "codex-cli 0.144.5",
+    "model": {
+      "agent": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      },
+      "judge": {
+        "name": "gpt-5.5",
+        "reasoningEffort": "medium",
+        "label": "gpt-5.5 medium",
+        "source": {
+          "name": "~/.codex/config.toml",
+          "reasoningEffort": "agent-e2e-runner default"
+        }
+      }
+    }
+  },
+  "skillsCliVersion": "1.5.12",
+  "skillPackage": {
+    "name": "@buresmi7/agent-doc-rules-skill",
+    "source": "workspace:*",
+    "skill": "agent-doc-rules"
+  },
+  "passThreshold": 0.8,
+  "turns": [
+    {
+      "id": "request",
+      "source": "scenario.json#/turns/0",
+      "status": "completed",
+      "prompt": "Review README.md for plain-English style. Return structured findings only and do not edit any files.",
+      "response": "warning README.md:3\nIssue: Opening description uses vague marketing terms instead of the concrete project behavior.\nReplacement: `Event Index stores index entries in memory and lets callers look them up by event ID.`\n\nwarning README.md:8\nIssue: `Getting Started` introduces only a test command, and lines 10-11 add throat-clearing before the useful action.\nReplacement: `## Verification\\n\\nRun:\\n\\n\\`\\`\\`bash\\nnpm test\\n\\`\\`\\``",
+      "criteria": [
+        {
+          "id": "request.structured-findings",
+          "source": "scenario.json#/turns/0/criteria/structured-findings",
+          "content": "Reports material findings with severity, `README.md:line`, a specific issue, and a concrete replacement.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.finds-padding",
+          "source": "scenario.json#/turns/0/criteria/finds-padding",
+          "content": "Identifies the vague marketing language or padded setup wording and suggests direct wording that preserves supported repository facts.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.no-style-churn",
+          "source": "scenario.json#/turns/0/criteria/no-style-churn",
+          "content": "Omits harmless personal preferences and does not propose unrelated documentation or code changes.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.report-only",
+          "source": "scenario.json#/turns/0/criteria/report-only",
+          "content": "Makes no fixture file changes because the request explicitly asks only for findings.",
+          "status": "passed",
+          "reason": ""
+        },
+        {
+          "id": "request.host-agent-review",
+          "source": "scenario.json#/turns/0/criteria/host-agent-review",
+          "content": "Applies the skill's writing-style reference directly without invoking or requiring a second AI CLI, login, model selection, or remote reviewer.",
+          "status": "passed",
+          "reason": ""
+        }
+      ],
+      "activity": [
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "nl",
+          "exitCode": 0,
+          "status": "completed"
+        }
+      ],
+      "changes": [],
+      "error": null
+    }
+  ],
+  "changes": [],
+  "evaluation": {
+    "judgePass": true,
+    "effectivePass": true,
+    "score": 1,
+    "passThreshold": 0.8,
+    "outcomeReason": "passed",
+    "failedCriteria": [],
+    "unknownFailedCriteria": [],
+    "requiredFixes": [],
+    "notes": "The agent returned structured style findings with severity, README line references, concrete issues, and replacement wording; it identified both marketing language and padded setup wording, made no file changes, and did not invoke any external reviewer."
+  },
+  "error": null,
+  "warnings": [],
+  "inspect": {}
+}

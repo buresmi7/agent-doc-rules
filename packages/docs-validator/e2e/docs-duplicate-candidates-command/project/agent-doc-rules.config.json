@@ -1,0 +1,15 @@
+{
+  "docs": {
+    "include": ["README.md", "docs/**/*.md"],
+    "exclude": [],
+    "duplicateCandidates": {
+      "includeReferences": false,
+      "includeSameFile": false,
+      "minSimilarity": 0.9,
+      "minWords": 6,
+      "minChars": 40,
+      "maxCandidates": 1,
+      "ignorePairs": []
+    }
+  }
+}

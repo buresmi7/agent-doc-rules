@@ -1,8 +1,17 @@
-import { resolveDocsOptions } from './config.mjs';
+import { resolveDocsOptions, resolveDuplicateCandidateOptions } from './config.mjs';
+import { runDuplicateCandidates } from './duplicate-candidates-command.mjs';
 import { runInit } from './init.mjs';
 import { runCheck, runLinks, runMarkdown, runSecurity, runWording } from './runner.mjs';
 
-const commands = new Set(['init', 'markdown', 'wording', 'security', 'links', 'check']);
+const commands = new Set([
+  'init',
+  'markdown',
+  'wording',
+  'security',
+  'links',
+  'duplicate-candidates',
+  'check',
+]);
 
 export async function main(argv = process.argv.slice(2)) {
   const parsed = parseArgs(argv);
@@ -14,6 +23,8 @@ export async function main(argv = process.argv.slice(2)) {
 
   const options = parsed.command === 'init'
     ? parsed
+    : parsed.command === 'duplicate-candidates'
+    ? await resolveDuplicateCandidateOptions(parsed)
     : parsed.command === 'check'
     ? {
         markdownOptions: await resolveDocsOptions({ ...parsed, command: 'markdown' }),
@@ -50,6 +61,11 @@ export async function runCommand(command, options, deps = {}) {
     return runSecurity(options, deps);
   }
 
+  if (command === 'duplicate-candidates') {
+    const runCandidates = deps.runDuplicateCandidates ?? runDuplicateCandidates;
+    return runCandidates(options, deps);
+  }
+
   if (command === 'check') {
     return runCheck(options, deps);
   }
@@ -72,6 +88,7 @@ export function parseArgs(argv) {
     command: maybeCommand,
     include: [],
     exclude: [],
+    focus: [],
     skip: [],
     forbiddenTerms: [],
     allow: [],
@@ -91,6 +108,30 @@ export function parseArgs(argv) {
       parsed.exclude.push(readValue(rest, ++index, arg));
     } else if (arg === '--config') {
       parsed.configPath = readValue(rest, ++index, arg);
+    } else if (arg === '--focus') {
+      parsed.focus.push(readValue(rest, ++index, arg));
+    } else if (arg === '--format') {
+      parsed.format = readValue(rest, ++index, arg);
+    } else if (arg === '--include-references') {
+      parsed.includeReferences = true;
+    } else if (arg === '--include-same-file') {
+      parsed.includeSameFile = true;
+    } else if (arg === '--min-similarity') {
+      parsed.minSimilarity = readNumber(rest, ++index, arg);
+    } else if (arg === '--min-words') {
+      parsed.minWords = readNumber(rest, ++index, arg);
+    } else if (arg === '--min-chars') {
+      parsed.minChars = readNumber(rest, ++index, arg);
+    } else if (arg === '--max-candidates') {
+      parsed.maxCandidates = readNumber(rest, ++index, arg);
+    } else if (arg === '--cursor') {
+      parsed.cursor = readValue(rest, ++index, arg);
+    } else if (arg === '--warn-score') {
+      throw new Error('--warn-score was renamed to --min-similarity.');
+    } else if (arg === '--fail-score') {
+      throw new Error('--fail-score was removed because candidates have no severity.');
+    } else if (arg === '--min-score') {
+      throw new Error('--min-score was renamed to --min-similarity.');
     } else if (arg === '--skip') {
       parsed.skip.push(readValue(rest, ++index, arg));
     } else if (arg === '--forbid') {
@@ -113,6 +154,17 @@ export function parseArgs(argv) {
   return parsed;
 }
 
+function readNumber(args, index, option) {
+  const raw = readValue(args, index, option);
+  const value = Number(raw);
+
+  if (!Number.isFinite(value)) {
+    throw new Error(`${option} must be a number.`);
+  }
+
+  return value;
+}
+
 function readValue(args, index, option) {
   const value = args[index];
 
@@ -132,13 +184,24 @@ Commands:
   wording       Run deterministic prose wording checks.
   security      Run deterministic documentation security checks.
   links         Run Markdown link validation.
+  duplicate-candidates
+                Find likely duplicate prose for review by the current agent.
   check         Run Markdown linting, wording, security, then link validation.
 
 Options:
   --root <dir>          Repository root. Defaults to the current directory.
   --include <glob>      Include Markdown glob. Repeatable.
   --exclude <glob>      Exclude glob. Repeatable.
+  --focus <glob>        Compare matching files with the full corpus. Repeatable.
   --config <path>       Config file. Defaults to agent-doc-rules.config.json.
+  --format <format>     Candidate output: text or json. Defaults to text.
+  --include-references  Include references/ directories in duplicate candidates.
+  --include-same-file   Include candidate pairs from the same file.
+  --min-similarity <n>  Minimum deterministic similarity from 0 through 1.
+  --min-words <number>  Minimum words in a prose unit.
+  --min-chars <number>  Minimum characters in a prose unit.
+  --max-candidates <n>  Maximum candidates in one page.
+  --cursor <id>         Continue after a previous page's nextCursor.
   --skip <regex>        Linkinator skip pattern. Repeatable.
   --forbid <term>       Project-specific term that should fail. Repeatable.
   --allow <regex>       Wording or security allow pattern for matching lines. Repeatable.

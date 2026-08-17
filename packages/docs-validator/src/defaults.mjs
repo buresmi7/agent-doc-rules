@@ -20,3 +20,13 @@ export const defaultExclude = [
 ];
 
 export const defaultConfigFile = 'agent-doc-rules.config.json';
+
+export const duplicateCandidateDefaults = {
+  includeReferences: false,
+  includeSameFile: false,
+  minSimilarity: 0.72,
+  minWords: 6,
+  minChars: 40,
+  maxCandidates: 50,
+  ignorePairs: [],
+};

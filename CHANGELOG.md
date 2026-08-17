@@ -8,10 +8,12 @@ live in the package changelogs:
 - [`@buresmi7/agent-e2e-runner`](packages/agent-e2e-runner/CHANGELOG.md)
 - [`@buresmi7/agent-e2e-report`](packages/agent-e2e-report/CHANGELOG.md)
 - [`@buresmi7/agent-doc-rules-docs-validator`](packages/docs-validator/CHANGELOG.md)
-- [`@buresmi7/agent-doc-rules-docs-duplicates`](packages/docs-duplicates/CHANGELOG.md)
+- [Retired docs duplicate checker](docs/retired/docs-duplicates-changelog.md)
 
 ## Unreleased
 
+- Retired the duplicate-checker workspace and archived its package history
+  after removing it from active release metadata.
 - Documented `v0.11.0` as the final lockstep release, reconciled legacy tags
   with GitHub Releases, and defined independent versioning for later package
   releases.

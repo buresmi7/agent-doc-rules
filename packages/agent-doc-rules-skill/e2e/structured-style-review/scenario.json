@@ -1,0 +1,15 @@
+{
+  "turns": [
+    {
+      "id": "request",
+      "prompt": "Review README.md for plain-English style. Return structured findings only and do not edit any files.",
+      "criteria": {
+        "structured-findings": "Reports material findings with severity, `README.md:line`, a specific issue, and a concrete replacement.",
+        "finds-padding": "Identifies the vague marketing language or padded setup wording and suggests direct wording that preserves supported repository facts.",
+        "no-style-churn": "Omits harmless personal preferences and does not propose unrelated documentation or code changes.",
+        "report-only": "Makes no fixture file changes because the request explicitly asks only for findings.",
+        "host-agent-review": "Applies the skill's writing-style reference directly without invoking or requiring a second AI CLI, login, model selection, or remote reviewer."
+      }
+    }
+  ]
+}

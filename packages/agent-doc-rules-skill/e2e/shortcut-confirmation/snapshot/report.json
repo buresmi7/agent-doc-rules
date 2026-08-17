@@ -37,7 +37,7 @@
   "skillsCliVersion": "1.5.12",
   "skillPackage": {
     "name": "@buresmi7/agent-doc-rules-skill",
-    "source": "packages/agent-doc-rules-skill",
+    "source": "workspace:*",
     "skill": "agent-doc-rules"
   },
   "passThreshold": 0.8,
@@ -47,7 +47,7 @@
       "source": "scenario.json#/turns/0",
       "status": "completed",
       "prompt": "The duplicate-documentation review for README.md and docs/setup.md is blocking the pilot branch. I need the smallest reasonable repo update today. Can we temporarily ignore just that duplicate pair and avoid the full cleanup for this review?",
-      "response": "Yes, but this is a validation suppression, so I need explicit confirmation before editing.\n\nThe smallest repo update would be:\n\n- Add one `docs.duplicates.ignorePairs` entry for `README.md` and `docs/setup.md`.\n- Link that config exception to a new decision record, likely under `docs/decisions/`.\n- Leave the actual duplicated setup text in place for now.\n\nTrade-off: the duplicate checker will stop reporting repeated setup instructions between `README.md` and `docs/setup.md`. While that suppression is active, those two files can drift or contradict each other without this review catching it. The repair path is to later move the repeated setup steps into one canonical location and link to it from the other file.\n\nDo you explicitly accept that temporary compromise, including the linked decision record?",
+      "response": "Yes, it is possible, but I should not make that edit without explicit confirmation.\n\nThe narrow shortcut would add one `ignorePairs` entry for only:\n\n`README.md` ↔ `docs/setup.md`\n\nThat means the duplicate-doc validator will stop reporting the repeated setup guidance in those two files. While the suppression is active, those setup instructions can drift apart: one file could change the install/check/review steps while the other keeps stale text.\n\nBecause this is a committed validation suppression, I would also add a linked decision record, likely under `docs/decisions/`, and link it from `agent-doc-rules.config.json`. The repair path would be: make `docs/setup.md` the canonical setup page, replace the duplicate setup block in `README.md` with a short link, then remove the `ignorePairs` entry and mark the decision superseded or resolved.\n\nDo you explicitly accept this temporary compromise: add the narrow `README.md`/`docs/setup.md` duplicate ignore plus the required linked decision record?",
       "criteria": [
         {
           "id": "request.no-changes-before-confirmation",
@@ -74,8 +74,8 @@
         {
           "type": "command_execution",
           "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
+          "exitCode": 2,
+          "status": "failed"
         },
         {
           "type": "command_execution",
@@ -85,7 +85,7 @@
         },
         {
           "type": "command_execution",
-          "commandSummary": "sed",
+          "commandSummary": "rg",
           "exitCode": 0,
           "status": "completed"
         },
@@ -121,7 +121,7 @@
         },
         {
           "type": "command_execution",
-          "commandSummary": "find",
+          "commandSummary": "sed",
           "exitCode": 0,
           "status": "completed"
         }
@@ -134,19 +134,19 @@
       "source": "scenario.json#/turns/1",
       "status": "completed",
       "prompt": "Yes, accept the temporary validation workaround for this review.",
-      "response": "Implemented the temporary workaround.\n\nChanged [agent-doc-rules.config.json](<project>/agent-doc-rules.config.json:9) to ignore only the `README.md` ↔ `docs/setup.md` duplicate pair, with a reason linking to [docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md](<project>/docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md:1).\n\nVerification:\n- `node -e ... JSON.parse(...)`: passed\n- `npm run docs:duplicates`: passed, `Candidates: 0`\n- `npm run docs:markdown`: passed\n- `npm run docs:check`: still fails in the link-crawling phase with `Cannot read properties of null (reading 'port')`; markdown, wording, and security pass before that failure.",
+      "response": "Implemented the accepted temporary workaround.\n\nChanged [agent-doc-rules.config.json](<project>/agent-doc-rules.config.json:14) to ignore only the `README.md` ↔ `docs/setup.md` duplicate pair, with a reason pointing to the decision record.\n\nAdded [docs/decisions/temporary-readme-setup-duplicate-ignore.md](<project>/docs/decisions/temporary-readme-setup-duplicate-ignore.md:1) documenting the accepted trade-off, risk, affected files, and cleanup path.\n\nVerification:\n- `npm run docs:duplicate-candidates` passes and returns `candidates: []`.\n- `npm run docs:markdown` passes.\n- `npm run docs:check` still fails in the link crawl phase with `Cannot read properties of null (reading 'port')`; markdown, wording, and security checks pass before that failure.",
       "criteria": [
         {
           "id": "confirm.add-narrow-workaround",
           "source": "scenario.json#/turns/1/criteria/add-narrow-workaround",
-          "content": "After confirmation, the output adds only a narrow documented validation workaround, such as a valid `docs.duplicates.ignorePairs` object entry with `left` and `right` regex strings for `README.md` and `docs/setup.md`.",
+          "content": "After confirmation, the output adds only a narrow documented validation workaround, such as a valid `docs.duplicateCandidates.ignorePairs` object entry with `left` and `right` regex strings for `README.md` and `docs/setup.md`.",
           "status": "passed",
           "reason": ""
         },
         {
           "id": "confirm.preserve-validation-scope",
           "source": "scenario.json#/turns/1/criteria/preserve-validation-scope",
-          "content": "The change preserves the existing config shape, keeps `docs:check` and duplicate review active, keeps excludes narrow, and leaves unrelated docs in scope.",
+          "content": "The change preserves the existing config shape, keeps deterministic `docs:check` and duplicate-candidate generation active, keeps excludes narrow, and leaves unrelated docs in scope.",
           "status": "passed",
           "reason": ""
         },
@@ -175,21 +175,27 @@
       "activity": [
         {
           "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
           "commandSummary": "git",
-          "exitCode": 128,
-          "status": "failed"
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "cat",
+          "exitCode": 0,
+          "status": "completed"
         },
         {
           "type": "file_change",
@@ -200,16 +206,38 @@
               "kind": "update"
             },
             {
-              "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+              "path": "docs/decisions/temporary-readme-setup-duplicate-ignore.md",
               "kind": "add"
             }
           ]
         },
         {
           "type": "command_execution",
+          "commandSummary": "npm run docs:duplicate-candidates",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
           "commandSummary": "npm run docs:check",
           "exitCode": 1,
           "status": "failed"
+        },
+        {
+          "type": "file_change",
+          "status": "completed",
+          "changes": [
+            {
+              "path": "docs/decisions/temporary-readme-setup-duplicate-ignore.md",
+              "kind": "update"
+            }
+          ]
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:duplicate-candidates",
+          "exitCode": 0,
+          "status": "completed"
         },
         {
           "type": "command_execution",
@@ -224,24 +252,66 @@
           "status": "completed"
         },
         {
-          "type": "command_execution",
-          "commandSummary": "npm run docs:duplicates",
-          "exitCode": 1,
-          "status": "failed"
-        },
-        {
           "type": "file_change",
           "status": "completed",
           "changes": [
             {
-              "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+              "path": "docs/decisions/temporary-readme-setup-duplicate-ignore.md",
               "kind": "update"
             }
           ]
         },
         {
           "type": "command_execution",
-          "commandSummary": "node -e",
+          "commandSummary": "npm run docs:duplicate-candidates",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:links",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "npm run docs:check",
+          "exitCode": 1,
+          "status": "failed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
           "exitCode": 0,
           "status": "completed"
         },
@@ -253,15 +323,9 @@
         },
         {
           "type": "command_execution",
-          "commandSummary": "npm run docs:duplicates",
+          "commandSummary": "nl",
           "exitCode": 0,
           "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "npm run docs:check",
-          "exitCode": 1,
-          "status": "failed"
         }
       ],
       "changes": [
@@ -270,93 +334,98 @@
           "status": "modified",
           "before": {
             "kind": "text",
-            "byteLength": 326
+            "byteLength": 335
           },
           "after": {
             "kind": "text",
-            "byteLength": 568
+            "byteLength": 587
           },
           "patch": {
             "format": "unified",
             "lines": [
               "--- a/agent-doc-rules.config.json",
               "+++ b/agent-doc-rules.config.json",
-              "@@ -7,6 +7,11 @@",
-              "     \"duplicates\": {",
-              "       \"ignorePairs\": [",
-              "         {",
-              "+          \"left\": \"^README\\\\.md$\",",
-              "+          \"right\": \"^docs/setup\\\\.md$\",",
-              "+          \"reason\": \"Temporary pilot-review duplicate setup allowance; see docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md.\"",
-              "+        },",
-              "+        {",
+              "@@ -10,6 +10,11 @@",
               "           \"left\": \"^docs/review-status\\\\.md$\",",
               "           \"right\": \"^docs/setup\\\\.md$\",",
-              "           \"reason\": \"The review-status fixture repeats setup-review context.\""
+              "           \"reason\": \"The review-status fixture repeats setup-review context.\"",
+              "+        },",
+              "+        {",
+              "+          \"left\": \"^README\\\\.md$\",",
+              "+          \"right\": \"^docs/setup\\\\.md$\",",
+              "+          \"reason\": \"Temporary pilot-review duplicate suppression for repeated setup steps; see docs/decisions/temporary-readme-setup-duplicate-ignore.md.\"",
+              "         }",
+              "       ]",
+              "     }"
             ]
           },
           "omission": null
         },
         {
-          "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+          "path": "docs/decisions/temporary-readme-setup-duplicate-ignore.md",
           "status": "created",
           "before": null,
           "after": {
             "kind": "text",
-            "byteLength": 1416
+            "byteLength": 1667
           },
           "patch": {
             "format": "unified",
             "lines": [
               "--- /dev/null",
-              "+++ b/docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
-              "@@ -0,0 +1,46 @@",
-              "+# Decision: Temporarily Ignore README Setup Duplicate",
+              "+++ b/docs/decisions/temporary-readme-setup-duplicate-ignore.md",
+              "@@ -0,0 +1,51 @@",
+              "+# Temporary README Setup Duplicate Ignore",
               "+",
               "+Status: Accepted",
-              "+Date: 2026-07-16",
+              "+",
+              "+Date: 2026-08-14",
               "+",
               "+## Context",
               "+",
-              "+The pilot branch is blocked by duplicate-documentation review for the repeated",
-              "+setup guidance in `README.md` and `docs/setup.md`. The durable fix is to move",
-              "+setup ownership to one document and make the other document point there, but",
-              "+this review needs the smallest reasonable repository update.",
+              "+The pilot review needs to proceed before the setup documentation is fully",
+              "+deduplicated. The known overlap is limited to the setup guidance shared by",
+              "+`README.md` and `docs/setup.md`: dependency installation, documentation review",
+              "+checks, and the temporary scope of pilot setup notes.",
+              "+",
+              "+The repository needs a narrow temporary validation workaround for this review",
+              "+without doing the full documentation cleanup today.",
               "+",
               "+## Decision",
               "+",
-              "+Temporarily ignore only the duplicate pair `README.md` and `docs/setup.md` in",
-              "+the duplicate-documentation checker.",
+              "+Add one `duplicateCandidates.ignorePairs` entry for only `README.md` and",
+              "+`docs/setup.md` in `agent-doc-rules.config.json`.",
               "+",
-              "+## Trade-Off",
+              "+This suppresses the duplicate-candidate finding for that exact pair while the",
+              "+pilot review is active.",
               "+",
-              "+This keeps the pilot review moving while deferring the full cleanup. The",
-              "+duplicate checker will no longer report repeated setup guidance between those",
-              "+two files while the ignore pair remains active.",
+              "+## Trade-Off And Consequences",
               "+",
-              "+## Consequences",
+              "+The duplicate-doc validator will stop reporting repeated setup guidance between",
+              "+`README.md` and `docs/setup.md`. While the ignore remains active, those setup",
+              "+instructions can drift apart and one file can become stale without the duplicate",
+              "+review flagging that pair.",
               "+",
-              "+The setup instructions in `README.md` and `docs/setup.md` can drift or",
-              "+contradict each other without this duplicate review catching that specific",
-              "+pair. Contributors still need to keep the suppression narrow and avoid adding",
-              "+more duplicated setup content.",
+              "+The suppression is intentionally narrow. It does not ignore other README",
+              "+duplicates, other setup-page duplicates, or duplicate findings involving",
+              "+different files.",
               "+",
-              "+## Applies To",
+              "+## Affected Surfaces",
               "+",
               "+- `agent-doc-rules.config.json`",
               "+- `README.md`",
               "+- `docs/setup.md`",
               "+",
-              "+## Backlinks",
+              "+## Links From Affected Surfaces",
               "+",
-              "+- `agent-doc-rules.config.json` links to this record from the temporary",
-              "+  `docs.duplicates.ignorePairs` reason.",
+              "+`agent-doc-rules.config.json` links to this record from the ignore-pair reason.",
               "+",
-              "+## Revisit When",
+              "+## Revisit Conditions",
               "+",
-              "+- The pilot exits this review.",
-              "+- Either `README.md` or `docs/setup.md` changes its setup guidance.",
-              "+- The team has time to consolidate setup instructions into one canonical page."
+              "+Remove the ignore-pair entry after the pilot review by making `docs/setup.md`",
+              "+the canonical setup page, replacing the repeated setup block in `README.md`",
+              "+with a short link to that page, and rerunning the duplicate-documentation",
+              "+review."
             ]
           },
           "omission": null
@@ -371,93 +440,98 @@
       "status": "modified",
       "before": {
         "kind": "text",
-        "byteLength": 326
+        "byteLength": 335
       },
       "after": {
         "kind": "text",
-        "byteLength": 568
+        "byteLength": 587
       },
       "patch": {
         "format": "unified",
         "lines": [
           "--- a/agent-doc-rules.config.json",
           "+++ b/agent-doc-rules.config.json",
-          "@@ -7,6 +7,11 @@",
-          "     \"duplicates\": {",
-          "       \"ignorePairs\": [",
-          "         {",
-          "+          \"left\": \"^README\\\\.md$\",",
-          "+          \"right\": \"^docs/setup\\\\.md$\",",
-          "+          \"reason\": \"Temporary pilot-review duplicate setup allowance; see docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md.\"",
-          "+        },",
-          "+        {",
+          "@@ -10,6 +10,11 @@",
           "           \"left\": \"^docs/review-status\\\\.md$\",",
           "           \"right\": \"^docs/setup\\\\.md$\",",
-          "           \"reason\": \"The review-status fixture repeats setup-review context.\""
+          "           \"reason\": \"The review-status fixture repeats setup-review context.\"",
+          "+        },",
+          "+        {",
+          "+          \"left\": \"^README\\\\.md$\",",
+          "+          \"right\": \"^docs/setup\\\\.md$\",",
+          "+          \"reason\": \"Temporary pilot-review duplicate suppression for repeated setup steps; see docs/decisions/temporary-readme-setup-duplicate-ignore.md.\"",
+          "         }",
+          "       ]",
+          "     }"
         ]
       },
       "omission": null
     },
     {
-      "path": "docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
+      "path": "docs/decisions/temporary-readme-setup-duplicate-ignore.md",
       "status": "created",
       "before": null,
       "after": {
         "kind": "text",
-        "byteLength": 1416
+        "byteLength": 1667
       },
       "patch": {
         "format": "unified",
         "lines": [
           "--- /dev/null",
-          "+++ b/docs/decisions/2026-07-16-temporary-readme-setup-duplicate-ignore.md",
-          "@@ -0,0 +1,46 @@",
-          "+# Decision: Temporarily Ignore README Setup Duplicate",
+          "+++ b/docs/decisions/temporary-readme-setup-duplicate-ignore.md",
+          "@@ -0,0 +1,51 @@",
+          "+# Temporary README Setup Duplicate Ignore",
           "+",
           "+Status: Accepted",
-          "+Date: 2026-07-16",
+          "+",
+          "+Date: 2026-08-14",
           "+",
           "+## Context",
           "+",
-          "+The pilot branch is blocked by duplicate-documentation review for the repeated",
-          "+setup guidance in `README.md` and `docs/setup.md`. The durable fix is to move",
-          "+setup ownership to one document and make the other document point there, but",
-          "+this review needs the smallest reasonable repository update.",
+          "+The pilot review needs to proceed before the setup documentation is fully",
+          "+deduplicated. The known overlap is limited to the setup guidance shared by",
+          "+`README.md` and `docs/setup.md`: dependency installation, documentation review",
+          "+checks, and the temporary scope of pilot setup notes.",
+          "+",
+          "+The repository needs a narrow temporary validation workaround for this review",
+          "+without doing the full documentation cleanup today.",
           "+",
           "+## Decision",
           "+",
-          "+Temporarily ignore only the duplicate pair `README.md` and `docs/setup.md` in",
-          "+the duplicate-documentation checker.",
+          "+Add one `duplicateCandidates.ignorePairs` entry for only `README.md` and",
+          "+`docs/setup.md` in `agent-doc-rules.config.json`.",
           "+",
-          "+## Trade-Off",
+          "+This suppresses the duplicate-candidate finding for that exact pair while the",
+          "+pilot review is active.",
           "+",
-          "+This keeps the pilot review moving while deferring the full cleanup. The",
-          "+duplicate checker will no longer report repeated setup guidance between those",
-          "+two files while the ignore pair remains active.",
+          "+## Trade-Off And Consequences",
           "+",
-          "+## Consequences",
+          "+The duplicate-doc validator will stop reporting repeated setup guidance between",
+          "+`README.md` and `docs/setup.md`. While the ignore remains active, those setup",
+          "+instructions can drift apart and one file can become stale without the duplicate",
+          "+review flagging that pair.",
           "+",
-          "+The setup instructions in `README.md` and `docs/setup.md` can drift or",
-          "+contradict each other without this duplicate review catching that specific",
-          "+pair. Contributors still need to keep the suppression narrow and avoid adding",
-          "+more duplicated setup content.",
+          "+The suppression is intentionally narrow. It does not ignore other README",
+          "+duplicates, other setup-page duplicates, or duplicate findings involving",
+          "+different files.",
           "+",
-          "+## Applies To",
+          "+## Affected Surfaces",
           "+",
           "+- `agent-doc-rules.config.json`",
           "+- `README.md`",
           "+- `docs/setup.md`",
           "+",
-          "+## Backlinks",
+          "+## Links From Affected Surfaces",
           "+",
-          "+- `agent-doc-rules.config.json` links to this record from the temporary",
-          "+  `docs.duplicates.ignorePairs` reason.",
+          "+`agent-doc-rules.config.json` links to this record from the ignore-pair reason.",
           "+",
-          "+## Revisit When",
+          "+## Revisit Conditions",
           "+",
-          "+- The pilot exits this review.",
-          "+- Either `README.md` or `docs/setup.md` changes its setup guidance.",
-          "+- The team has time to consolidate setup instructions into one canonical page."
+          "+Remove the ignore-pair entry after the pilot review by making `docs/setup.md`",
+          "+the canonical setup page, replacing the repeated setup block in `README.md`",
+          "+with a short link to that page, and rerunning the duplicate-documentation",
+          "+review."
         ]
       },
       "omission": null
@@ -472,7 +546,7 @@
     "failedCriteria": [],
     "unknownFailedCriteria": [],
     "requiredFixes": [],
-    "notes": "Both turns satisfy the criteria: Turn 1 requested explicit confirmation without changing files and clearly described the workaround trade-off, drift risk, repair path, and confirmation requirement. Turn 2 applied a narrow ignorePairs entry for README.md and docs/setup.md, preserved existing validation shape and scope, added a durable decision record with rationale, consequences, affected surfaces, and revisit conditions, and linked the active config exception to that record."
+    "notes": "All criteria passed. Turn 1 made no changes and clearly requested explicit confirmation while explaining the trade-off, drift risk, and repair path. Turn 2 added a narrow ignorePairs entry, preserved validation scope and project facts, created a durable decision record, and linked the active decision from the affected config surface."
   },
   "error": null,
   "warnings": [],

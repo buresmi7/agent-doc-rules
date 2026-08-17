@@ -7,29 +7,30 @@ import { fileURLToPath } from 'node:url';
 import {
   externalProjectSkillSources,
   externalProjectSkills,
-  localWorkspaceSkill,
+  localWorkspaceSkills,
   nodeModulesProjectSkills,
   skillsCliVersion,
 } from './project-skills.mjs';
 import { computeVersionedDirectoryHash } from './versioned-directory-hash.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const skillPackage = localWorkspaceSkill.packageName;
-const skillName = localWorkspaceSkill.name;
+const skillPackage = localWorkspaceSkills[0].packageName;
 const requireFromRoot = createRequire(join(repoRoot, 'package.json'));
 const skillPackageJson = requireFromRoot.resolve(`${skillPackage}/package.json`);
-const skillDir = await realpath(dirname(skillPackageJson));
-const targetDir = join(repoRoot, '.agents/skills', skillName);
-const targetParent = dirname(targetDir);
+const skillPackageDir = await realpath(dirname(skillPackageJson));
+const targetParent = join(repoRoot, '.agents/skills');
 const lockPath = join(repoRoot, 'skills-lock.json');
 const originalLockContent = await readFile(lockPath, 'utf8').catch(() => undefined);
 
 await mkdir(targetParent, { recursive: true });
 await syncExternalProjectSkillsSafely();
 await syncNodeModulesProjectSkills();
-await syncLocalWorkspaceSkill();
+await syncLocalWorkspaceSkills();
 
-console.log(`Synced ${skillPackage} and ${externalProjectSkills.length} external project skills.`);
+console.log(
+  `Synced ${localWorkspaceSkills.length} local skills from ${skillPackage}`
+  + ` and ${externalProjectSkills.length} external project skills.`,
+);
 
 async function syncExternalProjectSkills() {
   for (const source of externalProjectSkillSources) {
@@ -110,12 +111,17 @@ function githubRepositoryUrl(source) {
   return `https://github.com/${source}.git`;
 }
 
-async function syncLocalWorkspaceSkill() {
-  await assertFile(join(skillDir, 'SKILL.md'));
-  await rm(targetDir, { recursive: true, force: true });
-  await symlink(relative(targetParent, skillDir), targetDir, directorySymlinkType());
-  await normalizeSkillsLock();
-  await assertFile(join(targetDir, 'SKILL.md'));
+async function syncLocalWorkspaceSkills() {
+  for (const skill of localWorkspaceSkills) {
+    const skillDir = join(skillPackageDir, skill.relativeDirectory);
+    const targetDir = join(targetParent, skill.name);
+
+    await assertFile(join(skillDir, 'SKILL.md'));
+    await rm(targetDir, { recursive: true, force: true });
+    await symlink(relative(targetParent, skillDir), targetDir, directorySymlinkType());
+    await normalizeSkillsLock(skill.name, skillDir);
+    await assertFile(join(targetDir, 'SKILL.md'));
+  }
 }
 
 async function syncNodeModulesProjectSkills() {
@@ -123,7 +129,7 @@ async function syncNodeModulesProjectSkills() {
     return;
   }
 
-  const skillNodeModules = join(skillDir, 'node_modules');
+  const skillNodeModules = join(skillPackageDir, 'node_modules');
   const nodeModulesInfo = await stat(skillNodeModules).catch(() => undefined);
 
   if (!nodeModulesInfo?.isDirectory()) {
@@ -183,7 +189,7 @@ async function syncNodeModulesProjectSkills() {
   }
 }
 
-async function normalizeSkillsLock() {
+async function normalizeSkillsLock(skillName, skillDir) {
   const content = await readFile(lockPath, 'utf8').catch(() => undefined);
   const relativeSource = relative(repoRoot, skillDir).replaceAll('\\', '/');
 

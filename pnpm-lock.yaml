@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@buresmi7/agent-doc-rules-docs-duplicates':
-        specifier: workspace:*
-        version: link:packages/docs-duplicates
       '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:packages/docs-validator
@@ -72,9 +69,6 @@ importers:
         specifier: workspace:*
         version: link:../../..
     devDependencies:
-      '@buresmi7/agent-doc-rules-docs-duplicates':
-        specifier: workspace:*
-        version: link:../../../../docs-duplicates
       '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../../docs-validator
@@ -115,6 +109,16 @@ importers:
         specifier: workspace:*
         version: link:../../..
 
+  packages/agent-doc-rules-skill/e2e/semantic-duplicate-review/project:
+    dependencies:
+      '@buresmi7/agent-doc-rules-skill':
+        specifier: workspace:*
+        version: link:../../..
+    devDependencies:
+      '@buresmi7/agent-doc-rules-docs-validator':
+        specifier: workspace:*
+        version: link:../../../../docs-validator
+
   packages/agent-doc-rules-skill/e2e/sensitive-notes-redaction/project:
     dependencies:
       '@buresmi7/agent-doc-rules-skill':
@@ -131,9 +135,6 @@ importers:
         specifier: workspace:*
         version: link:../../..
     devDependencies:
-      '@buresmi7/agent-doc-rules-docs-duplicates':
-        specifier: workspace:*
-        version: link:../../../../docs-duplicates
       '@buresmi7/agent-doc-rules-docs-validator':
         specifier: workspace:*
         version: link:../../../../docs-validator
@@ -145,6 +146,12 @@ importers:
         version: link:../../..
 
   packages/agent-doc-rules-skill/e2e/stale-readme-commands/project:
+    dependencies:
+      '@buresmi7/agent-doc-rules-skill':
+        specifier: workspace:*
+        version: link:../../..
+
+  packages/agent-doc-rules-skill/e2e/structured-style-review/project:
     dependencies:
       '@buresmi7/agent-doc-rules-skill':
         specifier: workspace:*
@@ -183,14 +190,17 @@ importers:
         specifier: workspace:*
         version: link:../agent-e2e-report
 
-  packages/docs-duplicates:
+  packages/docs-validator:
     dependencies:
-      cross-spawn:
-        specifier: ^7.0.6
-        version: 7.0.6
       fast-glob:
         specifier: ^3.3.3
         version: 3.3.3
+      linkinator:
+        specifier: ^7.6.1
+        version: 7.6.1
+      markdownlint-cli2:
+        specifier: ^0.22.1
+        version: 0.22.1
       mdast-util-to-string:
         specifier: ^4.0.0
         version: 4.0.0
@@ -206,18 +216,6 @@ importers:
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.1.0
-
-  packages/docs-validator:
-    dependencies:
-      fast-glob:
-        specifier: ^3.3.3
-        version: 3.3.3
-      linkinator:
-        specifier: ^7.6.1
-        version: 7.6.1
-      markdownlint-cli2:
-        specifier: ^0.22.1
-        version: 0.22.1
       write-good:
         specifier: ^1.0.8
         version: 1.0.8
@@ -225,6 +223,12 @@ importers:
       '@buresmi7/agent-e2e-runner':
         specifier: workspace:*
         version: link:../agent-e2e-runner
+
+  packages/docs-validator/e2e/docs-duplicate-candidates-command/project:
+    devDependencies:
+      '@buresmi7/agent-doc-rules-docs-validator':
+        specifier: workspace:*
+        version: link:../../..
 
   packages/docs-validator/e2e/docs-security-command-fail/project:
     devDependencies:

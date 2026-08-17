@@ -6,10 +6,9 @@ export const recommendedScripts = {
   'docs:markdown': 'agent-doc-rules-docs markdown',
   'docs:wording': 'agent-doc-rules-docs wording',
   'docs:security': 'agent-doc-rules-docs security',
-  'docs:style': 'agent-doc-rules-docs-duplicates style',
   'docs:links': 'agent-doc-rules-docs links',
-  'docs:duplicates': 'agent-doc-rules-docs-duplicates check',
-  'docs:check': 'agent-doc-rules-docs check && agent-doc-rules-docs-duplicates style && agent-doc-rules-docs-duplicates check',
+  'docs:duplicate-candidates': 'agent-doc-rules-docs duplicate-candidates --format json',
+  'docs:check': 'agent-doc-rules-docs check',
 };
 
 export function buildStarterConfig() {
@@ -37,25 +36,14 @@ export function buildStarterConfig() {
       security: {
         allow: [],
       },
-      style: {
-        includeReferences: false,
-        minWords: 6,
-        minChars: 40,
-        maxUnits: 80,
-        model: 'gpt-5-nano',
-        reasoningEffort: 'low',
-      },
-      duplicates: {
+      duplicateCandidates: {
         includeReferences: false,
         includeSameFile: false,
-        warnScore: 0.78,
-        failScore: 0.92,
+        minSimilarity: 0.72,
         minWords: 6,
         minChars: 40,
         maxCandidates: 50,
         ignorePairs: [],
-        model: 'gpt-5-nano',
-        reasoningEffort: 'low',
       },
     },
   };

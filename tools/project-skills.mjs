@@ -7,6 +7,7 @@ export const skillsCliVersion = process.env.SKILLS_CLI_VERSION ?? '1.5.12';
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const skillPackagePath = join(repoRoot, 'packages/agent-doc-rules-skill/package.json');
 const skillPackageManifest = JSON.parse(readFileSync(skillPackagePath, 'utf8'));
+const configuredLocalSkills = skillPackageManifest.agentDocRules?.localSkills ?? [];
 const configuredNodeModulesSkills = skillPackageManifest.agentDocRules?.projectSkills ?? [];
 const skillPackageDependencies = {
   ...skillPackageManifest.dependencies,
@@ -15,12 +16,12 @@ const skillPackageDependencies = {
 };
 const skillsLockPath = join(repoRoot, 'skills-lock.json');
 const skillsLock = JSON.parse(readFileSync(skillsLockPath, 'utf8'));
-const localSkill = findLocalWorkspaceSkill();
 
-export const localWorkspaceSkill = {
-  name: localSkill.name,
+export const localWorkspaceSkills = configuredLocalSkills.map((name) => ({
+  name,
   packageName: skillPackageManifest.name,
-};
+  relativeDirectory: `skills/${name}`,
+}));
 
 export const externalProjectSkills = Object.entries(skillsLock.skills ?? {})
   .filter(([, entry]) => entry.sourceType !== 'local')
@@ -49,18 +50,15 @@ export const nodeModulesProjectSkills = configuredNodeModulesSkills.map((skill) 
 export const externalProjectSkillSources = groupExternalProjectSkills();
 
 function assertProjectSkillManifest() {
-  if (!localWorkspaceSkill.packageName) {
+  if (!skillPackageManifest.name) {
     throw new Error(`${skillPackagePath} must define name`);
-  }
-
-  if (!skillsLock.skills?.[localWorkspaceSkill.name]) {
-    throw new Error(`${skillsLockPath} must define the local workspace skill`);
   }
 
   if (externalProjectSkills.length === 0) {
     throw new Error(`${skillsLockPath} must define external project skills`);
   }
 
+  assertConfiguredLocalSkills();
   assertConfiguredNodeModulesSkills();
 
   for (const skill of externalProjectSkills) {
@@ -80,18 +78,50 @@ function assertProjectSkillManifest() {
   }
 }
 
-function findLocalWorkspaceSkill() {
-  const localEntry = Object.entries(skillsLock.skills ?? {}).find(([, entry]) =>
-    entry.sourceType === 'local' && entry.source === 'packages/agent-doc-rules-skill'
-  );
-
-  if (!localEntry) {
-    throw new Error(`${skillsLockPath} must contain a local packages/agent-doc-rules-skill entry`);
+function assertConfiguredLocalSkills() {
+  if (configuredLocalSkills.length === 0) {
+    throw new Error(`${skillPackagePath} agentDocRules.localSkills must not be empty`);
   }
 
-  const [name, entry] = localEntry;
+  const names = new Set();
 
-  return { name, ...entry };
+  for (const name of configuredLocalSkills) {
+    if (typeof name !== 'string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(name)) {
+      throw new Error(`${skillPackagePath} contains invalid local skill name ${JSON.stringify(name)}`);
+    }
+
+    if (names.has(name)) {
+      throw new Error(`${skillPackagePath} declares duplicate local skill ${name}`);
+    }
+    names.add(name);
+
+    const entry = skillsLock.skills?.[name];
+    const expectedSource = `packages/agent-doc-rules-skill/skills/${name}`;
+
+    if (!entry) {
+      throw new Error(`${skillsLockPath} must define local workspace skill ${name}`);
+    }
+
+    if (entry.sourceType !== 'local' || entry.source !== expectedSource) {
+      throw new Error(`${name} must use local source ${expectedSource} in ${skillsLockPath}`);
+    }
+  }
+
+  const lockedLocalNames = Object.entries(skillsLock.skills ?? {})
+    .filter(([, entry]) => entry.sourceType === 'local')
+    .map(([name]) => name)
+    .sort();
+  const configuredNames = [...names].sort();
+
+  if (
+    lockedLocalNames.length !== configuredNames.length
+    || lockedLocalNames.some((name, index) => name !== configuredNames[index])
+  ) {
+    throw new Error(
+      `${skillsLockPath} local entries must exactly match agentDocRules.localSkills: `
+      + configuredNames.join(', '),
+    );
+  }
 }
 
 function groupExternalProjectSkills() {

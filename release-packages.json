@@ -24,12 +24,6 @@
       "releaseTitle": "Docs Validator",
       "directory": "packages/docs-validator",
       "tagPrefix": "agent-doc-rules-docs-validator"
-    },
-    {
-      "name": "@buresmi7/agent-doc-rules-docs-duplicates",
-      "releaseTitle": "Docs Duplicate Checker",
-      "directory": "packages/docs-duplicates",
-      "tagPrefix": "agent-doc-rules-docs-duplicates"
     }
   ]
 }
