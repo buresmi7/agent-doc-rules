@@ -1,6 +1,6 @@
 {
   "name": "@buresmi7/agent-doc-rules-docs-validator",
-  "version": "0.11.2",
+  "version": "1.0.0",
   "private": false,
   "description": "Deterministic documentation validation and duplicate candidate CLI",
   "type": "module",
