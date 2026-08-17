@@ -4,6 +4,15 @@ Use this reference when a repository needs to record an accepted trade-off,
 rule exception, user-approved shortcut, skipped verification, or other decision
 that will affect future maintenance.
 
+## Contents
+
+- [Core Rule](#core-rule)
+- [When To Record](#when-to-record)
+- [Where To Put It](#where-to-put-it)
+- [Active Records Need Backlinks](#active-records-need-backlinks)
+- [Required Content](#required-content)
+- [Revisiting Decisions](#revisiting-decisions)
+
 ## Core Rule
 
 Do not hide the cost of a shortcut.

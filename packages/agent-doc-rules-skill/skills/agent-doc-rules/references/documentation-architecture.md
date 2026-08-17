@@ -3,7 +3,7 @@
 Use this rule when adding or changing project docs, rules, templates, skills,
 or agent instructions. This is the short agent rule set. For the fuller
 placement model and examples, see
-[Context Placement](../docs/context-placement.md).
+[Context Placement](context-placement.md).
 
 ## Core Rule
 

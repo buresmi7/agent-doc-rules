@@ -30,6 +30,15 @@ check. No installed runtime launches an AI CLI, calls a model API, or requires
 AI authentication. The Codex-backed duplicate-checker package is retired from
 the active workspace and release model.
 
+## Trade-Off
+
+Semantic findings no longer have a provider-independent process exit code.
+Maintainers must invoke the relevant skill and review the current agent's
+reasoning instead of treating style or duplicate ownership as an unattended CI
+verdict. Deterministic automation can prove candidate coverage, but it cannot
+prove that a semantic review occurred or that two agents would make the same
+judgment.
+
 ## Consequences
 
 - A consuming project needs no second AI runtime to use the skills and tools.
@@ -44,3 +53,34 @@ the active workspace and release model.
   or instructions embedded in candidate text.
 - Maintainer-only agent E2E tests may use a configured agent runtime, but that
   runtime is not installed or invoked by consuming projects.
+
+## Applies To
+
+- The [skill package documentation](../../packages/agent-doc-rules-skill/README.md),
+  the `agent-doc-rules` writing workflow, and the
+  [`docs-duplicate-review`](../../packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md)
+  workflow expose the host-agent review boundary.
+- The [documentation validator](../../packages/docs-validator/README.md) emits
+  deterministic findings and duplicate candidates without making semantic
+  verdicts.
+- The [consumer AI boundary](../../tools/consumer-ai-boundary.mjs) and its tests
+  prevent consumer packages from reintroducing a secondary AI runtime.
+- [Monorepo Development](../development.md) and
+  [Release Management](../release-management.md) describe the active validator
+  and retired-package boundaries.
+
+## Backlinks
+
+- [Monorepo Development](../development.md) links to this record from the
+  documentation-validation tool map.
+- [Release Management](../release-management.md) links to this record from the
+  retired-package section.
+
+## Revisit When
+
+- Reconsider the boundary if consumers require semantic findings to block CI
+  with reproducible process exit codes.
+- Reconsider the workflow if the active agent cannot consume complete,
+  deterministic candidate evidence without another runtime.
+- Reopen this decision before adding an AI SDK, model API call, or secondary AI
+  CLI to a consumer-facing package.

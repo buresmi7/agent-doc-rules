@@ -1,7 +1,16 @@
-# Config Reference
+# Validator Config Reference
 
 The deterministic documentation validator reads
 `agent-doc-rules.config.json` from the repository root by default.
+
+## Contents
+
+- [Shared Keys](#shared-keys)
+- [Link Keys](#link-keys)
+- [Wording Keys](#wording-keys)
+- [Security Keys](#security-keys)
+- [Duplicate Candidate Keys](#duplicate-candidate-keys)
+- [Init Command](#init-command)
 
 The file may contain a top-level `docs` object:
 

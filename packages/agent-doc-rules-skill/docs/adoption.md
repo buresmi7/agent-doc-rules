@@ -14,7 +14,7 @@ The goal is a small setup:
 Install the published npm package from the repository root:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill
+npx @buresmi7/agent-doc-rules-skill@1.0.0
 ```
 
 The npm installer stages and then creates or updates these owned directories:
@@ -39,13 +39,13 @@ Use a tagged skill directory with the `skills` CLI when the consuming repository
 wants a `skills-lock.json` entry:
 
 ```bash
-npx skills add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill --skill agent-doc-rules --skill docs-duplicate-review -y --copy
+npx -y skills@1.5.12 add https://github.com/<owner>/<repo>/tree/<tag>/packages/agent-doc-rules-skill --skill agent-doc-rules --skill docs-duplicate-review -y --copy
 ```
 
 For local testing from this repository, install the working tree:
 
 ```bash
-npx skills add ./packages/agent-doc-rules-skill --skill agent-doc-rules --skill docs-duplicate-review -y --copy
+npx -y skills@1.5.12 add ./packages/agent-doc-rules-skill --skill agent-doc-rules --skill docs-duplicate-review -y --copy
 ```
 
 The `skills add` path should create:
@@ -66,7 +66,7 @@ Use $agent-doc-rules to create a concise root AGENTS.md for this repository.
 ```
 
 For a manual starting point, adapt
-[`../assets/templates/AGENTS.project.md`](../assets/templates/AGENTS.project.md).
+[`AGENTS.project.md`](../skills/agent-doc-rules/assets/templates/AGENTS.project.md).
 
 A good root `AGENTS.md` should include:
 
@@ -82,7 +82,7 @@ Install the deterministic validator when the project wants Markdown, wording,
 security, local link checks, or duplicate review:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
 ```
 
 Add scripts like these:
@@ -100,8 +100,9 @@ Add scripts like these:
 }
 ```
 
-For starter config generation, use the validator's `init` command. See
-[Config Reference](config-reference.md) for supported keys.
+For starter config generation, use the validator's `init` command. See the
+[Config Reference](../skills/agent-doc-rules/references/config-reference.md)
+for supported keys.
 
 The agent already working in the repository applies plain-English guidance
 from `$agent-doc-rules`. For semantic overlap, `$docs-duplicate-review` uses
@@ -138,8 +139,10 @@ effective value instead of copying `warnScore` directly. Its default
 `model`, `reasoningEffort`, and `codexBin`. Remove `docs.style`;
 `$agent-doc-rules` now owns style judgment.
 
-Use the [Config Reference](config-reference.md) for the supported schema. Run
-`docs:check` and one complete `$docs-duplicate-review` after the migration.
+Use the
+[Config Reference](../skills/agent-doc-rules/references/config-reference.md)
+for the supported schema. Run `docs:check` and one complete
+`$docs-duplicate-review` after the migration.
 
 ## Verify The Setup
 
@@ -155,11 +158,11 @@ changes.
 
 ## Update The Skill
 
-Use the same install command with a newer package version or tag when the
-project wants to update both skills. For npm installs, run:
+Use the same install command with a reviewed package version or tag when the
+project wants to update both skills. This package version uses:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@latest --force
+npx @buresmi7/agent-doc-rules-skill@1.0.0 --force
 ```
 
 Review the generated diff before committing. If the project uses
@@ -175,8 +178,11 @@ The published package contains:
 
 - `README.md`
 - `bin/`
+- `docs/`
 - `skills/agent-doc-rules/`
 - `skills/docs-duplicate-review/`
 
-It does not include this monorepo's root maintainer docs, E2E fixtures, support
-scripts, or generated project-scoped maintainer skills.
+The installer copies only the two skill directories. The package-level `docs/`
+remain human-facing npm documentation. The package does not include this
+monorepo's root maintainer docs, E2E fixtures, support scripts, or generated
+project-scoped maintainer skills.

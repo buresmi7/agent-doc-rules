@@ -47,8 +47,10 @@ const packages = [
     readmeTerms: [
       '@buresmi7/agent-e2e-runner',
       'agent-e2e-runner agent',
-      'agent-e2e-runner command',
     ],
+    documentationTerms: {
+      'docs/reference.md': ['agent-e2e-runner command'],
+    },
   },
   {
     dir: 'packages/agent-e2e-report',
@@ -130,6 +132,16 @@ async function checkPackage(packageInfo) {
   for (const term of packageInfo.readmeTerms) {
     if (!readme.includes(term)) {
       errors.push(`${packageInfo.dir}/README.md must mention ${term}.`);
+    }
+  }
+
+  for (const [path, terms] of Object.entries(packageInfo.documentationTerms ?? {})) {
+    const content = await readFile(join(packageDir, path), 'utf8');
+
+    for (const term of terms) {
+      if (!content.includes(term)) {
+        errors.push(`${packageInfo.dir}/${path} must mention ${term}.`);
+      }
     }
   }
 

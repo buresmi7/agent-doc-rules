@@ -16,13 +16,13 @@ require a separate AI login, model configuration, or model-provider service.
 Install both skills from npm into the current project:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill
+npx @buresmi7/agent-doc-rules-skill@1.0.0
 ```
 
 Replace existing copies of these two skills:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill install --force
+npx @buresmi7/agent-doc-rules-skill@1.0.0 install --force
 ```
 
 The installer writes only:
@@ -41,15 +41,15 @@ reports their recovery paths.
 Preview the operation without writing files:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill install --dry-run
+npx @buresmi7/agent-doc-rules-skill@1.0.0 install --dry-run
 ```
 
 The package also follows standard skill discovery. From a repository checkout
 or unpacked package root, list or install its skills with the `skills` CLI:
 
 ```bash
-npx skills add . --list
-npx skills add . --skill agent-doc-rules --skill docs-duplicate-review -y --copy
+npx -y skills@1.5.12 add . --list
+npx -y skills@1.5.12 add . --skill agent-doc-rules --skill docs-duplicate-review -y --copy
 ```
 
 ## Use The Skills
@@ -90,7 +90,7 @@ Install the validator for Markdown, wording, security, links, and
 duplicate-candidate generation:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
 ```
 
 Recommended scripts:
@@ -120,15 +120,15 @@ pnpm run docs:duplicate-candidates
 ```
 
 Existing users of the retired duplicate checker should follow the
-[migration steps](skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker).
+[migration steps](docs/adoption.md#replace-the-retired-duplicate-checker).
 
 ## Documentation
 
-- [Adoption Guide](skills/agent-doc-rules/docs/adoption.md)
-- [Tool Map](skills/agent-doc-rules/docs/tool-map.md)
-- [Config Reference](skills/agent-doc-rules/docs/config-reference.md)
-- [Context Placement](skills/agent-doc-rules/docs/context-placement.md)
-- [Recipes](skills/agent-doc-rules/docs/recipes.md)
+- [Adoption Guide](docs/adoption.md)
+- [Tool Map](docs/tool-map.md)
+- [Config Reference](skills/agent-doc-rules/references/config-reference.md)
+- [Context Placement](skills/agent-doc-rules/references/context-placement.md)
+- [Recipes](docs/recipes.md)
 - [Validation Guidance](skills/agent-doc-rules/references/validation.md)
 
 ## Development

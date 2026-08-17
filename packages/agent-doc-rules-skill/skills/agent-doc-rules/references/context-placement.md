@@ -2,7 +2,18 @@
 
 Use this guide when deciding where project information should live. Agents that
 need only the short rule set should use
-[Documentation Architecture](../references/documentation-architecture.md).
+[Documentation Architecture](documentation-architecture.md).
+
+## Contents
+
+- [Core Rule](#core-rule)
+- [Placement Matrix](#placement-matrix)
+- [README](#readme)
+- [Docs](#docs)
+- [Decision Records](#decision-records)
+- [AGENTS.md](#agentsmd)
+- [Skills](#skills)
+- [Review Questions](#review-questions)
 
 ## Core Rule
 
@@ -86,27 +97,12 @@ needs a stable explanation home when the user asks to organize durable notes.
 ## Decision Records
 
 Use decision records for confirmed choices that future maintainers may question
-without context.
+without context. Keep them in the repository's existing decision log, or use
+`docs/decisions/` when no decision-log location exists. Keep the full rationale
+out of `AGENTS.md`.
 
-Create or update a decision record when a user explicitly accepts a lasting
-trade-off, rule exception, skipped expected check, or simpler path that creates
-debt. The record should name the context, decision, trade-off, consequences,
-affected surfaces, and revisit conditions.
-
-Active decision records must be discoverable from the thing they explain. Link
-the record from affected code, configuration, documentation, or agent
-instructions. A link from a decision index alone is not enough.
-
-For code, avoid noisy comments. Add an inline link only when the code would look
-wrong or arbitrary without the decision. Otherwise, link from the nearest stable
-architecture, API, configuration, or maintenance document that describes the
-code.
-
-If no affected surface should link to a record anymore, mark it as
-`Superseded` or `Archived`. Treat orphaned active records as historical context,
-not as current project constraints.
-
-See [Decision Records](../references/decision-records.md) for the full rule and
+[Decision Records](decision-records.md) owns the approval, content, backlink,
+status, and revisit rules. Use
 [`decision-record.md`](../assets/templates/decision-record.md) for a starter
 template.
 

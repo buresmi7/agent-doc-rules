@@ -1,118 +1,75 @@
 # Agent Doc Rules - AI Agent Instructions
 
-This maintainer workspace builds `agent-doc-rules`; see `README.md` for the
-project overview. Keep the repository generic; project-specific rules belong in
-consuming repositories.
+This maintainer workspace builds the reusable `agent-doc-rules` skills and
+documentation tools. Start with the [repository README](README.md). Keep the
+repository generic; project-specific rules belong in consuming repositories.
 
 ## Shared Rules
 
-Use [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
+Follow the installed
+[AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)
 for shared instruction-file guidance.
 
-## Repository Skill
+## Skill Routing
 
-Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, writing style,
-skill references, templates, E2E documentation scenarios, and documentation
-architecture. Use `$docs-duplicate-review` for semantic review of repeated
-durable facts or rules. The root package depends on the local skill workspace.
-Run `corepack pnpm run skills:sync` to install both local skills into
-`.agents/skills/` with the project-scoped maintainer skills.
-
-## Project Skills
-
-This repository keeps project-scoped maintainer skills under `.agents/skills/`:
-
-- Use `$skill-creator` when creating, changing, evaluating, or improving the
-  published skill.
-- Use `$doc-coauthoring` for substantial design docs, decision docs, specs, or
-  similar structured writing.
-- Use `$documentation-writer` for Diataxis-style user documentation.
-- Use `$docmd-writer` when reviewing documentation prose, page structure, and
-  code-block conventions from the npm-sourced writer skill.
-- Use `$meta-skill` when evaluating, designing, or refining reusable Agent
-  Skills.
-- Use `$plain-english` before finishing docs or prose changes to simplify
-  English and reduce generic AI prose.
-- Use `$update-markdown-file-index` when maintaining Markdown indexes of files
-  or directories.
-
-Keep generated maintainer skill files and their source links documented in
-`docs/maintainer-skills.md`.
+- Use `$agent-doc-rules` for `AGENTS.md`, README, documentation architecture,
+  factual or security review, templates, and documentation E2E scenarios.
+- Use `$docs-duplicate-review` for semantic review of repeated durable rules or
+  facts.
+- Use `$skill-creator` when changing or evaluating the published skills.
+- Use `$doc-coauthoring` for substantial design documents and `$documentation-writer`
+  for Diataxis-style user documentation.
+- Use `$docmd-writer` for Markdown prose and code-block conventions,
+  `$meta-skill` for reusable skill design, `$plain-english` before finishing
+  prose changes, and `$update-markdown-file-index` for generated Markdown
+  indexes.
+- Follow the [maintainer skill guide](docs/maintainer-skills.md) for generated
+  project skills, source links, locking, and review.
 
 ## Source Of Truth
 
-- Main skill entry point:
-  `packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md`
-- Duplicate-review skill entry point:
-  `packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md`
-- Skill human README: `packages/agent-doc-rules-skill/README.md`
-- Skill product docs:
-  `packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/`
-- Canonical reusable rules:
-  `packages/agent-doc-rules-skill/skills/agent-doc-rules/references/`
-- Starter templates:
-  `packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/`
-- Monorepo developer docs: `docs/development.md`
-- Release procedure: `docs/release-management.md`
-- Public package release identities: `release-packages.json`
-- Checked-in package release intent: `.changeset/`
-- Rule placement rubric: `docs/rule-placement.md`
-- E2E failure triage: `docs/e2e-failure-triage.md`
-- E2E rule matrix: `docs/e2e-rule-matrix.md`
-- E2E report format: `packages/agent-e2e-report/docs/report-format.md`
-- Markdown/docs validator: `packages/docs-validator/`
-- Deterministic duplicate candidate scanner: `packages/docs-validator/`
-- npm-sourced maintainer skill dependencies:
-  `packages/agent-doc-rules-skill/package.json`
-- Project-scoped maintainer skill lockfile: `skills-lock.json`
-- Maintainer skill sync procedure: `docs/maintainer-skills.md`
-- Project cleanup checklist: `docs/project-cleanup.md`
-- Generated project-scoped maintainer skills: `.agents/skills/`
-- Skill E2E scenarios: `packages/agent-doc-rules-skill/e2e/`
-- Validator command E2E scenarios: `packages/docs-validator/e2e/`
-- Monorepo support scripts: `tools/`
+- Published skills: [main skill](packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md)
+  and [duplicate review](packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md).
+- Product and maintainer docs: [skill package README](packages/agent-doc-rules-skill/README.md),
+  [guides](packages/agent-doc-rules-skill/docs/),
+  [canonical rules](packages/agent-doc-rules-skill/skills/agent-doc-rules/references/),
+  [development](docs/development.md), [project cleanup](docs/project-cleanup.md),
+  [release management](docs/release-management.md), and [rule placement](docs/rule-placement.md).
+- E2E guidance: [failure triage](docs/e2e-failure-triage.md),
+  [rule matrix](docs/e2e-rule-matrix.md), and
+  [report format](packages/agent-e2e-report/docs/report-format.md).
+- Release and dependency state: [release package identities](release-packages.json),
+  [changesets](.changeset/), [project skill lock](skills-lock.json), and
+  [pnpm lockfile](pnpm-lock.yaml).
 
-## Rules
+## Local Rules
 
-- Use English for repository files that are committed or generated for reuse.
-- Keep files that agents read by default short; move reusable detail into the
-  skill references.
-- Do not duplicate canonical rules across root docs and skill references.
-- Keep the root `README.md` as a short monorepo entry point. It should say what
-  the repository is for, link to `packages/agent-doc-rules-skill/README.md` for
-  the main package, and link to `docs/development.md` for monorepo development.
-  Put other monorepo detail in `docs/`.
-- Do not add project-specific commands, issue workflows, cloud accounts, host
-  names, secrets, or private environment notes.
-- The skill suite is a public npm-compatible package that also remains a pnpm
-  workspace package for local monorepo and E2E `workspace:*` dependencies.
-- Keep npm-compatible project skill packages in the skill workspace
-  `devDependencies` and list the installed skill names in
-  `agentDocRules.projectSkills`.
-- Keep all external project skills locked in `skills-lock.json`; restore them
-  with `corepack pnpm run skills:sync`.
-- Keep each agent E2E scenario's `project/` directory as a standalone workspace
-  project that installs its skill dependency through `npx skills add`.
-- Keep E2E scenarios beside the package whose behavior they test. Shared runner
-  unit tests and examples remain in `packages/agent-e2e-runner/`.
-- When an E2E scenario fails, use `docs/e2e-failure-triage.md` and
-  `docs/rule-placement.md` before changing skill rules or criteria.
+- Write reusable files in English, keep the repository generic, and do not add
+  consuming-project workflows, cloud accounts, secrets, private hosts, or
+  environment notes.
+- Keep always-loaded files short. The root README links to the
+  [skill package README](packages/agent-doc-rules-skill/README.md) and
+  [development guide](docs/development.md).
+- Preserve the npm-compatible skill package and pnpm workspace boundary. Follow
+  the [development guide](docs/development.md) for workspace metadata and the
+  [maintainer skill guide](docs/maintainer-skills.md) for project skills and
+  [skills-lock.json](skills-lock.json).
+- Keep E2E scenarios beside the package they test. Use
+  [E2E failure triage](docs/e2e-failure-triage.md) and
+  [rule placement](docs/rule-placement.md) before changing rules or criteria.
+- Use the [project cleanup checklist](docs/project-cleanup.md) before finishing
+  changes that affect more than one file or change repository behavior.
 
-## Maintenance
+## Verification
 
-- Use `docs/release-management.md` to prepare versions, changelogs, Git tags,
-  npm publications, and GitHub Releases.
-- Review external skill updates before committing lockfile changes; follow the
-  maintainer-skill guidance in `docs/maintainer-skills.md`. Commit the
-  lockfile, not generated external skill copies.
-- Update `pnpm-lock.yaml` when workspace metadata or project skill package
-  dependencies change.
-- Use `docs/project-cleanup.md` before finishing changes that affect more than
-  one file, including docs, skills, validators, E2E tests, installation docs,
-  release workflows, or runtime behavior.
-- Before finishing, run `corepack pnpm test`.
-- For documentation validation changes, also run `corepack pnpm run
-  docs:check`.
-- When the skill layout changes, also run `corepack pnpm run skills:sync` and
-  `corepack pnpm run test:install`.
-- Before tagging a release, run `corepack pnpm run verify:release`.
+Use the most specific route below. The release gate supersedes the other rows.
+
+| Change scope | Required final checks |
+| --- | --- |
+| Documentation only | `corepack pnpm test` and `corepack pnpm run docs:check` |
+| Skill layout or install behavior | `corepack pnpm run skills:sync`, `corepack pnpm run test:install`, and `corepack pnpm test`; add `docs:check` when documentation changed |
+| Runtime, validator, or E2E code | The relevant targeted command from the [development guide](docs/development.md), then `corepack pnpm test` |
+| Release preparation | `corepack pnpm run verify:release` |
+
+If any required check is skipped, state the reason and the residual risk in the
+final result.

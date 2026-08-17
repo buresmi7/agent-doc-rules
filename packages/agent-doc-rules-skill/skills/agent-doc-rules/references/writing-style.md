@@ -2,6 +2,17 @@
 
 Use this rule when drafting, rewriting, or reviewing repository documentation.
 
+## Contents
+
+- [Core Rule](#core-rule)
+- [Document Shape](#document-shape)
+- [Plain English Rules](#plain-english-rules)
+- [Repository Documentation Rules](#repository-documentation-rules)
+- [Markdown Format](#markdown-format)
+- [What To Avoid](#what-to-avoid)
+- [Review Pass](#review-pass)
+- [Structured Style Review](#structured-style-review)
+
 ## Core Rule
 
 Write for the next person trying to use or maintain the project. Prefer plain,
