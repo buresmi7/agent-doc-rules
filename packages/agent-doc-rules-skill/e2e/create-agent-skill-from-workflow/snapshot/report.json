@@ -37,7 +37,7 @@
   "skillsCliVersion": "1.5.12",
   "skillPackage": {
     "name": "@buresmi7/agent-doc-rules-skill",
-    "source": "packages/agent-doc-rules-skill",
+    "source": "workspace:*",
     "skill": "agent-doc-rules"
   },
   "passThreshold": 0.8,
@@ -47,7 +47,7 @@
       "source": "scenario.json#/turns/0",
       "status": "completed",
       "prompt": "Clean up the release documentation.",
-      "response": "Cleaned up the release documentation:\n\n- Shortened [README.md](<project>/README.md:1) so it points to the release-note workflow instead of carrying it inline.\n- Added [AGENTS.md](<project>/AGENTS.md:1) with project routing, shared-rule links, local release safety rules, and verification guidance.\n- Added the agent workflow as [.agents/skills/release-notes/SKILL.md](<project>/.agents/skills/release-notes/SKILL.md:1).\n\nVerification: `npm test` passed.",
+      "response": "Cleaned up the release docs.\n\nMoved the repeated release-note workflow out of [README.md](<project>/README.md) into a new project skill at [.agents/skills/release-notes/SKILL.md](<project>/.agents/skills/release-notes/SKILL.md), then added [AGENTS.md](<project>/AGENTS.md) so agents know when to use it.\n\nVerification: `npm test` passed. The fixture currently has 0 tests.",
       "criteria": [
         {
           "id": "request.w1",
@@ -115,44 +115,44 @@
         },
         {
           "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "sed",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "cat",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
-          "commandSummary": "find",
-          "exitCode": 0,
-          "status": "completed"
-        },
-        {
-          "type": "command_execution",
           "commandSummary": "git",
-          "exitCode": 128,
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "pwd",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "rg",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 2,
           "status": "failed"
         },
         {
@@ -169,13 +169,31 @@
         },
         {
           "type": "command_execution",
+          "commandSummary": "find",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
           "commandSummary": "sed",
           "exitCode": 0,
           "status": "completed"
         },
         {
           "type": "command_execution",
-          "commandSummary": "mkdir",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "sed",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "find",
           "exitCode": 0,
           "status": "completed"
         },
@@ -220,6 +238,42 @@
           "commandSummary": "npm test",
           "exitCode": 0,
           "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "ls",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
+        },
+        {
+          "type": "command_execution",
+          "commandSummary": "git",
+          "exitCode": 0,
+          "status": "completed"
         }
       ],
       "changes": [
@@ -229,7 +283,7 @@
           "before": null,
           "after": {
             "kind": "text",
-            "byteLength": 830
+            "byteLength": 882
           },
           "patch": {
             "format": "unified",
@@ -239,12 +293,12 @@
               "@@ -0,0 +1,28 @@",
               "+---",
               "+name: release-notes",
-              "+description: Use when drafting Atlas CLI release notes from the changelog and merged pull request input.",
+              "+description: Draft Atlas CLI release notes from the repository changelog and release input. Use this skill whenever the user asks to write, update, or prepare docs/releases/<version>.md, release summaries, or release notes for Atlas.",
               "+---",
               "+",
               "+# Release Notes",
               "+",
-              "+Use this skill to draft `docs/releases/<version>.md` for an Atlas CLI release.",
+              "+Use this workflow to draft Atlas CLI release notes.",
               "+",
               "+## Inputs",
               "+",
@@ -263,8 +317,8 @@
               "+",
               "+## Verification",
               "+",
-              "+Run `npm test` before publishing release documentation changes. If the check",
-              "+cannot run, record the blocker and what remains unverified."
+              "+Run `npm test` before finishing. If you skip it, state why and note the",
+              "+residual risk."
             ]
           },
           "omission": null
@@ -275,39 +329,32 @@
           "before": null,
           "after": {
             "kind": "text",
-            "byteLength": 888
+            "byteLength": 516
           },
           "patch": {
             "format": "unified",
             "lines": [
               "--- /dev/null",
               "+++ b/AGENTS.md",
-              "@@ -0,0 +1,25 @@",
-              "+# Atlas Release Notes - AI Agent Instructions",
+              "@@ -0,0 +1,18 @@",
+              "+# Atlas Release Notes - Agent Instructions",
               "+",
               "+Atlas Release Notes keeps release summaries for the Atlas CLI.",
               "+",
               "+## Shared Rules",
               "+",
-              "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
-              "+- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+              "+Use [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+              "+for shared instruction-file guidance.",
               "+",
-              "+## Local Rules",
+              "+## Project Skills",
               "+",
-              "+- Use the [release notes skill](.agents/skills/release-notes/SKILL.md) when",
-              "+  drafting `docs/releases/<version>.md`.",
-              "+- Keep customer names and private issue links out of committed release notes.",
-              "+",
-              "+## Source Of Truth",
-              "+",
-              "+- [README](README.md) describes the project and release-documentation check.",
-              "+- [CHANGELOG](CHANGELOG.md) and [release input](docs/release-input.md) provide",
-              "+  release-note source material.",
+              "+- Use `$release-notes` when drafting `docs/releases/<version>.md` from",
+              "+  `CHANGELOG.md` and `docs/release-input.md`.",
               "+",
               "+## Verification",
               "+",
-              "+- Run `npm test` before publishing release documentation changes.",
-              "+- If a check cannot run, state the blocker and what remains unverified."
+              "+Run `npm test` before finishing release documentation changes. If you skip it,",
+              "+state why and note the residual risk."
             ]
           },
           "omission": null
@@ -321,19 +368,17 @@
           },
           "after": {
             "kind": "text",
-            "byteLength": 336
+            "byteLength": 256
           },
           "patch": {
             "format": "unified",
             "lines": [
               "--- a/README.md",
               "+++ b/README.md",
-              "@@ -2,18 +2,8 @@",
+              "@@ -4,16 +4,7 @@",
               " ",
-              " Atlas Release Notes keeps release summaries for the Atlas CLI.",
+              " Run `npm test` before publishing release documentation changes.",
               " ",
-              "-Run `npm test` before publishing release documentation changes.",
-              "-",
               "-## Release note drafting",
               "-",
               "-This workflow is repeated every release and is meant for the coding agent:",
@@ -347,11 +392,10 @@
               "-   of inventing missing changes.",
               "-",
               "-The README should not carry this whole workflow forever.",
-              "+Use the local [release notes skill](.agents/skills/release-notes/SKILL.md) when",
-              "+an agent drafts release notes.",
+              "+## Release Notes",
               "+",
-              "+Run `npm test` before publishing release documentation changes. If the check",
-              "+cannot run, record the blocker and what remains unverified."
+              "+Use the `.agents/skills/release-notes/SKILL.md` workflow when drafting release",
+              "+notes."
             ]
           },
           "omission": null
@@ -367,7 +411,7 @@
       "before": null,
       "after": {
         "kind": "text",
-        "byteLength": 830
+        "byteLength": 882
       },
       "patch": {
         "format": "unified",
@@ -377,12 +421,12 @@
           "@@ -0,0 +1,28 @@",
           "+---",
           "+name: release-notes",
-          "+description: Use when drafting Atlas CLI release notes from the changelog and merged pull request input.",
+          "+description: Draft Atlas CLI release notes from the repository changelog and release input. Use this skill whenever the user asks to write, update, or prepare docs/releases/<version>.md, release summaries, or release notes for Atlas.",
           "+---",
           "+",
           "+# Release Notes",
           "+",
-          "+Use this skill to draft `docs/releases/<version>.md` for an Atlas CLI release.",
+          "+Use this workflow to draft Atlas CLI release notes.",
           "+",
           "+## Inputs",
           "+",
@@ -401,8 +445,8 @@
           "+",
           "+## Verification",
           "+",
-          "+Run `npm test` before publishing release documentation changes. If the check",
-          "+cannot run, record the blocker and what remains unverified."
+          "+Run `npm test` before finishing. If you skip it, state why and note the",
+          "+residual risk."
         ]
       },
       "omission": null
@@ -413,39 +457,32 @@
       "before": null,
       "after": {
         "kind": "text",
-        "byteLength": 888
+        "byteLength": 516
       },
       "patch": {
         "format": "unified",
         "lines": [
           "--- /dev/null",
           "+++ b/AGENTS.md",
-          "@@ -0,0 +1,25 @@",
-          "+# Atlas Release Notes - AI Agent Instructions",
+          "@@ -0,0 +1,18 @@",
+          "+# Atlas Release Notes - Agent Instructions",
           "+",
           "+Atlas Release Notes keeps release summaries for the Atlas CLI.",
           "+",
           "+## Shared Rules",
           "+",
-          "+- [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
-          "+- [Documentation architecture](.agents/skills/agent-doc-rules/references/documentation-architecture.md)",
+          "+Use [AGENTS.md rules](.agents/skills/agent-doc-rules/references/agents-rules.md)",
+          "+for shared instruction-file guidance.",
           "+",
-          "+## Local Rules",
+          "+## Project Skills",
           "+",
-          "+- Use the [release notes skill](.agents/skills/release-notes/SKILL.md) when",
-          "+  drafting `docs/releases/<version>.md`.",
-          "+- Keep customer names and private issue links out of committed release notes.",
-          "+",
-          "+## Source Of Truth",
-          "+",
-          "+- [README](README.md) describes the project and release-documentation check.",
-          "+- [CHANGELOG](CHANGELOG.md) and [release input](docs/release-input.md) provide",
-          "+  release-note source material.",
+          "+- Use `$release-notes` when drafting `docs/releases/<version>.md` from",
+          "+  `CHANGELOG.md` and `docs/release-input.md`.",
           "+",
           "+## Verification",
           "+",
-          "+- Run `npm test` before publishing release documentation changes.",
-          "+- If a check cannot run, state the blocker and what remains unverified."
+          "+Run `npm test` before finishing release documentation changes. If you skip it,",
+          "+state why and note the residual risk."
         ]
       },
       "omission": null
@@ -459,19 +496,17 @@
       },
       "after": {
         "kind": "text",
-        "byteLength": 336
+        "byteLength": 256
       },
       "patch": {
         "format": "unified",
         "lines": [
           "--- a/README.md",
           "+++ b/README.md",
-          "@@ -2,18 +2,8 @@",
+          "@@ -4,16 +4,7 @@",
           " ",
-          " Atlas Release Notes keeps release summaries for the Atlas CLI.",
+          " Run `npm test` before publishing release documentation changes.",
           " ",
-          "-Run `npm test` before publishing release documentation changes.",
-          "-",
           "-## Release note drafting",
           "-",
           "-This workflow is repeated every release and is meant for the coding agent:",
@@ -485,11 +520,10 @@
           "-   of inventing missing changes.",
           "-",
           "-The README should not carry this whole workflow forever.",
-          "+Use the local [release notes skill](.agents/skills/release-notes/SKILL.md) when",
-          "+an agent drafts release notes.",
+          "+## Release Notes",
           "+",
-          "+Run `npm test` before publishing release documentation changes. If the check",
-          "+cannot run, record the blocker and what remains unverified."
+          "+Use the `.agents/skills/release-notes/SKILL.md` workflow when drafting release",
+          "+notes."
         ]
       },
       "omission": null
@@ -504,7 +538,7 @@
     "failedCriteria": [],
     "unknownFailedCriteria": [],
     "requiredFixes": [],
-    "notes": "The final state creates a focused release-notes skill with valid frontmatter, required inputs and workflow, privacy safeguards, concise README routing, and short AGENTS.md routing without inventing unsupported release details or unnecessary skill assets."
+    "notes": "All criteria are satisfied: the repeated workflow was moved into a valid task-specific skill, README and AGENTS.md are concise routing layers, privacy and anti-invention rules are preserved, and no unsupported release content or extra reference/assets structure was added."
   },
   "error": null,
   "warnings": [],

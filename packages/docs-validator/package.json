@@ -2,7 +2,7 @@
   "name": "@buresmi7/agent-doc-rules-docs-validator",
   "version": "0.11.2",
   "private": false,
-  "description": "Markdown, security, and link validation CLI for agent-doc-rules projects",
+  "description": "Deterministic documentation validation and duplicate candidate CLI",
   "type": "module",
   "license": "MIT",
   "homepage": "https://github.com/buresmi7/agent-doc-rules/tree/master/packages/docs-validator#readme",
@@ -33,6 +33,11 @@
     "fast-glob": "^3.3.3",
     "linkinator": "^7.6.1",
     "markdownlint-cli2": "^0.22.1",
+    "mdast-util-to-string": "^4.0.0",
+    "remark-parse": "^11.0.0",
+    "sentence-splitter": "^5.0.1",
+    "unified": "^11.0.5",
+    "unist-util-visit": "^5.0.0",
     "write-good": "^1.0.8"
   },
   "devDependencies": {

@@ -11,10 +11,11 @@ for shared instruction-file guidance.
 
 ## Repository Skill
 
-Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, skill
-references, templates, E2E documentation scenarios, and documentation
-architecture. The root package depends on the local skill workspace. Run
-`corepack pnpm run skills:sync` to install the local skill workspace into
+Use `$agent-doc-rules` for changes to `AGENTS.md`, README files, writing style,
+skill references, templates, E2E documentation scenarios, and documentation
+architecture. Use `$docs-duplicate-review` for semantic review of repeated
+durable facts or rules. The root package depends on the local skill workspace.
+Run `corepack pnpm run skills:sync` to install both local skills into
 `.agents/skills/` with the project-scoped maintainer skills.
 
 ## Project Skills
@@ -40,11 +41,17 @@ Keep generated maintainer skill files and their source links documented in
 
 ## Source Of Truth
 
-- Skill entry point: `packages/agent-doc-rules-skill/SKILL.md`
+- Main skill entry point:
+  `packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md`
+- Duplicate-review skill entry point:
+  `packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md`
 - Skill human README: `packages/agent-doc-rules-skill/README.md`
-- Skill product docs: `packages/agent-doc-rules-skill/docs/`
-- Canonical reusable rules: `packages/agent-doc-rules-skill/references/`
-- Starter templates: `packages/agent-doc-rules-skill/assets/templates/`
+- Skill product docs:
+  `packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/`
+- Canonical reusable rules:
+  `packages/agent-doc-rules-skill/skills/agent-doc-rules/references/`
+- Starter templates:
+  `packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/`
 - Monorepo developer docs: `docs/development.md`
 - Release procedure: `docs/release-management.md`
 - Public package release identities: `release-packages.json`
@@ -54,7 +61,7 @@ Keep generated maintainer skill files and their source links documented in
 - E2E rule matrix: `docs/e2e-rule-matrix.md`
 - E2E report format: `packages/agent-e2e-report/docs/report-format.md`
 - Markdown/docs validator: `packages/docs-validator/`
-- Semantic duplicate checker: `packages/docs-duplicates/`
+- Deterministic duplicate candidate scanner: `packages/docs-validator/`
 - npm-sourced maintainer skill dependencies:
   `packages/agent-doc-rules-skill/package.json`
 - Project-scoped maintainer skill lockfile: `skills-lock.json`
@@ -77,8 +84,8 @@ Keep generated maintainer skill files and their source links documented in
   Put other monorepo detail in `docs/`.
 - Do not add project-specific commands, issue workflows, cloud accounts, host
   names, secrets, or private environment notes.
-- The skill directory is a public npm-compatible package that also remains a
-  pnpm workspace package for local monorepo and E2E `workspace:*` dependencies.
+- The skill suite is a public npm-compatible package that also remains a pnpm
+  workspace package for local monorepo and E2E `workspace:*` dependencies.
 - Keep npm-compatible project skill packages in the skill workspace
   `devDependencies` and list the installed skill names in
   `agentDocRules.projectSkills`.

@@ -1,0 +1,9 @@
+{
+  "name": "docs-duplicate-candidates-command",
+  "command": "agent-doc-rules-docs",
+  "args": ["duplicate-candidates", "--format", "json"],
+  "expect": {
+    "exitCode": 0,
+    "stdoutSnapshot": "snapshot/stdout.json"
+  }
+}

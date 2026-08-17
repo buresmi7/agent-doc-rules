@@ -53,7 +53,7 @@
         "packages/*/e2e/**/snapshot/**",
         "packages/docs-validator/e2e/docs-wording-command-fail/**",
         "packages/agent-doc-rules-skill/e2e/plain-english-doc-review/**",
-        "packages/agent-doc-rules-skill/references/writing-style.md"
+        "packages/agent-doc-rules-skill/skills/agent-doc-rules/references/writing-style.md"
       ],
       "forbiddenTerms": [],
       "allow": []
@@ -73,7 +73,7 @@
       ],
       "allow": []
     },
-    "style": {
+    "duplicateCandidates": {
       "exclude": [
         "node_modules/**",
         ".git/**",
@@ -83,30 +83,12 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "CHANGELOG.md",
-        "packages/*/e2e/**"
-      ],
-      "includeReferences": false,
-      "maxUnits": 80,
-      "model": "gpt-5.5",
-      "reasoningEffort": "low"
-    },
-    "duplicates": {
-      "exclude": [
-        "node_modules/**",
-        ".git/**",
-        "dist/**",
-        "coverage/**",
-        ".tmp/**",
-        ".agent-e2e-output/**",
-        "repos/**",
-        "worktrees/**",
+        "docs/retired/**",
         "packages/*/e2e/**/snapshot*/**"
       ],
       "includeReferences": false,
       "includeSameFile": false,
-      "warnScore": 0.78,
-      "failScore": 0.92,
+      "minSimilarity": 0.72,
       "minWords": 6,
       "minChars": 40,
       "maxCandidates": 25,
@@ -123,7 +105,7 @@
         },
         {
           "left": "^packages/agent-doc-rules-skill/e2e/local-language-override/project/project-notes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
           "reason": "The local-language fixture intentionally mirrors the recipe rule it exercises."
         },
         {
@@ -132,13 +114,13 @@
           "reason": "The changelog records release history and can repeat current docs briefly."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/assets/templates/AGENTS\\.",
-          "right": "^packages/agent-doc-rules-skill/assets/templates/AGENTS\\.",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/AGENTS\\.",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/AGENTS\\.",
           "reason": "AGENTS templates are standalone starter files and share placeholder guidance."
         },
         {
           "left": "^packages/agent-doc-rules-skill/README\\.md$",
-          "right": "^packages/agent-doc-rules-skill/docs/adoption\\.md$",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption\\.md$",
           "reason": "The README summarizes the adoption guide."
         },
         {
@@ -148,7 +130,7 @@
         },
         {
           "left": "^packages/agent-doc-rules-skill/e2e/README\\.md$",
-          "right": "^packages/agent-doc-rules-skill/docs/adoption\\.md$",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption\\.md$",
           "reason": "Both workflows intentionally remind maintainers to review generated or refreshed diffs before committing."
         },
         {
@@ -162,38 +144,31 @@
           "reason": "Root AGENTS.md and README.md both need a short project orientation."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/docs/context-placement\\.md$",
-          "right": "^packages/agent-doc-rules-skill/(README\\.md|SKILL\\.md)$",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement\\.md$",
+          "right": "^packages/agent-doc-rules-skill/(README\\.md|skills/agent-doc-rules/SKILL\\.md)$",
           "reason": "The README and SKILL.md contain short routing summaries."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/SKILL\\.md$",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL\\.md$",
           "right": "^packages/agent-doc-rules-skill/README\\.md$",
           "reason": "The README and SKILL.md share short package-level routing pointers."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/SKILL\\.md$",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL\\.md$",
           "reason": "Recipes intentionally summarize skill behavior for example tasks."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/docs/recipes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/docs/context-placement\\.md$",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
+          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement\\.md$",
           "reason": "Recipes intentionally summarize context-placement guidance."
         },
         {
-          "left": "^packages/agent-doc-rules-skill/docs/config-reference\\.md$",
+          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference\\.md$",
           "right": "^packages/docs-validator/README\\.md$",
           "reason": "The CLI README repeats the config file location as local usage context."
-        },
-        {
-          "left": "^packages/docs-duplicates/README\\.md$",
-          "right": "^packages/docs-validator/README\\.md$",
-          "reason": "Package READMEs intentionally share short routing links to the config reference."
         }
-      ],
-      "model": "gpt-5.5",
-      "reasoningEffort": "low"
+      ]
     }
   }
 }

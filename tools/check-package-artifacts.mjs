@@ -1,7 +1,12 @@
-import { access, readFile, stat } from 'node:fs/promises';
+import { access, readFile, readdir, stat } from 'node:fs/promises';
 import { constants } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  findConsumerAiDependencyViolations,
+  findConsumerAiTextViolations,
+  findConsumerRuntimeDependencyViolations,
+} from './consumer-ai-boundary.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
@@ -17,18 +22,19 @@ const packages = [
     readmeTerms: [
       '@buresmi7/agent-doc-rules-docs-validator',
       'agent-doc-rules-docs check',
+      'agent-doc-rules-docs duplicate-candidates',
     ],
-  },
-  {
-    dir: 'packages/docs-duplicates',
-    name: '@buresmi7/agent-doc-rules-docs-duplicates',
-    bin: {
-      'agent-doc-rules-docs-duplicates': 'bin/agent-doc-rules-docs-duplicates.mjs',
-    },
-    files: ['bin', 'src', 'README.md'],
-    readmeTerms: [
-      '@buresmi7/agent-doc-rules-docs-duplicates',
-      'agent-doc-rules-docs-duplicates check',
+    consumerAiBoundary: true,
+    runtimeDependencies: [
+      'fast-glob',
+      'linkinator',
+      'markdownlint-cli2',
+      'mdast-util-to-string',
+      'remark-parse',
+      'sentence-splitter',
+      'unified',
+      'unist-util-visit',
+      'write-good',
     ],
   },
   {
@@ -126,6 +132,62 @@ async function checkPackage(packageInfo) {
       errors.push(`${packageInfo.dir}/README.md must mention ${term}.`);
     }
   }
+
+  if (packageInfo.consumerAiBoundary) {
+    await checkConsumerAiBoundary(packageInfo, packageDir, packageJson);
+  }
+}
+
+async function checkConsumerAiBoundary(packageInfo, packageDir, packageJson) {
+  for (const violation of findConsumerAiDependencyViolations(packageJson)) {
+    errors.push(`${packageInfo.dir}/package.json contains ${violation}.`);
+  }
+
+  for (const violation of findConsumerRuntimeDependencyViolations(
+    packageJson,
+    packageInfo.runtimeDependencies,
+  )) {
+    errors.push(`${packageInfo.dir}/package.json contains unaudited runtime dependency ${violation}.`);
+  }
+
+  const files = [join(packageDir, 'package.json')];
+
+  for (const entry of packageJson.files ?? []) {
+    files.push(...await collectFiles(join(packageDir, entry)));
+  }
+
+  for (const file of files) {
+    if (!['.cjs', '.js', '.json', '.md', '.mjs', '.ts', '.yaml', '.yml'].includes(extname(file))) {
+      continue;
+    }
+
+    const content = await readFile(file, 'utf8');
+    const violations = findConsumerAiTextViolations(content, {
+      allowRetiredMigration: relative(packageDir, file).replaceAll('\\', '/') === 'README.md',
+    });
+
+    for (const violation of violations) {
+      errors.push(
+        `${relative(repoRoot, file)} contains ${violation.label}: ${violation.match}.`,
+      );
+    }
+  }
+}
+
+async function collectFiles(path) {
+  const info = await stat(path);
+
+  if (info.isFile()) {
+    return [path];
+  }
+
+  const files = [];
+
+  for (const entry of await readdir(path, { withFileTypes: true })) {
+    files.push(...await collectFiles(join(path, entry.name)));
+  }
+
+  return files;
 }
 
 async function assertPath(path, message) {

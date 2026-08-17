@@ -1,0 +1,17 @@
+{
+  "name": "semantic-duplicate-review-fixture",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "docs:duplicate-candidates": "agent-doc-rules-docs duplicate-candidates --format json",
+    "docs:check": "agent-doc-rules-docs check",
+    "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill docs-duplicate-review"
+  },
+  "dependencies": {
+    "@buresmi7/agent-doc-rules-skill": "workspace:*"
+  },
+  "devDependencies": {
+    "@buresmi7/agent-doc-rules-docs-validator": "workspace:*"
+  }
+}

@@ -13,17 +13,24 @@ are not the source of truth for agents.
 
 ## Placement
 
-Use `packages/agent-doc-rules-skill/SKILL.md` when the rule must be available
-before the agent chooses which reference to load. Good candidates are routing
-rules, cross-scenario safety boundaries, no-invention rules, and short
-invariants that prevent common harmful output.
+Use `packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md` when the
+rule must be available before the agent chooses which reference to load. Good
+candidates are routing rules, cross-scenario safety boundaries, no-invention
+rules, and short invariants that prevent common harmful output.
 
-Use `packages/agent-doc-rules-skill/references/` when the rule is task-specific
-detail loaded after the skill triggers. Rubrics, report formats, evidence
-checks, examples, and longer review workflows belong here.
+Use `packages/agent-doc-rules-skill/skills/agent-doc-rules/references/` when the
+rule is task-specific detail loaded after the main skill triggers. Rubrics,
+report formats, evidence checks, examples, and longer review workflows belong
+here.
 
-Use `packages/agent-doc-rules-skill/docs/` for user-facing explanation about
-the skill's model, trade-offs, and placement concepts.
+Use `packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md` for
+the semantic duplicate workflow. Keep candidate collection mechanical in the
+validator. Put classification, canonical-owner selection, and review reporting
+in the duplicate-review skill.
+
+Use `packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/` for
+user-facing explanation about the skill model, trade-offs, and placement
+concepts.
 
 Use root `AGENTS.md` for this repository's always-loaded maintainer rules:
 verification commands, source-of-truth routing, release rules, and local

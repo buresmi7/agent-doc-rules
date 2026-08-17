@@ -13,8 +13,8 @@ as consuming projects. Those skills are local development tools.
 | GitHub skills | `skills-lock.json` | `skills add <source> --skill <name>` or a pinned checkout |
 
 Generated copies under `.agents/skills/` are ignored by Git, except for the
-`agent-doc-rules` symlink. See the root `AGENTS.md` maintenance rules for the
-commit boundary.
+`agent-doc-rules` and `docs-duplicate-review` symlinks. See the root
+`AGENTS.md` maintenance rules for the commit boundary.
 
 ## Installed Maintainer Skills
 
@@ -28,7 +28,8 @@ that commit before it calls the skills CLI.
 
 | Skill | Source | Link |
 | --- | --- | --- |
-| `agent-doc-rules` | Local workspace | [`packages/agent-doc-rules-skill/SKILL.md`](../packages/agent-doc-rules-skill/SKILL.md) |
+| `agent-doc-rules` | Local workspace | [`skills/agent-doc-rules/SKILL.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md) |
+| `docs-duplicate-review` | Local workspace | [`skills/docs-duplicate-review/SKILL.md`](../packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md) |
 | `doc-coauthoring` | `anthropics/skills` | [upstream skill](https://github.com/anthropics/skills/blob/main/skills/doc-coauthoring/SKILL.md) |
 | `skill-creator` | `anthropics/skills` | [upstream skill](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md) |
 | `documentation-writer` | `github/awesome-copilot` | [upstream skill](https://github.com/github/awesome-copilot/tree/main/skills/documentation-writer) |
@@ -53,11 +54,11 @@ package, not as direct root dependencies.
 5. It copies only the npm skills listed in
    `agentDocRules.projectSkills` into root `.agents/skills/`.
 6. It verifies each copied skill against the hash stored in `skills-lock.json`.
-7. It hashes versioned and non-ignored `agent-doc-rules` source files, then
-   symlinks the workspace package into the project skills directory.
+7. It hashes each local skill directory, then symlinks both workspace skills
+   into the project skills directory.
 
-The install check separately uses `skills add --list` to verify that the local
-workspace remains discoverable by the pinned skills CLI.
+The install check separately uses `skills add --list` to verify that both local
+skills remain discoverable by the pinned skills CLI.
 
 This keeps the dependency ownership close to the local skill package while the
 root project still gets a normal project-scoped `.agents/skills/` directory.

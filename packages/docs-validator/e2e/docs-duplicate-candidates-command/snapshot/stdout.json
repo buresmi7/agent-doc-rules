@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "sha256:a99afa61eb9972e99c0070c252c5b6fd51a19305a207b4ac8c8d4005ea774451",
+  "corpus": {
+    "files": [
+      "README.md",
+      "docs/canonical.md",
+      "docs/repeated.md"
+    ],
+    "units": 3
+  },
+  "focus": {
+    "files": [
+      "README.md",
+      "docs/canonical.md",
+      "docs/repeated.md"
+    ],
+    "units": 3,
+    "explicit": false
+  },
+  "candidates": [
+    {
+      "id": "DUP-fcbaf44b4f0324cf",
+      "similarity": 1,
+      "signal": "normalized exact match",
+      "left": {
+        "file": "README.md",
+        "line": 3,
+        "text": "Keep AGENTS.md short and link to the canonical documentation rules for details."
+      },
+      "right": {
+        "file": "docs/canonical.md",
+        "line": 3,
+        "text": "Keep AGENTS.md short and link to the canonical documentation rules for details."
+      }
+    }
+  ],
+  "pagination": {
+    "cursor": null,
+    "totalCandidates": 3,
+    "returnedCandidates": 1,
+    "truncated": true,
+    "nextCursor": "DUP-fcbaf44b4f0324cf"
+  }
+}

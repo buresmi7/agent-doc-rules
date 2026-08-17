@@ -6,15 +6,14 @@
   "scripts": {
     "docs:markdown": "agent-doc-rules-docs markdown",
     "docs:links": "agent-doc-rules-docs links",
-    "docs:duplicates": "agent-doc-rules-docs-duplicates check",
-    "docs:check": "agent-doc-rules-docs check && agent-doc-rules-docs-duplicates check",
+    "docs:duplicate-candidates": "agent-doc-rules-docs duplicate-candidates --format json",
+    "docs:check": "agent-doc-rules-docs check",
     "test:agent": "node ../../run-agent-scenario.mjs --skill-package @buresmi7/agent-doc-rules-skill --skill agent-doc-rules"
   },
   "dependencies": {
     "@buresmi7/agent-doc-rules-skill": "workspace:*"
   },
   "devDependencies": {
-    "@buresmi7/agent-doc-rules-docs-duplicates": "workspace:*",
     "@buresmi7/agent-doc-rules-docs-validator": "workspace:*"
   }
 }

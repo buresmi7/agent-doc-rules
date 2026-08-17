@@ -37,7 +37,6 @@ Use these identities for releases governed by the independent model:
 | `@buresmi7/agent-e2e-runner` | `E2E Runner` | `agent-e2e-runner@VERSION` | `packages/agent-e2e-runner/CHANGELOG.md` |
 | `@buresmi7/agent-e2e-report` | `E2E Report Format` | `agent-e2e-report@VERSION` | `packages/agent-e2e-report/CHANGELOG.md` |
 | `@buresmi7/agent-doc-rules-docs-validator` | `Docs Validator` | `agent-doc-rules-docs-validator@VERSION` | `packages/docs-validator/CHANGELOG.md` |
-| `@buresmi7/agent-doc-rules-docs-duplicates` | `Docs Duplicate Checker` | `agent-doc-rules-docs-duplicates@VERSION` | `packages/docs-duplicates/CHANGELOG.md` |
 
 Do not create another unqualified `vMAJOR.MINOR.PATCH` tag. A release commit may
 carry more than one package tag when it publishes several packages.
@@ -53,6 +52,30 @@ Continue to test the whole workspace even when a release changes one package.
 After the migration, the root changelog records only repository and monorepo
 changes. Package behavior and publication history belong only in the matching
 package changelog.
+
+### Retired Package
+
+`@buresmi7/agent-doc-rules-docs-duplicates` ended at version `0.12.0`. Preserve
+its [changelog](retired/docs-duplicates-changelog.md), npm versions, package
+tags, and GitHub Releases as history, but do not keep it in
+`release-packages.json` or publish another version. Its deterministic candidate
+scanner moved to the documentation validator. Semantic review moved to the
+installed skills under the
+[host-agent review decision](decisions/host-agent-semantic-review.md).
+
+Deprecate the retired package only after the replacement skill and validator
+releases are available on npm:
+
+```bash
+npm deprecate '@buresmi7/agent-doc-rules-docs-duplicates@*' \
+  'Retired: install @buresmi7/agent-doc-rules-skill and use @buresmi7/agent-doc-rules-docs-validator for deterministic candidates.'
+npm view @buresmi7/agent-doc-rules-docs-duplicates deprecated
+```
+
+Do not run this step before both replacements publish. Deprecation changes npm
+registry metadata and requires the same explicit publication approval as an npm
+publish. Consumers should remove the retired dependency and follow the skill
+package's [migration guide](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker).
 
 ## Transition Checklist
 
@@ -234,11 +257,11 @@ Also review the pack output for each affected package:
 | `@buresmi7/agent-e2e-report` | `corepack pnpm --dir packages/agent-e2e-report pack --dry-run` |
 | `@buresmi7/agent-e2e-runner` | `corepack pnpm --dir packages/agent-e2e-runner pack --dry-run` |
 | `@buresmi7/agent-doc-rules-docs-validator` | `corepack pnpm --dir packages/docs-validator pack --dry-run` |
-| `@buresmi7/agent-doc-rules-docs-duplicates` | `corepack pnpm --dir packages/docs-duplicates pack --dry-run` |
 
 When the skill package changes:
 
-- check that `npx skills add . --list` discovers `agent-doc-rules`;
+- check that `npx skills add . --list` discovers `agent-doc-rules` and
+  `docs-duplicate-review`;
 - review external maintainer skill changes when the package manifest or
   `skills-lock.json` changed;
 - check reusable content for secrets, private environment details, and

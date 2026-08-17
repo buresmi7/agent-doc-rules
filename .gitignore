@@ -4,3 +4,4 @@ npm-debug.log*
 .agent-e2e-output/
 .agents/skills/*
 !.agents/skills/agent-doc-rules
+!.agents/skills/docs-duplicate-review

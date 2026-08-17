@@ -6,29 +6,35 @@ import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import {
   externalProjectSkills,
-  localWorkspaceSkill,
+  localWorkspaceSkills,
   skillsCliVersion,
 } from './project-skills.mjs';
 import { computeVersionedDirectoryHash } from './versioned-directory-hash.mjs';
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const skillPackage = localWorkspaceSkill.packageName;
-const skillName = localWorkspaceSkill.name;
+const skillPackage = localWorkspaceSkills[0].packageName;
 const requireFromRoot = createRequire(join(repoRoot, 'package.json'));
 const skillPackageJson = requireFromRoot.resolve(`${skillPackage}/package.json`);
-const skillDir = dirname(skillPackageJson);
-const expectedSource = relative(repoRoot, skillDir).replaceAll('\\', '/');
-const expectedHash = await computeVersionedDirectoryHash(repoRoot, skillDir);
-
-await assertFile(join(skillDir, 'SKILL.md'));
-await assertFile(join(repoRoot, '.agents/skills', skillName, 'SKILL.md'));
-await assertAgentSkillSymlink(skillDir);
+const skillPackageDir = dirname(skillPackageJson);
 const skillsLock = JSON.parse(await readFile(join(repoRoot, 'skills-lock.json'), 'utf8'));
-await assertSkillsLock(skillsLock, expectedSource, expectedHash);
-await assertExternalProjectSkills(skillsLock);
-await assertSkillsDiscovery(skillDir);
 
-console.log(`Verified ${skillPackage} and ${externalProjectSkills.length} external project skills.`);
+for (const skill of localWorkspaceSkills) {
+  const skillDir = join(skillPackageDir, skill.relativeDirectory);
+  const expectedSource = relative(repoRoot, skillDir).replaceAll('\\', '/');
+  const expectedHash = await computeVersionedDirectoryHash(repoRoot, skillDir);
+
+  await assertFile(join(skillDir, 'SKILL.md'));
+  await assertFile(join(repoRoot, '.agents/skills', skill.name, 'SKILL.md'));
+  await assertAgentSkillSymlink(skill.name, skillDir);
+  await assertSkillsLock(skillsLock, skill.name, expectedSource, expectedHash);
+}
+await assertExternalProjectSkills(skillsLock);
+await assertSkillsDiscovery(skillPackageDir);
+
+console.log(
+  `Verified ${localWorkspaceSkills.length} local skills from ${skillPackage}`
+  + ` and ${externalProjectSkills.length} external project skills.`,
+);
 
 async function assertSkillsDiscovery(sourceDir) {
   const npmCache = await mkdtemp(join(tmpdir(), 'agent-doc-rules-npm-cache-'));
@@ -50,15 +56,17 @@ async function assertSkillsDiscovery(sourceDir) {
       },
     });
 
-    if (!stdout.includes(skillName)) {
-      throw new Error(`skills add --list did not discover ${skillName}`);
+    for (const skill of localWorkspaceSkills) {
+      if (!stdout.includes(skill.name)) {
+        throw new Error(`skills add --list did not discover ${skill.name}`);
+      }
     }
   } finally {
     await rm(npmCache, { recursive: true, force: true });
   }
 }
 
-async function assertSkillsLock(lock, expectedSourcePath, expectedComputedHash) {
+async function assertSkillsLock(lock, skillName, expectedSourcePath, expectedComputedHash) {
   const entry = lock.skills?.[skillName];
 
   if (!entry) {
@@ -112,7 +120,7 @@ async function assertExternalProjectSkills(lock) {
   }
 }
 
-async function assertAgentSkillSymlink(expectedTarget) {
+async function assertAgentSkillSymlink(skillName, expectedTarget) {
   const linkPath = join(repoRoot, '.agents/skills', skillName);
   const info = await lstat(linkPath).catch(() => undefined);
 

@@ -25,7 +25,6 @@ const publicPackages = [
   ['@buresmi7/agent-e2e-runner', 'agent-e2e-runner'],
   ['@buresmi7/agent-e2e-report', 'agent-e2e-report'],
   ['@buresmi7/agent-doc-rules-docs-validator', 'docs-validator'],
-  ['@buresmi7/agent-doc-rules-docs-duplicates', 'docs-duplicates'],
 ];
 
 test('Changesets versions only the package named by a changeset', async (context) => {

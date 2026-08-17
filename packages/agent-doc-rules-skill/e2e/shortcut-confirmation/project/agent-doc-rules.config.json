@@ -4,7 +4,7 @@
       "README.md",
       "docs/**/*.md"
     ],
-    "duplicates": {
+    "duplicateCandidates": {
       "ignorePairs": [
         {
           "left": "^docs/review-status\\.md$",

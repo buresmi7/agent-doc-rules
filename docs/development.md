@@ -10,7 +10,8 @@ For install commands, usage examples, the feature guide, and product docs, use
 
 - You maintain the published `agent-doc-rules` skill.
 - You change reusable documentation rules, references, or starter templates.
-- You work on the Markdown/link validator or semantic duplicate checker.
+- You work on the deterministic documentation validator or duplicate candidate
+  scanner.
 - You test how agents read and apply documentation in E2E scenarios.
 - You prepare a release of any public package.
 
@@ -31,16 +32,18 @@ skill, reference, or template changes.
 
 ### Published Skill Package
 
-The installable skill lives in
-[packages/agent-doc-rules-skill/](../packages/agent-doc-rules-skill/). Its
-[SKILL.md](../packages/agent-doc-rules-skill/SKILL.md) tells agents which
-reference file to read, and its
+The installable skill suite lives in
+[packages/agent-doc-rules-skill/](../packages/agent-doc-rules-skill/). The
+[main skill](../packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md)
+routes documentation work, while
+[duplicate review](../packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md)
+owns semantic duplicate classification. The
 [package README](../packages/agent-doc-rules-skill/README.md) covers install
 and usage.
 
 The public npm package is `@buresmi7/agent-doc-rules-skill`. Its bin installer
-copies only the skill artifact into `.agents/skills/agent-doc-rules/`; it does
-not copy E2E fixtures, monorepo support scripts, or maintainer-only files.
+copies the two owned skills into `.agents/skills/`; it does not copy E2E
+fixtures, monorepo support scripts, or maintainer-only files.
 
 ### Factual Documentation Review
 
@@ -51,7 +54,7 @@ configs, tests, canonical docs, or official external sources.
 If a requested edit conflicts with local evidence, the agent should not edit the
 file. It should report the contradiction and name the evidence instead. The
 canonical rule lives in
-[factual-review.md](../packages/agent-doc-rules-skill/references/factual-review.md).
+[factual-review.md](../packages/agent-doc-rules-skill/skills/agent-doc-rules/references/factual-review.md).
 The E2E scenario for this rule is
 [factual-change-rejection](../packages/agent-doc-rules-skill/e2e/factual-change-rejection/scenario.json).
 It asks the agent to add Node.js 24 to the README while `package.json` only
@@ -59,14 +62,16 @@ supports `>=20 <24`. The expected output is no file changes and a clear warning.
 
 ### Documentation Validation Tools
 
-The monorepo ships two optional CLIs:
+The monorepo ships one consumer-facing validation CLI:
 
 - [docs-validator](../packages/docs-validator/) is published as
-  `@buresmi7/agent-doc-rules-docs-validator` and checks Markdown, wording,
-  security patterns, and local links.
-- [docs-duplicates](../packages/docs-duplicates/) is published as
-  `@buresmi7/agent-doc-rules-docs-duplicates` and finds likely semantic
-  duplicate documentation passages.
+  `@buresmi7/agent-doc-rules-docs-validator`. It checks Markdown, wording,
+  security patterns, and links, and emits deterministic duplicate candidates.
+
+Style judgment stays in `agent-doc-rules`. The `docs-duplicate-review` skill
+classifies candidate overlap with the currently active agent. The accepted
+runtime boundary is recorded in
+[Host-Agent Semantic Documentation Review](decisions/host-agent-semantic-review.md).
 
 Run `corepack pnpm run docs:check` for the configured documentation checks.
 
@@ -124,7 +129,7 @@ independently. The accepted release model is recorded in
 | Test and build the report viewer | `corepack pnpm run test:report-viewer` |
 | Run deterministic prose wording checks | `corepack pnpm run docs:wording` |
 | Run deterministic documentation security checks | `corepack pnpm run docs:security` |
-| Run AI sentence-level style review | `corepack pnpm run docs:style` |
+| Collect deterministic duplicate candidates | `corepack pnpm run docs:duplicate-candidates` |
 | Run static Markdown, security, link, and audit checks | `corepack pnpm test` |
 | Run the explicit documentation validation gate | `corepack pnpm run docs:check` |
 | Create a starter docs-tool config in a consuming project | `agent-doc-rules-docs init` |
@@ -142,17 +147,17 @@ runner configuration and the single-file agent snapshot format.
 | --- | --- |
 | [`packages/agent-doc-rules-skill/`](../packages/agent-doc-rules-skill/) | Published skill package and installable artifact. |
 | [`packages/agent-doc-rules-skill/README.md`](../packages/agent-doc-rules-skill/README.md) | Human-facing product README for the skill. |
-| [`packages/agent-doc-rules-skill/docs/`](../packages/agent-doc-rules-skill/docs/) | Product docs for the skill. |
-| [`packages/agent-doc-rules-skill/docs/adoption.md`](../packages/agent-doc-rules-skill/docs/adoption.md) | Setup path for consuming repositories. |
-| [`packages/agent-doc-rules-skill/docs/tool-map.md`](../packages/agent-doc-rules-skill/docs/tool-map.md) | Map from common tasks to skill references and CLIs. |
-| [`packages/agent-doc-rules-skill/docs/config-reference.md`](../packages/agent-doc-rules-skill/docs/config-reference.md) | Configuration reference for documentation tooling. |
-| [`packages/agent-doc-rules-skill/docs/recipes.md`](../packages/agent-doc-rules-skill/docs/recipes.md) | E2E-backed examples for common documentation repairs. |
-| [`packages/agent-doc-rules-skill/references/`](../packages/agent-doc-rules-skill/references/) | Canonical reusable rules loaded by the skill. |
-| [`packages/agent-doc-rules-skill/assets/templates/`](../packages/agent-doc-rules-skill/assets/templates/) | Starter templates shipped with the skill. |
+| [`packages/agent-doc-rules-skill/skills/`](../packages/agent-doc-rules-skill/skills/) | The two installable skill artifacts. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/) | Product docs for the main skill. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md) | Setup path for consuming repositories. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/tool-map.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/tool-map.md) | Map from common tasks to skills and the validator CLI. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference.md) | Configuration reference for documentation tooling. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes.md) | E2E-backed examples for common documentation repairs. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/references/`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/references/) | Canonical reusable rules loaded by the main skill. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/) | Starter templates shipped with the main skill. |
 | [`packages/agent-doc-rules-skill/e2e/`](../packages/agent-doc-rules-skill/e2e/) | Agent scenarios that test the published skill behavior. |
 | [`packages/docs-validator/`](../packages/docs-validator/) | Deterministic Markdown and link validation CLI. |
 | [`packages/docs-validator/e2e/`](../packages/docs-validator/e2e/) | Command scenarios that test the documentation validator CLI. |
-| [`packages/docs-duplicates/`](../packages/docs-duplicates/) | Codex-assisted semantic duplicate checker. |
 | [`packages/agent-e2e-runner/`](../packages/agent-e2e-runner/) | Reusable CLI and library for agent and command E2E scenarios. |
 | [`packages/agent-e2e-report/`](../packages/agent-e2e-report/) | Public browser-safe contract and validator for `report.json`. |
 | [`packages/agent-e2e-report-viewer/`](../packages/agent-e2e-report-viewer/) | Private static React application for viewing a local report. |
@@ -172,12 +177,13 @@ runner configuration and the single-file agent snapshot format.
 | Document | Content |
 | --- | --- |
 | [`AGENTS.md`](../AGENTS.md) | Project-specific agent routing, invariants, and verification rules. |
-| [`packages/agent-doc-rules-skill/SKILL.md`](../packages/agent-doc-rules-skill/SKILL.md) | Agent entry file that loads the right rule references. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL.md) | Main agent entry file that loads the right rule references. |
+| [`packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md`](../packages/agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md) | Semantic duplicate-review workflow. |
 | [`packages/agent-doc-rules-skill/README.md`](../packages/agent-doc-rules-skill/README.md) | Install, examples, feature guide, and development notes for the skill. |
-| [`packages/agent-doc-rules-skill/docs/context-placement.md`](../packages/agent-doc-rules-skill/docs/context-placement.md) | How to choose a durable home for each project fact. |
-| [`packages/agent-doc-rules-skill/docs/adoption.md`](../packages/agent-doc-rules-skill/docs/adoption.md) | How consuming repositories install, verify, and update the skill. |
-| [`packages/agent-doc-rules-skill/docs/config-reference.md`](../packages/agent-doc-rules-skill/docs/config-reference.md) | Supported `agent-doc-rules.config.json` keys. |
-| [`packages/agent-doc-rules-skill/references/`](../packages/agent-doc-rules-skill/references/) | Source of truth for reusable README, `AGENTS.md`, writing, validation, and documentation architecture rules. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement.md) | How to choose a durable home for each project fact. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md) | How consuming repositories install, verify, and update the skill suite. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference.md`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference.md) | Supported `agent-doc-rules.config.json` keys. |
+| [`packages/agent-doc-rules-skill/skills/agent-doc-rules/references/`](../packages/agent-doc-rules-skill/skills/agent-doc-rules/references/) | Source of truth for reusable README, `AGENTS.md`, writing, validation, and documentation architecture rules. |
 | [`docs/e2e-failure-triage.md`](e2e-failure-triage.md) | How maintainers diagnose failed agent E2E scenarios. |
 | [`docs/e2e-rule-matrix.md`](e2e-rule-matrix.md) | Which skill behavior each E2E scenario protects. |
 | [`docs/rule-placement.md`](rule-placement.md) | Where new maintainer or skill behavior should be encoded. |
@@ -185,6 +191,7 @@ runner configuration and the single-file agent snapshot format.
 | [`docs/project-cleanup.md`](project-cleanup.md) | How maintainers fold cleanup into ordinary development. |
 | [`docs/release-management.md`](release-management.md) | How maintainers reconcile legacy Releases and publish independent package versions. |
 | [`docs/decisions/independent-package-versioning.md`](decisions/independent-package-versioning.md) | Why public packages stop using lockstep versions after `v0.11.0`. |
+| [`docs/decisions/host-agent-semantic-review.md`](decisions/host-agent-semantic-review.md) | Why semantic style and duplicate review use the active agent instead of a second AI runtime. |
 | [`release-packages.json`](../release-packages.json) | Which public package, directory, and tag identity each release tool uses. |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Repository and monorepo history; package histories live beside their manifests. |
 

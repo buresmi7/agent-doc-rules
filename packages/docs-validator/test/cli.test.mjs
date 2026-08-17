@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import test from 'node:test';
 import { parseArgs, runCommand } from '../src/cli.mjs';
-import { resolveDocsOptions } from '../src/config.mjs';
+import { resolveDocsOptions, resolveDuplicateCandidateOptions } from '../src/config.mjs';
 import {
   buildLinkinatorArgs,
   buildMarkdownlintArgs,
@@ -519,10 +519,17 @@ test('init command writes a starter config', async () => {
   assert.deepEqual(config.docs.security, {
     allow: [],
   });
-  assert.equal(config.docs.style.model, 'gpt-5-nano');
-  assert.equal(config.docs.style.maxUnits, 80);
-  assert.equal(config.docs.duplicates.model, 'gpt-5-nano');
-  assert.deepEqual(config.docs.duplicates.ignorePairs, []);
+  assert.equal('style' in config.docs, false);
+  assert.equal('duplicates' in config.docs, false);
+  assert.deepEqual(config.docs.duplicateCandidates, {
+    includeReferences: false,
+    includeSameFile: false,
+    minSimilarity: 0.72,
+    minWords: 6,
+    minChars: 40,
+    maxCandidates: 50,
+    ignorePairs: [],
+  });
 });
 
 test('init command refuses to overwrite existing config without force', async () => {
@@ -548,11 +555,44 @@ test('init command can print without writing files', async () => {
 
   assert.equal(code, 0);
   assert.match(stdout, /"docs"/);
-  assert.match(stdout, /"docs:style"/);
+  assert.match(stdout, /"docs:duplicate-candidates"/);
+  assert.doesNotMatch(stdout, /"docs:style"/);
+  assert.doesNotMatch(stdout, /agent-doc-rules-docs-duplicates/);
   assert.match(stdout, /"docs:check"/);
 
   await assert.rejects(
     readFile(join(root, 'agent-doc-rules.config.json'), 'utf8'),
     /ENOENT/,
   );
+});
+
+test('stale duplicate thresholds report behavior-preserving migration values', async () => {
+  const cases = [
+    {
+      config: { docs: { duplicates: {} } },
+      expected: /old default warnScore 0\.78 maps to minSimilarity 0\.72/i,
+    },
+    {
+      config: { docs: { duplicates: { warnScore: 0.65 } } },
+      expected: /configured warnScore 0\.65 maps to minSimilarity 0\.65/i,
+    },
+    {
+      config: { docs: { duplicateCandidates: { warnScore: 0.9 } } },
+      expected: /configured warnScore 0\.9 maps to minSimilarity 0\.72/i,
+    },
+  ];
+
+  for (const { config, expected } of cases) {
+    const root = await mkdtemp(join(tmpdir(), 'docs-validator-threshold-migration-'));
+    await writeFile(join(root, 'agent-doc-rules.config.json'), JSON.stringify(config));
+
+    await assert.rejects(
+      resolveDuplicateCandidateOptions({ root }),
+      (error) => {
+        assert.match(error.message, /minSimilarity = Math\.min\(warnScore, 0\.72\)/);
+        assert.match(error.message, expected);
+        return true;
+      },
+    );
+  }
 });
