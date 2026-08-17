@@ -32,6 +32,12 @@ await checkSkillFrontmatter({
     if (!normalized.includes('do not use as a general product-doc writer')) {
       errors.push('agent-doc-rules description must state the product-doc boundary.');
     }
+
+    for (const trigger of ['factual', 'security review', 'documentation architecture']) {
+      if (!normalized.includes(trigger)) {
+        errors.push(`agent-doc-rules description must expose its ${trigger} trigger.`);
+      }
+    }
   },
 });
 await checkSkillFrontmatter({
@@ -51,6 +57,7 @@ await checkSkillFrontmatter({
 });
 await checkMainSkillAlwaysLoadedContract();
 await checkOpenAiMetadata();
+await checkSkillProgressiveDisclosure();
 await checkMarkdownLinks();
 await checkPackageReadme();
 await checkFactualReviewContract();
@@ -68,7 +75,7 @@ if (errors.length > 0) {
 console.log('Skill artifact check passed for agent-doc-rules and docs-duplicate-review.');
 
 async function checkPackageFiles() {
-  const requiredFiles = ['README.md', 'bin', 'skills'];
+  const requiredFiles = ['README.md', 'bin', 'docs', 'skills'];
   const actualFiles = Array.isArray(packageJson.files) ? packageJson.files : [];
 
   if (packageJson.name !== expectedPackageName) {
@@ -118,7 +125,7 @@ async function checkPackageFiles() {
     await assertFile(join(skillsDir, skillName, 'SKILL.md'));
   }
 
-  for (const legacyPath of ['SKILL.md', 'agents', 'assets', 'docs', 'references']) {
+  for (const legacyPath of ['SKILL.md', 'agents', 'assets', 'references']) {
     await assertMissing(
       join(packageDir, legacyPath),
       `Legacy package-root skill entry must move under skills/: ${legacyPath}`,
@@ -189,51 +196,59 @@ async function checkSkillFrontmatter({ name, directory, checkDescription }) {
 async function checkMainSkillAlwaysLoadedContract() {
   const skillPath = join(mainSkillDir, 'SKILL.md');
   const content = await readFile(skillPath, 'utf8');
+  const requiredPatterns = [
+    {
+      pattern: /When creating a nested `AGENTS\.md`[\s\S]{0,160}root pointer/,
+      message: 'nested AGENTS.md root-pointer guidance',
+    },
+    {
+      pattern: /brief project orientation/,
+      message: 'root AGENTS.md project orientation guidance',
+    },
+    {
+      pattern: /real customer names, emails, account IDs, private\s+hosts, tokens/,
+      message: 'explicit sensitive documentation categories',
+    },
+    {
+      pattern: /do not turn this skill's generic\s+examples into project-specific facts/,
+      message: 'generic examples must not become project facts',
+    },
+    {
+      pattern: /Do not add generic setup, install, test, deployment, or package-manager steps\s+without local evidence/,
+      message: 'unsupported generic workflow guard',
+    },
+    {
+      pattern: /Put rationale and trade-offs[\s\S]{0,180}README as the only owner/,
+      message: 'rationale placement guidance',
+    },
+    {
+      pattern: /dedicated\s+top-level `Shared Rules` or `Skill Reference` section[\s\S]{0,220}Source Of Truth/,
+      message: 'dedicated Shared Rules section guidance',
+    },
+    {
+      pattern: /Write the durable result, not the conversation that produced it\.[\s\S]{0,260}explicitly a transcript or conversation example/,
+      message: 'conversation-artifact guard',
+    },
+    {
+      pattern: /When evidence supplies only names, keep a bare list\.[\s\S]{0,180}mappings,\s+transformations, cardinality/,
+      message: 'unsupported semantics guard',
+    },
+    {
+      pattern: /short Markdown link to the skill[\s\S]{0,100}code formatting alone is not a link/,
+      message: 'workflow-to-skill link guidance',
+    },
+  ];
 
-  if (!content.includes('When creating a nested `AGENTS.md`')) {
-    errors.push('agent-doc-rules must keep nested AGENTS.md root-pointer guidance always loaded.');
+  for (const { pattern, message } of requiredPatterns) {
+    if (!pattern.test(content)) {
+      errors.push(`agent-doc-rules must keep ${message} always loaded.`);
+    }
   }
 
-  if (!content.includes('brief project orientation')) {
-    errors.push('agent-doc-rules must keep root AGENTS.md project orientation guidance always loaded.');
-  }
+  const sharedRulePath = '.agents/skills/agent-doc-rules/references/agents-rules.md';
 
-  if (!content.includes('real customer names, emails, account IDs, private host')) {
-    errors.push('agent-doc-rules must explicitly name sensitive documentation categories.');
-  }
-
-  if (!content.includes("do not turn this skill's generic examples into project-specific")) {
-    errors.push('agent-doc-rules must prevent generic sensitive examples becoming project facts.');
-  }
-
-  if (!content.includes('do not add generic setup, install, test')) {
-    errors.push('agent-doc-rules must keep unsupported generic setup-step guidance always loaded.');
-  }
-
-  if (!content.includes('reason, rationale, why, or') || !content.includes('README as the only')) {
-    errors.push('agent-doc-rules must keep notes-triage rationale placement guidance always loaded.');
-  }
-
-  if (!content.includes('dedicated')
-    || !content.includes('top-level `Shared Rules` or `Skill Reference` section')
-    || !content.includes('do not bury the shared-rule link under')
-    || !content.includes('Source Of Truth')) {
-    errors.push('agent-doc-rules must keep dedicated Shared Rules section guidance always loaded.');
-  }
-
-  if (!content.includes('Write the durable result, not the conversation that produced it.')
-    || !content.includes('Do not fill gaps from field names')
-    || !content.includes('do not infer meanings, required status')
-    || !content.includes('mappings, transformations, cardinality')
-    || !content.includes('When evidence supplies only a list of names, keep a bare list')
-    || !content.includes('Omit prompts and replies')
-    || !content.includes('explicit transcript or conversation example')) {
-    errors.push('agent-doc-rules must keep the conversation-artifact rule always loaded.');
-  }
-
-  if (!content.includes('short Markdown link to the skill')
-    || !/code formatting alone is\s+not a link/.test(content)) {
-    errors.push('agent-doc-rules must keep explicit workflow-to-skill link guidance always loaded.');
+  if (countOccurrences(content, sharedRulePath) !== 1) {
+    errors.push('agent-doc-rules must state its installed Shared Rules path exactly once.');
   }
 }
 
@@ -242,9 +257,70 @@ async function checkOpenAiMetadata() {
     const metadataPath = join(skillsDir, skillName, 'agents/openai.yaml');
     await assertFile(metadataPath);
     const metadata = await readFile(metadataPath, 'utf8');
+    const shortDescription = metadata.match(/^\s*short_description: "([^"]+)"\s*$/m)?.[1];
 
     if (!metadata.includes(`$${skillName}`)) {
       errors.push(`${relative(repoRoot, metadataPath)} default_prompt must mention $${skillName}.`);
+    }
+
+    if (!shortDescription) {
+      errors.push(`${relative(repoRoot, metadataPath)} must quote interface.short_description.`);
+    } else if (Array.from(shortDescription).length < 25 || Array.from(shortDescription).length > 64) {
+      errors.push(`${relative(repoRoot, metadataPath)} short_description must contain 25-64 characters.`);
+    }
+  }
+}
+
+async function checkSkillProgressiveDisclosure() {
+  const allowedEntries = new Set(['SKILL.md', 'agents', 'assets', 'references', 'scripts']);
+  const lineLimits = new Map([
+    ['agent-doc-rules', 180],
+    ['docs-duplicate-review', 140],
+  ]);
+
+  for (const skillName of skillNames) {
+    const skillDir = join(skillsDir, skillName);
+    const entries = await readdir(skillDir, { withFileTypes: true });
+    const unexpected = entries
+      .map((entry) => entry.name)
+      .filter((name) => !allowedEntries.has(name));
+
+    if (unexpected.length > 0) {
+      errors.push(
+        `${relative(repoRoot, skillDir)} contains non-skill documentation or unknown entries: `
+        + unexpected.join(', '),
+      );
+    }
+
+    const skill = await readFile(join(skillDir, 'SKILL.md'), 'utf8');
+    const lineCount = skill.split('\n').length;
+    const lineLimit = lineLimits.get(skillName);
+
+    if (lineCount > lineLimit) {
+      errors.push(`${skillName}/SKILL.md has ${lineCount} lines; keep it at or below ${lineLimit}.`);
+    }
+
+    const referencesDir = join(skillDir, 'references');
+    const referenceEntries = await readdir(referencesDir, { withFileTypes: true });
+
+    for (const entry of referenceEntries) {
+      if (!entry.isFile() || extname(entry.name) !== '.md') {
+        errors.push(`${relative(repoRoot, referencesDir)} must contain one-level Markdown references only.`);
+        continue;
+      }
+
+      const path = join(referencesDir, entry.name);
+      const content = await readFile(path, 'utf8');
+
+      if (!skill.includes(`](references/${entry.name})`)) {
+        errors.push(
+          `${relative(repoRoot, path)} must be linked directly from ${skillName}/SKILL.md.`,
+        );
+      }
+
+      if (content.split('\n').length > 100 && !/^## Contents$/m.test(content)) {
+        errors.push(`${relative(repoRoot, path)} exceeds 100 lines and needs a Contents section.`);
+      }
     }
   }
 }
@@ -292,11 +368,11 @@ async function checkPackageReadme() {
 
   const requiredLinks = [
     'skills/agent-doc-rules/references/writing-style.md',
-    'skills/agent-doc-rules/docs/adoption.md',
-    'skills/agent-doc-rules/docs/tool-map.md',
-    'skills/agent-doc-rules/docs/config-reference.md',
-    'skills/agent-doc-rules/docs/context-placement.md',
-    'skills/agent-doc-rules/docs/recipes.md',
+    'docs/adoption.md',
+    'docs/tool-map.md',
+    'skills/agent-doc-rules/references/config-reference.md',
+    'skills/agent-doc-rules/references/context-placement.md',
+    'docs/recipes.md',
     'skills/agent-doc-rules/references/validation.md',
     'skills/docs-duplicate-review/references/classification-rubric.md',
   ];
@@ -355,7 +431,7 @@ async function checkFactualReviewContract() {
     errors.push('Skill package README must include factual-review usage language.');
   }
 
-  if (!skill.includes('local manifests support them')) {
+  if (!/Do not add generic setup, install, test[\s\S]{0,120}without local evidence/.test(skill)) {
     errors.push('agent-doc-rules must block unsupported generic workflow additions.');
   }
 }
@@ -437,7 +513,7 @@ async function checkForbiddenText() {
     '.yaml',
     '.yml',
   ].includes(extname(path)));
-  const migrationPath = join(mainSkillDir, 'docs/adoption.md');
+  const migrationPath = join(packageDir, 'docs/adoption.md');
   const forbiddenPatterns = [
     { pattern: /\bTODO\b/i, message: 'TODO marker' },
     { pattern: /rules\/readme\.md/, message: 'stale rules/readme.md path' },
@@ -544,6 +620,10 @@ function sameValues(actual, expected) {
   return Array.isArray(actual)
     && actual.length === expected.length
     && [...actual].sort().every((value, index) => value === [...expected].sort()[index]);
+}
+
+function countOccurrences(content, value) {
+  return content.split(value).length - 1;
 }
 
 function isExternalOrAnchor(href) {

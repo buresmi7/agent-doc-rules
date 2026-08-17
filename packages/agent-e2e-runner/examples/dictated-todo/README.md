@@ -20,7 +20,7 @@ The five turns exercise one real Codex conversation:
 Run the scenario from this directory:
 
 ```bash
-npx agent-e2e-runner agent --scenario e2e/messy-dictation \
+npx --no-install agent-e2e-runner agent --scenario e2e/messy-dictation \
   --skill-package @agent-e2e-example/todo-cleaner \
   --skill todo-cleaner
 ```

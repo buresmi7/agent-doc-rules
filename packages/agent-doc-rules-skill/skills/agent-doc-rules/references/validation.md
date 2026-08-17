@@ -3,6 +3,13 @@
 Use this reference when a repository has documentation validation tooling or
 when you add it.
 
+## Contents
+
+- [Preferred Checks](#preferred-checks)
+- [Recommended Tool Split](#recommended-tool-split)
+- [Repository Self-Compliance](#repository-self-compliance)
+- [Duplicate Review](#duplicate-review)
+
 ## Preferred Checks
 
 Prefer the repository's own validation scripts. When a project exposes
@@ -36,7 +43,7 @@ Keep deterministic validation separate from semantic review:
 The `agent-doc-rules` tool packages follow this split:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
 ```
 
 Recommended scripts:
@@ -77,6 +84,21 @@ narrow and prefer rewriting examples that look like real instructions.
 For sentence-level style judgment, the current host agent should use
 `$agent-doc-rules` and load [writing-style.md](writing-style.md). This review is
 not part of the deterministic CI gate.
+
+## Repository Self-Compliance
+
+When a repository publishes documentation rules or skills, add local tests for
+its own stable, mechanical contracts. Useful checks include:
+
+- required entry-point links and verified commands,
+- standard skill layout, metadata limits, and progressive disclosure,
+- machine-readable ownership for lasting validation exceptions, and
+- complete decision-record fields and backlinks.
+
+Run these checks from both the main test gate and `docs:check` so documentation
+changes cannot bypass them. Keep semantic style and duplicate-ownership
+judgment with the active agent; do not encode those decisions as brittle phrase
+or similarity assertions.
 
 ## Duplicate Review
 

@@ -75,7 +75,8 @@ npm view @buresmi7/agent-doc-rules-docs-duplicates deprecated
 Do not run this step before both replacements publish. Deprecation changes npm
 registry metadata and requires the same explicit publication approval as an npm
 publish. Consumers should remove the retired dependency and follow the skill
-package's [migration guide](../packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker).
+package's
+[migration guide](../packages/agent-doc-rules-skill/docs/adoption.md#replace-the-retired-duplicate-checker).
 
 ## Transition Checklist
 
@@ -260,7 +261,7 @@ Also review the pack output for each affected package:
 
 When the skill package changes:
 
-- check that `npx skills add . --list` discovers `agent-doc-rules` and
+- check that `npx -y skills@1.5.12 add . --list` discovers `agent-doc-rules` and
   `docs-duplicate-review`;
 - review external maintainer skill changes when the package manifest or
   `skills-lock.json` changed;

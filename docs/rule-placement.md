@@ -28,9 +28,9 @@ the semantic duplicate workflow. Keep candidate collection mechanical in the
 validator. Put classification, canonical-owner selection, and review reporting
 in the duplicate-review skill.
 
-Use `packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/` for
-user-facing explanation about the skill model, trade-offs, and placement
-concepts.
+Use `packages/agent-doc-rules-skill/docs/` for user-facing setup, examples, and
+product guides. Keep agent-only detailed rules under the skill's `references/`
+directory so they load only after the skill triggers.
 
 Use root `AGENTS.md` for this repository's always-loaded maintainer rules:
 verification commands, source-of-truth routing, release rules, and local

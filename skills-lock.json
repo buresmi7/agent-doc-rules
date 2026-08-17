@@ -4,12 +4,12 @@
     "agent-doc-rules": {
       "source": "packages/agent-doc-rules-skill/skills/agent-doc-rules",
       "sourceType": "local",
-      "computedHash": "ae1f157dd9256088f0539f03d8614cdb5f2917d5f178923716b1af0f4a9f907b"
+      "computedHash": "d95f69ebf7ce848efc9a6b39bc522c05b35414ae924ca0cbf1776b8339ee0ddc"
     },
     "docs-duplicate-review": {
       "source": "packages/agent-doc-rules-skill/skills/docs-duplicate-review",
       "sourceType": "local",
-      "computedHash": "497b2bbdb3025a715cb5b6f9fcee7caae4b7f32dd88a2c2212b52747d844120e"
+      "computedHash": "f91d9be06d19c2ac78088389922b5f5a3d60c6959181dec53af9f0bbc8742c2a"
     },
     "doc-coauthoring": {
       "source": "anthropics/skills",

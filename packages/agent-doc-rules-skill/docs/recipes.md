@@ -44,7 +44,8 @@ Use $agent-doc-rules to trim this README and move long-lived detail to the right
 
 Expected result:
 
-- README follows [`readme-rules.md`](../references/readme-rules.md),
+- README follows
+  [`readme-rules.md`](../skills/agent-doc-rules/references/readme-rules.md),
 - architecture, operations, and troubleshooting move into `docs/`,
 - stale or unsupported commands are removed.
 

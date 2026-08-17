@@ -3,6 +3,16 @@
 Use this reference when reviewing repository docs for factual accuracy,
 contradictions, unsupported claims, stale facts, or misleading precision.
 
+## Contents
+
+- [Review Scope](#review-scope)
+- [Evidence Rules](#evidence-rules)
+- [Detection Pass](#detection-pass)
+- [Finding Types](#finding-types)
+- [Severity](#severity)
+- [Report Format](#report-format)
+- [Repair Rules](#repair-rules)
+
 ## Review Scope
 
 Review claims that a maintainer or reader could act on:

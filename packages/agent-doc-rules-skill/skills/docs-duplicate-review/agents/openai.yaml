@@ -1,4 +1,4 @@
 interface:
   display_name: "Documentation Duplicate Review"
-  short_description: "Classify semantic documentation overlap from deterministic candidates"
+  short_description: "Classify semantic overlap from deterministic candidates"
   default_prompt: "Use $docs-duplicate-review to inspect deterministic candidates and report competing documentation ownership."

@@ -1,146 +1,94 @@
 # Docs Validator
 
 `@buresmi7/agent-doc-rules-docs-validator` provides deterministic documentation
-validation for repositories that use the `agent-doc-rules` skills.
+checks for repositories that use the `agent-doc-rules` skills.
 
 ## Install
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
 ```
 
-## Commands
+## First Check
+
+Preview the generated starter config and package scripts without writing files:
+
+```bash
+agent-doc-rules-docs init --print
+```
+
+Review the output, then write `agent-doc-rules.config.json`:
 
 ```bash
 agent-doc-rules-docs init
-agent-doc-rules-docs markdown
-agent-doc-rules-docs wording
-agent-doc-rules-docs security
-agent-doc-rules-docs links
-agent-doc-rules-docs duplicate-candidates --format json
+```
+
+Add the printed scripts that fit the repository, then run:
+
+```bash
 agent-doc-rules-docs check
 ```
 
-`init` creates a starter `agent-doc-rules.config.json`. Use
-`agent-doc-rules-docs init --print` to preview the config without writing files.
+`check` runs Markdown, wording, security, and link validation in that order. It
+stops on the first failed phase.
 
-`markdown`, `wording`, `security`, and `links` run the corresponding
-deterministic phases. `check` runs them in that order and stops on the first
-failure. `duplicate-candidates` emits evidence for the `docs-duplicate-review`
-skill. It does not invoke an AI tool, require authentication, or access the
-network.
+## Commands
 
-Candidate similarity is not a pass or fail verdict. Finding candidates returns
-exit code `0`; invalid arguments, configuration, or unreadable inputs return a
-nonzero code. The current agent reviews each candidate in its surrounding
-context and chooses the canonical owner.
+| Command | Purpose |
+| --- | --- |
+| `init` | Preview or write a starter config and recommended package scripts. |
+| `markdown` | Run Markdown linting. |
+| `wording` | Run deterministic prose checks. |
+| `security` | Scan documentation for high-risk instructions and content. |
+| `links` | Validate Markdown links. |
+| `duplicate-candidates` | Collect likely duplicate prose for agent review. |
+| `check` | Run Markdown, wording, security, and link validation. |
 
-The validator does not bundle an Agent Skill. Install the
-[`agent-doc-rules` skill package](../agent-doc-rules-skill/README.md) to add
-`docs-duplicate-review`. That skill requires this candidate command for a
-complete duplicate review; the validator remains optional for other skill
-workflows.
+Run `agent-doc-rules-docs --help` for command options.
 
-## Config
+## Configuration
 
 The CLI reads `agent-doc-rules.config.json` from the repository root. CLI flags
 override config values, and config values override built-in defaults.
 
-```json
-{
-  "docs": {
-    "include": ["*.md", "docs/**/*.md", "packages/**/*.md"],
-    "exclude": ["node_modules/**", ".git/**"],
-    "links": {
-      "skip": ["^https://github.com/example/archived"]
-    },
-    "wording": {
-      "writeGood": {
-        "passive": false,
-        "illusion": false,
-        "weasel": false,
-        "adverb": false,
-        "tooWordy": false,
-        "eprime": false,
-        "fail": false
-      },
-      "forbiddenTerms": [],
-      "allow": ["intentional example"]
-    },
-    "security": {
-      "allow": ["intentional fixture"]
-    },
-    "duplicateCandidates": {
-      "includeReferences": false,
-      "includeSameFile": false,
-      "minSimilarity": 0.72,
-      "minWords": 6,
-      "minChars": 40,
-      "maxCandidates": 50,
-      "ignorePairs": []
-    }
-  }
-}
-```
+Use `init --print` instead of copying a static config example. The
+[config reference](../agent-doc-rules-skill/skills/agent-doc-rules/references/config-reference.md)
+owns the supported keys, defaults, and exception guidance.
 
-Use `--skip <regex>` for repeated Linkinator skip patterns and `--no-fragments`
-when fragment validation is too strict for a specific repository. Use
-`docs.wording.writeGood` to tune the deterministic prose linter. Use
-`docs.wording.forbiddenTerms` only for project-specific phrases that must fail.
+Keep fragment checking enabled by default. If a repository must use
+`--no-fragments`, record why fragment validation cannot run and note that broken
+heading anchors remain unverified. Apply the same reason and residual-risk rule
+to skipped link patterns.
 
-## Duplicate candidate review
+## Duplicate Review
 
-By default, the command compares all included Markdown files with each other.
-Repeat `--focus <glob>` to compare only matching files against the full
-included corpus:
+Collect candidates for changed files with repeatable `--focus` flags:
 
 ```bash
 agent-doc-rules-docs duplicate-candidates \
   --focus 'README.md' \
-  --focus 'docs/changed/**/*.md' \
   --format json
 ```
 
-Candidate IDs are derived from their file and prose content. Ordering is stable
-for the same corpus. JSON output includes the corpus and focus files, a source
-digest that binds the source units and candidate-selection scope, the
-similarity value and signal for each pair, and pagination metadata. When
-`pagination.truncated` is `true`, rerun the identical scan and add
-`pagination.nextCursor`:
+Candidate similarity is evidence, not a pass or fail verdict. Finding candidates
+returns exit code `0`. The command does not invoke an AI tool, require
+authentication, or access the network.
+
+Use the
+[`docs-duplicate-review` skill](../agent-doc-rules-skill/skills/docs-duplicate-review/SKILL.md)
+for pagination, contextual review, and classification.
+
+## Migration
+
+The old `docs.style` and `docs.duplicates` config sections are unsupported.
+Follow the
+[retired checker migration](../agent-doc-rules-skill/docs/adoption.md#replace-the-retired-duplicate-checker)
+instead of maintaining a second migration procedure here.
+
+## Verification
+
+From the monorepo root, run:
 
 ```bash
-agent-doc-rules-docs duplicate-candidates \
-  --focus 'README.md' \
-  --focus 'docs/changed/**/*.md' \
-  --format json \
-  --cursor DUP-0123456789abcdef
+corepack pnpm --filter @buresmi7/agent-doc-rules-docs-validator test
 ```
-
-Text output contains the same candidate locations and pagination state for
-interactive use. `--min-similarity` sets the candidate threshold, and
-`--max-candidates` controls the page size. Use `--include-references` or
-`--include-same-file` only when those sources belong in the review. The
-`duplicateCandidates` section accepts `include`, `exclude`,
-`includeReferences`, `includeSameFile`, `minSimilarity`, `minWords`, `minChars`,
-`maxCandidates`, and `ignorePairs`.
-
-If a cursor is no longer present, restart from the first page. The source or
-candidate-selection scope may have changed before the scanner could emit the
-next page.
-
-The old `docs.style` and `docs.duplicates` sections are unsupported. Remove the
-`@buresmi7/agent-doc-rules-docs-duplicates` dependency and its `docs:style` and
-`docs:duplicates` scripts. Also remove `@openai/codex` when it was installed
-only as that checker's project-local fallback. Move deterministic settings to
-`docs.duplicateCandidates`. Set `minSimilarity` to
-`Math.min(previous warnScore, 0.72)` to preserve the retired checker's candidate
-threshold; its default `warnScore` of `0.78` maps to `minSimilarity: 0.72`.
-Remove `model`, `reasoningEffort`, `codexBin`, and `failScore`. Keep
-`docs:check` as `agent-doc-rules-docs check`. The CLI reports stale config
-instead of silently ignoring it. See the skill package's
-[migration guide](../agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption.md#replace-the-retired-duplicate-checker)
-for the full replacement path.
-
-Use `docs-duplicate-review` from the separate skill package for semantic
-classification. Use the `agent-doc-rules` security-review reference to define
-security scope.

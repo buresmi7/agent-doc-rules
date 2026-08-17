@@ -43,7 +43,10 @@ test('consumer packages expose no secondary AI runtime requirement', async () =>
     Object.values(rootPackage.scripts ?? {}).some((script) => script.includes('agent-doc-rules-docs-duplicates')),
     false,
   );
-  assert.equal(rootPackage.scripts?.['docs:check'], 'agent-doc-rules-docs check');
+  assert.match(
+    rootPackage.scripts?.['docs:check'] ?? '',
+    /^agent-doc-rules-docs check(?:\s|$)/,
+  );
   assert.equal(
     rootPackage.scripts?.['docs:duplicate-candidates'],
     'agent-doc-rules-docs duplicate-candidates --format json',

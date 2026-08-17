@@ -4,6 +4,16 @@ Use this rule when creating or maintaining a project `README.md`.
 Also apply [Documentation writing style](writing-style.md) for prose,
 structure, and plain-English review.
 
+## Contents
+
+- [Purpose](#purpose)
+- [Core Rules](#core-rules)
+- [Recommended Shape](#recommended-shape)
+- [Source Of Truth](#source-of-truth)
+- [Commands](#commands)
+- [What To Avoid](#what-to-avoid)
+- [Review](#review)
+
 ## Purpose
 
 `README.md` is the human entry point for the repository. It should answer:

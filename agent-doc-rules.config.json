@@ -1,10 +1,5 @@
 {
   "docs": {
-    "include": [
-      "*.md",
-      "docs/**/*.md",
-      "packages/**/*.md"
-    ],
     "exclude": [
       "node_modules/**",
       ".git/**",
@@ -13,22 +8,12 @@
       ".tmp/**",
       ".agent-e2e-output/**",
       "repos/**",
-      "worktrees/**"
+      "worktrees/**",
+      ".agents/skills/**"
     ],
     "links": {
-      "exclude": [
-        "node_modules/**",
-        ".git/**",
-        "dist/**",
-        "coverage/**",
-        ".tmp/**",
-        ".agent-e2e-output/**",
-        "repos/**",
-        "worktrees/**",
-        "packages/*/e2e/**/snapshot*/**"
-      ],
       "skip": [
-        "^https://"
+        "^https://example\\.invalid(?:/|$)"
       ]
     },
     "wording": {
@@ -40,23 +25,7 @@
         "tooWordy": false,
         "eprime": false,
         "fail": false
-      },
-      "exclude": [
-        "node_modules/**",
-        ".git/**",
-        "dist/**",
-        "coverage/**",
-        ".tmp/**",
-        ".agent-e2e-output/**",
-        "repos/**",
-        "worktrees/**",
-        "packages/*/e2e/**/snapshot/**",
-        "packages/docs-validator/e2e/docs-wording-command-fail/**",
-        "packages/agent-doc-rules-skill/e2e/plain-english-doc-review/**",
-        "packages/agent-doc-rules-skill/skills/agent-doc-rules/references/writing-style.md"
-      ],
-      "forbiddenTerms": [],
-      "allow": []
+      }
     },
     "security": {
       "exclude": [
@@ -68,10 +37,10 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "packages/docs-validator/e2e/docs-security-command-fail/**",
-        "packages/docs-validator/e2e/docs-security-command-pass/**"
-      ],
-      "allow": []
+        ".agents/skills/**",
+        "packages/docs-validator/e2e/docs-security-command-fail/project/README.md",
+        "packages/docs-validator/e2e/docs-security-command-pass/project/README.md"
+      ]
     },
     "duplicateCandidates": {
       "exclude": [
@@ -83,8 +52,9 @@
         ".agent-e2e-output/**",
         "repos/**",
         "worktrees/**",
-        "docs/retired/**",
-        "packages/*/e2e/**/snapshot*/**"
+        ".agents/skills/**",
+        "docs/retired/docs-duplicates-changelog.md",
+        "packages/**/e2e/**/project/**"
       ],
       "includeReferences": false,
       "includeSameFile": false,
@@ -92,83 +62,47 @@
       "minWords": 6,
       "minChars": 40,
       "maxCandidates": 25,
-      "ignorePairs": [
-        {
-          "left": "^packages/(agent-doc-rules-skill|docs-validator)/e2e/",
-          "right": "^packages/(agent-doc-rules-skill|docs-validator)/e2e/",
-          "reason": "E2E fixture documents intentionally repeat scenario facts."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/e2e/create-basic/project/README\\.md$",
-          "right": "^docs/project-cleanup\\.md$",
-          "reason": "The create-basic fixture intentionally includes skipped-check residual-risk guidance."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/e2e/local-language-override/project/project-notes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
-          "reason": "The local-language fixture intentionally mirrors the recipe rule it exercises."
-        },
-        {
-          "left": "^CHANGELOG\\.md$",
-          "right": ".*",
-          "reason": "The changelog records release history and can repeat current docs briefly."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/AGENTS\\.",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/assets/templates/AGENTS\\.",
-          "reason": "AGENTS templates are standalone starter files and share placeholder guidance."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/README\\.md$",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption\\.md$",
-          "reason": "The README summarizes the adoption guide."
-        },
-        {
-          "left": "^docs/development\\.md$",
-          "right": "^packages/agent-doc-rules-skill/README\\.md$",
-          "reason": "The development guide intentionally records the npm artifact boundary for maintainers while the README states it for users."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/e2e/README\\.md$",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/adoption\\.md$",
-          "reason": "Both workflows intentionally remind maintainers to review generated or refreshed diffs before committing."
-        },
-        {
-          "left": "^README\\.md$",
-          "right": "^docs/development\\.md$",
-          "reason": "The root README is a short pointer to development docs."
-        },
-        {
-          "left": "^AGENTS\\.md$",
-          "right": "^README\\.md$",
-          "reason": "Root AGENTS.md and README.md both need a short project orientation."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement\\.md$",
-          "right": "^packages/agent-doc-rules-skill/(README\\.md|skills/agent-doc-rules/SKILL\\.md)$",
-          "reason": "The README and SKILL.md contain short routing summaries."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL\\.md$",
-          "right": "^packages/agent-doc-rules-skill/README\\.md$",
-          "reason": "The README and SKILL.md share short package-level routing pointers."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/SKILL\\.md$",
-          "reason": "Recipes intentionally summarize skill behavior for example tasks."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/recipes\\.md$",
-          "right": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/context-placement\\.md$",
-          "reason": "Recipes intentionally summarize context-placement guidance."
-        },
-        {
-          "left": "^packages/agent-doc-rules-skill/skills/agent-doc-rules/docs/config-reference\\.md$",
-          "right": "^packages/docs-validator/README\\.md$",
-          "reason": "The CLI README repeats the config file location as local usage context."
-        }
-      ]
+      "ignorePairs": []
     }
+  },
+  "governance": {
+    "exceptions": [
+      {
+        "setting": "docs.exclude",
+        "value": ".agents/skills/**",
+        "reason": "Generated project-skill copies are validated at their canonical package sources and by install-layout tests.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      },
+      {
+        "setting": "docs.links.skip",
+        "value": "^https://example\\.invalid(?:/|$)",
+        "reason": "Reserved example URLs in documentation and fixtures are intentionally unreachable.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      },
+      {
+        "setting": "docs.security.exclude",
+        "value": "packages/docs-validator/e2e/docs-security-command-fail/project/README.md",
+        "reason": "The isolated failure fixture must contain unsafe instructions for the security command E2E test.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      },
+      {
+        "setting": "docs.security.exclude",
+        "value": "packages/docs-validator/e2e/docs-security-command-pass/project/README.md",
+        "reason": "The isolated pass fixture contains explicitly allowed remote-image and tracking examples.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      },
+      {
+        "setting": "docs.duplicateCandidates.exclude",
+        "value": "docs/retired/docs-duplicates-changelog.md",
+        "reason": "The retired package changelog is historical output rather than current canonical documentation.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      },
+      {
+        "setting": "docs.duplicateCandidates.exclude",
+        "value": "packages/**/e2e/**/project/**",
+        "reason": "Prepared E2E projects are isolated fixture input rather than repository documentation.",
+        "decision": "docs/decisions/documentation-validation-exceptions.md"
+      }
+    ]
   }
 }

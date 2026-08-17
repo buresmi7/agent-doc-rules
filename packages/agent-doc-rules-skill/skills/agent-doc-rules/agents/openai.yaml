@@ -1,4 +1,4 @@
 interface:
   display_name: "Agent Doc Rules"
-  short_description: "Repo docs, AGENTS.md, factual review, and context placement rules"
+  short_description: "Repo docs, AGENTS.md, factual review, and placement"
   default_prompt: "Use $agent-doc-rules to review or repair concise, factual repository documentation."

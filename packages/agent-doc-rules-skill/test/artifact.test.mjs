@@ -32,6 +32,7 @@ test('declares both local skills for repository tooling', async () => {
 
   assert.deepEqual(manifest.agentDocRules?.localSkills, skillNames);
   assert.ok(manifest.files.includes('skills'));
+  assert.ok(manifest.files.includes('docs'));
   assert.ok(!manifest.files.includes('SKILL.md'));
   assert.ok(!manifest.files.includes('references'));
 });
@@ -85,8 +86,8 @@ test('public current docs require no secondary AI tool', async () => {
     /reasoningEffort/,
   ];
   const migrationPath = join(
-    skillsRoot,
-    'agent-doc-rules/docs/adoption.md',
+    packageRoot,
+    'docs/adoption.md',
   );
 
   for (const path of paths) {

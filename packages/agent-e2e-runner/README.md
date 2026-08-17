@@ -1,15 +1,9 @@
 # Agent E2E Runner
 
 `@buresmi7/agent-e2e-runner` tests an Agent Skill in a real, persistent Codex
-session against an isolated fixture project. Codex discovers the installed
-skill, reads and edits the project with its normal tools, and responds to each
-user turn in the same conversation.
-
-The package provides two commands:
-
-- `agent` runs a Codex conversation and judges its behavior and project edits;
-- `command` runs a deterministic command and checks its process and file
-  results.
+session against an isolated fixture project. The `agent` command judges agent
+behavior and project edits. The `command` command checks deterministic process
+and file results.
 
 ## Install
 
@@ -17,394 +11,49 @@ The package provides two commands:
 npm install --save-dev @buresmi7/agent-e2e-runner@0.12.0
 ```
 
-Agent scenarios require an installed and authenticated `codex` CLI.
-The runner installs fixture dependencies with the project's package manager.
-It then runs the configured `skills` CLI through `npx`, so agent scenarios may
-need npm registry access.
+Agent scenarios require an installed and authenticated `codex` CLI. The runner
+installs fixture dependencies and invokes the pinned `skills` CLI through `npx`.
+A scenario may need package-registry access.
 
-## How Agent Tests Work
+## Security Boundary
 
-For each agent scenario, the runner:
+Agent scenarios install fixture dependencies and run a real Codex process.
+Dependency installation may execute package lifecycle scripts, and Codex
+inherits the runner environment. `workspace-write` limits writes; it is not
+container isolation.
 
-1. validates the scenario, Codex runtime, and selected skill package;
-2. copies `project/` to an isolated run directory without `node_modules`;
-3. installs the isolated project's dependencies;
-4. installs an isolated copy of the selected skill with `skills add --copy`;
-5. starts Codex with write access limited to that project;
-6. sends every prompt in `scenario.json.turns` to the same Codex session;
-7. atomically checkpoints `report.json` during setup and before and after each
-   turn with the prompt, criteria, available response, concise tool activity,
-   and unified file diff;
-8. asks a separate read-only Codex run to judge that evidence and the final
-   project against the named criteria beside each prompt.
+Run only trusted fixtures, dependencies, and skills. Do not expose credentials
+or sensitive fixture data that the tested process should not receive. See
+[Architecture](docs/architecture.md#limits) for the full boundary and retained
+artifact safeguards.
 
-`--copy` is an isolation choice for the test, not a required Agent Skills
-installation convention. The source fixture stays unchanged. A judged failure
-keeps the isolated project, Codex event logs, transcript, and judgment. An
-earlier setup or runtime error may have only the artifacts produced before the
-error. See [Architecture](docs/architecture.md) for the test boundary and
-limitations.
+## First Agent Scenario
 
-## Dictated Todo Example
-
-The included `examples/dictated-todo/` scenario tests a small skill that turns
-rough dictation into a useful todo list:
-
-```text
-examples/dictated-todo/
-  skills/todo-cleaner/
-    package.json
-    SKILL.md
-  e2e/messy-dictation/
-    project/
-      package.json
-      docs/people.md
-      docs/todo-style.md
-      TODO.md
-    scenario.json
-```
-
-The first turn is an ordinary dictated message, not a test instruction:
-
-```text
-Book the dentist for Thursday at four. The office printer is doing those pale
-zebra stripes again, so order toner, not printer paper. Call Jane. Move the
-launch email to Friday... no, make that Monday if legal still hasn't approved
-it.
-```
-
-The existing todo already has a haircut at Thursday 4:00, and the project notes
-list both Jane A. and Jane B. The skill should add the unambiguous toner task,
-ask about the conflicts, and wait for later user turns before adding unresolved
-work. A later `Buy flowers for Jane.` turn creates a second clarification loop.
-
-Run the example from its directory:
+The included
+[dictated-todo example](examples/dictated-todo/README.md) exercises skill
+discovery, project edits, clarification across multiple turns, and judgment.
+Run this command from `examples/dictated-todo/`:
 
 ```bash
-npx agent-e2e-runner agent --scenario e2e/messy-dictation \
+npx --no-install agent-e2e-runner agent --scenario e2e/messy-dictation \
   --skill-package @agent-e2e-example/todo-cleaner \
   --skill todo-cleaner
 ```
 
-This test covers behavior that a static review of `SKILL.md` cannot prove:
-normal skill discovery, actual tool use, state preserved across turns,
-clarification before edits, and the final repository state.
+## Documentation
 
-## Write Your Own Agent E2E Test
-
-Keep each scenario focused on one behavior. Use multiple turns only when the
-behavior depends on a real follow-up, such as clarification, confirmation, or a
-changed decision.
-
-### 1. Create the Fixture Project
-
-Create a directory with the project state the agent should receive:
-
-```text
-e2e/readme-confirmation/
-  project/
-    package.json
-    README.md
-  scenario.json
-```
-
-The runner copies `project/` before each run, so the source fixture stays
-unchanged. Put normal project facts and supported commands there. Do not add
-test instructions or expected answers to fixture files.
-
-Agent fixtures require `project/package.json`. Declare the runner and skill as
-normal dependencies:
-
-```json
-{
-  "name": "readme-confirmation-fixture",
-  "version": "0.0.0",
-  "private": true,
-  "devDependencies": {
-    "@acme/my-skill": "file:../../..",
-    "@buresmi7/agent-e2e-runner": "^0.12.0"
-  }
-}
-```
-
-No runner-specific `package.json` field is required. The package manager owns
-the skill source and version. Use `file:` for a local standalone package,
-`workspace:*` in a workspace, or a published package version for a release
-test. Local and workspace dependencies let each run use current uncommitted
-skill changes.
-
-### 2. Write the Conversation and Criteria
-
-Add `scenario.json`. Keep each user prompt next to the behavior expected after
-that turn:
-
-```json
-{
-  "turns": [
-    {
-      "id": "request",
-      "prompt": "Add the npm test check to the README, but ask me before editing.",
-      "criteria": {
-        "ask-first": "The agent asks for confirmation and changes no files."
-      }
-    },
-    {
-      "id": "confirm",
-      "prompt": "Yes, proceed.",
-      "criteria": {
-        "update-readme": "README.md tells contributors to run `npm test`."
-      }
-    }
-  ]
-}
-```
-
-Array order is conversation order. Each turn requires a unique kebab-case `id`,
-a non-empty `prompt`, and at least one criterion. Criterion keys must also use
-kebab-case. Turn IDs and criterion keys are limited to 128 bytes. Criterion
-values must be non-empty strings. A one-turn test uses the same shape with one
-array item. Criteria apply to the response, activity, and project state
-immediately after their turn.
-
-Write prompts as normal user messages. Do not tell the agent which skill to use
-or describe the test. Write criteria against visible behavior and repository
-state, not exact response wording or the skill's internal implementation.
-
-### 3. Add a Test Script
-
-Add the runner command to the fixture's `project/package.json`. Select the npm
-package and the skill it contains explicitly:
-
-```json
-{
-  "scripts": {
-    "test:agent": "agent-e2e-runner agent --scenario .. --project . --skill-package @acme/my-skill --skill my-skill"
-  }
-}
-```
-
-`--skill-package` must match a package in `dependencies`, `devDependencies`, or
-`optionalDependencies`. `--skill` must match the name in the selected skill's
-`SKILL.md`. Keeping the selection in a standard npm script makes each fixture
-self-contained without defining custom package metadata.
-
-Use one script per scenario when your test runner or workspace should execute
-scenarios independently or in parallel.
-
-### 4. Run the Test
-
-Install the fixture dependencies once so it can resolve the runner and local
-skill package:
-
-```bash
-npm --prefix e2e/readme-confirmation/project install
-```
-
-Then run the scenario. The runner performs another clean dependency install in
-the isolated copy on every run:
-
-```bash
-npm --prefix e2e/readme-confirmation/project run test:agent
-```
-
-A judged failure prints the failed criterion IDs and retains its inspection
-artifacts. Drop `report.json` into the
-[static report viewer](../agent-e2e-report-viewer/README.md) to inspect the
-conversation, expectations, activity, and project diffs. The runner checkpoints
-the JSON throughout setup and the conversation. If a later turn fails, the
-report keeps every completed earlier turn and marks the active turn as
-incomplete when it can capture that state. To record a passing run:
-
-```bash
-UPDATE_AGENT_SNAPSHOTS=1 npm --prefix e2e/readme-confirmation/project run test:agent
-```
-
-Useful environment variables:
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `CODEX_BIN` | `codex` | Codex executable. |
-| `CODEX_MODEL` | Codex config or CLI default | Override the model used by the tested agent. |
-| `CODEX_REASONING_EFFORT` | `medium` | Override agent reasoning effort. |
-| `CODEX_JUDGE_MODEL` | Agent model | Use a different Codex model for judging. |
-| `CODEX_JUDGE_REASONING_EFFORT` | Agent reasoning effort | Override judge reasoning effort. |
-| `UPDATE_AGENT_SNAPSHOTS` | Off | Set to `1` to write snapshots for passing scenarios. |
-| `AGENT_E2E_SNAPSHOT_DIR` | `snapshot` | Set the snapshot directory name. |
-| `AGENT_E2E_OUTPUT_ROOT` | `<scenario>/.agent-e2e-output/` | Set a different output root. |
-| `KEEP_TEST_OUTPUT` | Off | Set to `1` to keep output after a passing run. |
-
-## Run Output
-
-Each run gets a unique directory under
-`<scenario>/.agent-e2e-output/`. Passing runs remove their unique directory
-unless `--keep-output` or `KEEP_TEST_OUTPUT=1` is set. Failed runs stay in
-place. The runner adds an ignore file to the default output root so retained
-runs do not appear in Git status.
-
-The runner checkpoints `report.json` during every passing run. Normal passing
-cleanup removes that run directory; `--keep-output` retains the report, while
-`--update-snapshots` copies the completed document to `snapshot/report.json`.
-
-Failures that happen before an output directory can be created, such as CLI
-argument errors or a config module that cannot be loaded, are printed by the
-CLI and cannot produce `report.json`.
-
-Use `--output-root <dir>` or `AGENT_E2E_OUTPUT_ROOT` to store run directories
-elsewhere, such as a CI artifact directory. Relative paths resolve from the
-current working directory. The output root must be outside the fixture project.
-If the fixture contains the scenario directory, the default output root moves
-next to the fixture to avoid copying a run into itself.
-
-Each run contains a private root manifest and workspace file so dependency
-installation stays inside the run rather than joining a parent workspace.
-`report.json` is the canonical record for passing, failed, and interrupted
-agent runs. Failed runs also retain `project/`, the Codex event log, and judge
-output. Retained artifacts can contain sensitive test data. See
-[Scenario Record And Report](docs/architecture.md#scenario-record-and-report)
-for checkpoint behavior, data safeguards, and snapshot storage. See the
-[report format](../agent-e2e-report/docs/report-format.md) for the JSON field
-contract.
-
-## Parallel Runs
-
-One CLI invocation runs one scenario. Run independent invocations concurrently
-through your test runner or workspace. Projects, Codex homes, and output
-directories are isolated per run. Package managers and the skill installer may
-share their normal cache or store. Keep the turns within one
-scenario sequential, and start with a concurrency limit of two to avoid API
-rate limits. For example, a pnpm workspace can use:
-
-```bash
-corepack pnpm -r --workspace-concurrency=2 run test:agent
-```
-
-## Agent Config
-
-`agent-e2e.config.mjs` is optional. It configures suite-wide runner behavior,
-not the skill under test. A `skill` entry in this file is rejected:
-
-| Key | Purpose |
+| Document | Content |
 | --- | --- |
-| `skillsCliVersion` | `skills` CLI version; defaults to `1.5.12`. |
-| `judgePrompt` | Optional custom judge prompt template. |
-| `passThreshold` | Minimum judge score; defaults to `0.8`. |
-| `tempPrefix` | Prefix for unique run directory names. |
-| `projectFileOptions` | Judge evidence, ignored paths, and report diff limits. |
-| `inspectLinks` | Extra repository-relative report paths; `project` is reserved. |
+| [Write agent scenarios](docs/writing-agent-scenarios.md) | Fixture, conversation, criteria, run, and snapshot workflow. |
+| [CLI and library reference](docs/reference.md) | Commands, options, environment variables, config, and JavaScript API. |
+| [Architecture](docs/architecture.md) | Isolation, evaluation, reports, safety boundaries, and limits. |
+| [Report format](../agent-e2e-report/docs/report-format.md) | Canonical `report.json` field and payload contract. |
+| [Report viewer](../agent-e2e-report-viewer/README.md) | Inspect a local `report.json` in a static browser app. |
 
-Custom judge prompts may use:
+## Verification
 
-- `{{criteria}}`
-- `{{originalProjectFiles}}`
-- `{{projectFiles}}`
-- `{{changes}}`
-- `{{transcript}}`
-
-`{{transcript}}` provides the conversation, per-turn file changes, and a concise
-tool audit. See [Architecture](docs/architecture.md#evaluation) for the exact
-evidence boundary and retained debugging data.
-
-A custom prompt must tell the judge to evaluate every declared criterion and
-return an exhaustive `failedCriteria` array. The report records every known
-criterion omitted from that array as passed.
-
-`projectFileOptions` supports `evidenceFileNames`, `evidenceFileSuffixes`,
-`evidenceFileExtensions`, `ignoredPaths`, `ignoredPathPrefixes`,
-`ignoredDirectoryNames`, `hiddenPackageScripts`, `maxEvidenceFileBytes`,
-`maxEvidenceBytes`, `maxProjectFiles`, `maxStateFileBytes`, `maxStateFiles`,
-`maxStateBytes`, `maxReportFileBytes`, `maxReportDiffBytes`,
-`maxReportChanges`, and `maxReportPatchBytes`. See
-[Architecture](docs/architecture.md#scenario-record-and-report) for evidence
-and project-state capture behavior. See the
-[report format](../agent-e2e-report/docs/report-format.md#default-limits) for
-report payload defaults and overflow behavior.
-
-## Command Scenarios
-
-Command scenarios copy a fixture, run one command, and check deterministic
-expectations from `scenario.json`:
-
-```json
-{
-  "command": "npm",
-  "args": ["run", "docs:check"],
-  "expect": {
-    "exitCode": 0,
-    "stdoutIncludes": ["docs ok"],
-    "filesExist": ["README.md"]
-  }
-}
-```
-
-Run one with:
+From the monorepo root, run:
 
 ```bash
-npx agent-e2e-runner command --scenario e2e/<scenario>
+corepack pnpm --filter @buresmi7/agent-e2e-runner test
 ```
-
-Supported expectations are `exitCode`, `stdoutIncludes`, `stderrIncludes`,
-`stdoutExcludes`, `stderrExcludes`, `stdoutSnapshot`, `stderrSnapshot`,
-`filesExist`, and `filesDoNotExist`.
-
-## CLI Reference
-
-```bash
-agent-e2e-runner agent --scenario e2e/<name> --skill-package <package> --skill <name> [--config agent-e2e.config.mjs]
-agent-e2e-runner command --scenario e2e/<name>
-```
-
-| Option | Scope | Purpose |
-| --- | --- | --- |
-| `--scenario <dir>` | Both | Scenario directory. |
-| `--project <dir>` | Both | Fixture project; defaults to `<scenario>/project`. |
-| `--repo-root <dir>` | Both | Repository root; defaults to the current directory. |
-| `--output-root <dir>` | Both | Parent directory for unique run output directories. |
-| `--keep-output` | Both | Keep run output after a passing run. |
-| `--name <name>` | Both | Scenario name override. |
-| `--help` | Both | Print CLI usage. |
-| `--config <file>` | Agent | Config file; defaults to `agent-e2e.config.mjs`. |
-| `--skill-package <package>` | Agent | Fixture dependency that contains the tested skill. |
-| `--skill <name>` | Agent | Skill name passed to the skill installer. |
-| `--snapshot-dir <name>` | Agent | Snapshot directory name. |
-| `--update-snapshots` | Agent | Refresh snapshots for a passing run. |
-
-## Library API
-
-The CLI is the default integration. Projects that need custom discovery or
-reporting can use the small public API:
-
-```js
-import { resolve } from 'node:path';
-import {
-  buildAgentRuntimeFromEnv,
-  runAgentScenario,
-  validateAgentRuntime
-} from '@buresmi7/agent-e2e-runner';
-
-const runtime = await buildAgentRuntimeFromEnv();
-await validateAgentRuntime(runtime);
-
-const result = await runAgentScenario({
-  scenarioName: 'example',
-  scenarioDir: resolve('e2e/example'),
-  projectFixtureDir: resolve('e2e/example/project'),
-  repoRoot: process.cwd(),
-  runtime,
-  skill: {
-    packageName: '@acme/my-skill',
-    name: 'my-skill'
-  },
-  skillsCliVersion: '1.5.12'
-});
-```
-
-`runAgentScenario` verifies that `skill.packageName` is a fixture dependency
-and uses its package spec as the source under test. Pass `outputRoot` to place
-run directories outside the scenario. Retained results include `reportPath`
-for `report.json`. Runtime errors expose the same path on the thrown error
-object.
-
-The root export also provides `createCodexSession`, `judgeAgentOutput`,
-`readAgentMetadata`, `readSnapshotDirName`, `main`, `runCommand`, and
-`runCommandScenario`. Validate report documents with the separate
-[`@buresmi7/agent-e2e-report`](../agent-e2e-report/README.md) package.
