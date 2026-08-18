@@ -379,58 +379,279 @@ export function extractCodexActivity(events) {
 }
 
 export function summarizeCodexCommand(command) {
-  const payload = command
-    .trim()
-    .replace(/^(?:\S*[\\/])?(?:ba|z|fi)?sh\s+-lc\s+/, '')
-    .replace(/^[\s'"`]+/, '')
-    .replace(/\s+/g, ' ');
-  const commandBoundary = '(?:^|(?:&&|\\|\\||;)\\s*)';
-  const environmentPrefix = '(?:[A-Za-z_][A-Za-z0-9_]*=[^\\s]+\\s+)*';
-  const packageManager = payload.match(new RegExp(
-    `${commandBoundary}${environmentPrefix}(?:corepack\\s+)?`
-    + '(npm|pnpm|yarn|bun)\\s+(test|run\\s+[A-Za-z0-9:._-]+)',
-  ));
+  const payload = extractShellPayload(command);
+
+  if (payload === null) {
+    return 'shell command';
+  }
+
+  const segments = splitShellCommand(payload);
+
+  if (!segments || segments.length === 0) {
+    return 'shell command';
+  }
+
+  if (segments.slice(1).some(({ operator }) => operator !== '&&')) {
+    return 'shell command';
+  }
+
+  if (segments.length > 1) {
+    const leadingVerifications = [];
+
+    for (const { command: segment } of segments) {
+      const verification = summarizeVerificationSegment(segment);
+
+      if (verification) {
+        leadingVerifications.push(verification);
+        continue;
+      }
+
+      if (leadingVerifications.length === 0 && isSafeVerificationPrefix(segment)) {
+        continue;
+      }
+
+      break;
+    }
+
+    return leadingVerifications.length > 0
+      ? leadingVerifications.join(' && ')
+      : 'shell command';
+  }
+
+  const summary = summarizeShellSegment(segments[0].command);
+
+  return summary === 'shell command'
+    || unsafeStandaloneCommands.has(summary.split(' ')[0])
+    ? 'shell command'
+    : summary;
+}
+
+const unsafeStandaloneCommands = new Set([
+  '!', '.', 'break', 'builtin', 'case', 'command', 'continue', 'coproc',
+  'do', 'done', 'elif', 'else', 'enable', 'esac', 'eval', 'exec', 'exit',
+  'fi', 'for', 'function', 'hash', 'if', 'logout', 'return', 'select', 'set',
+  'source', 'suspend', 'then', 'time', 'trap', 'until', 'while',
+]);
+
+function extractShellPayload(command) {
+  const normalizedCommand = trimShellWhitespace(command);
+  const wrapper = normalizedCommand.match(
+    /^(?:[A-Za-z]:)?[\\/]?(?:(?:[A-Za-z0-9._+-]+[\\/])*)(?:ba|z|fi)?sh[ \t]+-lc[ \t]+/,
+  );
+
+  if (!wrapper) {
+    return normalizedCommand;
+  }
+
+  const wrappedPayload = trimShellWhitespace(normalizedCommand.slice(wrapper[0].length));
+  const quote = wrappedPayload[0];
+
+  if (
+    (quote !== "'" && quote !== '"')
+    || wrappedPayload.at(-1) !== quote
+    || wrappedPayload.slice(1, -1).includes(quote)
+  ) {
+    return null;
+  }
+
+  return wrappedPayload.slice(1, -1);
+}
+
+function summarizeShellSegment(payload) {
+  const normalizedPayload = trimShellWhitespace(payload).replace(/[ \t\n]+/g, ' ');
+  const verification = summarizeVerificationSegment(normalizedPayload);
+
+  if (verification) {
+    return verification;
+  }
+
+  const python = normalizedPayload.match(
+    /^(python(?:3(?:\.\d+)?)?) +([^ '"`]+)$/,
+  );
+
+  if (python) {
+    const scriptName = safePortableBasename(python[2]);
+    return python[2].startsWith('-') || !scriptName
+      ? python[1]
+      : `${python[1]} ${scriptName}`;
+  }
+
+  const node = normalizedPayload.match(/^node +([^ '"`]+)$/);
+
+  if (node) {
+    const scriptName = safePortableBasename(node[1]);
+    return node[1].startsWith('-') || !scriptName
+      ? 'node'
+      : `node ${scriptName}`;
+  }
+
+  const npx = normalizedPayload.match(/^npx +([^ '"`]+)$/);
+
+  if (npx) {
+    const executableName = safePortableBasename(npx[1]);
+    return npx[1].startsWith('-') || !executableName
+      ? 'npx'
+      : `npx ${executableName}`;
+  }
+
+  const executable = normalizedPayload.match(/^([^ '"`;|&]+)(?= |$)/)?.[1];
+  const executableName = executable ? safePortableBasename(executable) : null;
+
+  return executable && executableName && !executable.includes('=')
+    ? executableName
+    : 'shell command';
+}
+
+function summarizeVerificationSegment(payload) {
+  const normalizedPayload = trimShellWhitespace(payload).replace(/[ \t\n]+/g, ' ');
+  const packageManager = normalizedPayload.match(
+    /^(?:corepack +)?(npm|pnpm|yarn|bun) +(test|run +[A-Za-z0-9:._-]+)$/,
+  );
 
   if (packageManager) {
     return `${packageManager[1]} ${packageManager[2]}`;
   }
 
-  const python = payload.match(new RegExp(
-    `${commandBoundary}${environmentPrefix}`
-    + "(python(?:3(?:\\.\\d+)?)?)\\s+([^\\s'\"`]+)",
-  ));
+  return normalizedPayload === 'node --test' ? normalizedPayload : null;
+}
 
-  if (python) {
-    return `${python[1]} ${portableBasename(python[2])}`;
+function isSafeVerificationPrefix(payload) {
+  const normalizedPayload = trimShellWhitespace(payload).replace(/[ \t\n]+/g, ' ');
+  const pathList = String.raw`[A-Za-z0-9@._+\/-]+(?: +[A-Za-z0-9@._+\/-]+)*`;
+
+  return new RegExp(`^git diff(?: +--check)?(?: +-- +${pathList})?$`).test(normalizedPayload)
+    || new RegExp(`^git status(?: +--short)?(?: +-- +${pathList})?$`).test(normalizedPayload);
+}
+
+function splitShellCommand(payload) {
+  if (
+    payload.includes('$(')
+    || payload.includes('`')
+    || payload.includes("$'")
+    || payload.includes('$"')
+    || /[\u0000-\u0008\u000b-\u001f\u007f]/.test(payload)
+  ) {
+    return null;
   }
 
-  const node = payload.match(new RegExp(
-    `${commandBoundary}${environmentPrefix}`
-    + "node\\s+(--test|[^\\s'\"`]+)",
-  ));
+  const segments = [];
+  let command = '';
+  let pendingOperator = null;
+  let quote = null;
+  let escaped = false;
 
-  if (node) {
-    return `node ${node[1].startsWith('-') ? node[1] : portableBasename(node[1])}`;
+  const pushCommand = (nextOperator) => {
+    const trimmed = trimShellWhitespace(command);
+
+    if (!trimmed) {
+      return false;
+    }
+
+    segments.push({ operator: pendingOperator, command: trimmed });
+    command = '';
+    pendingOperator = nextOperator;
+    return true;
+  };
+
+  for (let index = 0; index < payload.length; index += 1) {
+    const character = payload[index];
+    const next = payload[index + 1];
+
+    if (escaped) {
+      command += character;
+      escaped = false;
+      continue;
+    }
+
+    if (quote) {
+      command += character;
+
+      if (character === '\\' && quote !== "'") {
+        escaped = true;
+      } else if (character === quote) {
+        quote = null;
+      }
+
+      continue;
+    }
+
+    if (character === "'" || character === '"' || character === '`') {
+      quote = character;
+      command += character;
+      continue;
+    }
+
+    if (character === '\\') {
+      return null;
+    }
+
+    if (
+      character === '<'
+      || character === '>'
+      || character === '('
+      || character === ')'
+      || character === '{'
+      || character === '}'
+      || character === '['
+      || character === ']'
+      || (character === '#' && /[\s;|&]/.test(payload[index - 1] ?? ' '))
+    ) {
+      return null;
+    }
+
+    let operator = null;
+
+    if ((character === '&' && next === '&') || (character === '|' && next === '|')) {
+      operator = `${character}${next}`;
+      index += 1;
+    } else if (character === '|' && next === '&') {
+      operator = '|&';
+      index += 1;
+    } else if (character === ';' || character === '|' || character === '\n') {
+      operator = character === '\n' ? ';' : character;
+    } else if (character === '&') {
+      operator = character;
+    }
+
+    if (operator) {
+      if (character === '\n' && !trimShellWhitespace(command)) {
+        continue;
+      }
+
+      if (!pushCommand(operator)) {
+        return null;
+      }
+
+      continue;
+    }
+
+    command += character;
   }
 
-  const npx = payload.match(new RegExp(
-    `${commandBoundary}${environmentPrefix}`
-    + "npx\\s+([^\\s'\"`]+)",
-  ));
-
-  if (npx) {
-    return `npx ${portableBasename(npx[1])}`;
+  if (quote || escaped) {
+    return null;
   }
 
-  const executable = payload.match(/^([^\s'"`;|&]+)/)?.[1];
+  if (trimShellWhitespace(command)) {
+    pushCommand(null);
+  } else if (pendingOperator && pendingOperator !== ';') {
+    return null;
+  }
 
-  return executable && !executable.includes('=')
-    ? portableBasename(executable)
-    : 'shell command';
+  return segments;
 }
 
 function portableBasename(path) {
   return basename(path.replaceAll('\\', '/'));
+}
+
+function safePortableBasename(path) {
+  const name = portableBasename(path);
+  return /^[A-Za-z0-9@._+-]+$/.test(name) ? name : null;
+}
+
+function trimShellWhitespace(value) {
+  return value.replace(/^[ \t\n]+|[ \t\n]+$/g, '');
 }
 
 export async function prepareIsolatedCodexHome({
@@ -449,6 +670,7 @@ export async function prepareIsolatedCodexHome({
 
   const configLines = [
     '# Generated by agent-e2e-runner. Do not load maintainer-local Codex rules here.',
+    'project_root_markers = ["package.json", "pnpm-workspace.yaml"]',
   ];
 
   if (codexModel) {

@@ -94,8 +94,10 @@ canonical, plain, and easy for agents and people to use.
 - Do not add generic setup, install, test, deployment, or package-manager steps
   without local evidence. Preserve the consuming repository's language rule.
 - Do not include secrets, real customer names, emails, account IDs, private
-  hosts, tokens, or environment-specific notes in reusable docs. Keep only the
-  locally supported safety categories; do not turn this skill's generic
+  hosts, tokens, or environment-specific notes in reusable docs. When source
+  notes contain sensitive examples, preserve only their locally supported
+  categories as a short `AGENTS.md` safety rule; a general anonymization rule
+  does not replace that category list; do not turn this skill's generic
   examples into project-specific facts.
 - When evidence supplies only names, keep a bare list. Do not infer meanings,
   required status, mappings, transformations, cardinality, causes, or downstream

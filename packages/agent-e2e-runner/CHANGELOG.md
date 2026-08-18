@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.12.1
+
+### Patch Changes
+
+- b1c084e: Move command and scenario-authoring guidance into dedicated package docs, keep
+  the README as an entry point, and pin runnable installation examples.
+- Preserve leading exact verification commands in simple, successful `&&` chains
+  without exposing other shell arguments.
+- Keep parent-repository `AGENTS.md` files out of isolated agent and judge sessions.
+- Updated dependencies [b1c084e]
+  - @buresmi7/agent-e2e-report@0.1.1
+
 ## 0.12.0
 
 ### Minor Changes

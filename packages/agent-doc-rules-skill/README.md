@@ -16,13 +16,13 @@ require a separate AI login, model configuration, or model-provider service.
 Install both skills from npm into the current project:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@1.0.0
+npx @buresmi7/agent-doc-rules-skill@1.0.1
 ```
 
 Replace existing copies of these two skills:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@1.0.0 install --force
+npx @buresmi7/agent-doc-rules-skill@1.0.1 install --force
 ```
 
 The installer writes only:
@@ -41,7 +41,7 @@ reports their recovery paths.
 Preview the operation without writing files:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@1.0.0 install --dry-run
+npx @buresmi7/agent-doc-rules-skill@1.0.1 install --dry-run
 ```
 
 The package also follows standard skill discovery. From a repository checkout
@@ -90,7 +90,7 @@ Install the validator for Markdown, wording, security, links, and
 duplicate-candidate generation:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.0
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.1
 ```
 
 Recommended scripts:

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.1
+
+### Patch Changes
+
+- b1c084e: Pin the package installation example to an exact version for reproducible
+  setup.
+
 ## 0.1.0
 
 ### Minor Changes

@@ -56,6 +56,7 @@ await checkSkillFrontmatter({
   },
 });
 await checkMainSkillAlwaysLoadedContract();
+await checkCompliantNoopFixture();
 await checkOpenAiMetadata();
 await checkSkillProgressiveDisclosure();
 await checkMarkdownLinks();
@@ -202,6 +203,10 @@ async function checkMainSkillAlwaysLoadedContract() {
       message: 'nested AGENTS.md root-pointer guidance',
     },
     {
+      pattern: /Leave compliant documentation unchanged; do not create style-only churn/,
+      message: 'compliant-documentation no-op guidance',
+    },
+    {
       pattern: /brief project orientation/,
       message: 'root AGENTS.md project orientation guidance',
     },
@@ -212,6 +217,10 @@ async function checkMainSkillAlwaysLoadedContract() {
     {
       pattern: /do not turn this skill's generic\s+examples into project-specific facts/,
       message: 'generic examples must not become project facts',
+    },
+    {
+      pattern: /general anonymization rule\s+does not replace that category list/,
+      message: 'generic anonymization must preserve local sensitive categories',
     },
     {
       pattern: /Do not add generic setup, install, test, deployment, or package-manager steps\s+without local evidence/,
@@ -249,6 +258,47 @@ async function checkMainSkillAlwaysLoadedContract() {
 
   if (countOccurrences(content, sharedRulePath) !== 1) {
     errors.push('agent-doc-rules must state its installed Shared Rules path exactly once.');
+  }
+}
+
+async function checkCompliantNoopFixture() {
+  const fixtureDir = join(packageDir, 'e2e/compliant-noop/project');
+  const agents = await readFile(join(fixtureDir, 'AGENTS.md'), 'utf8');
+  const readme = await readFile(join(fixtureDir, 'README.md'), 'utf8');
+  const runtimeReferences = [
+    ['AGENTS.md rules', 'agents-rules.md'],
+    ['README rules', 'readme-rules.md'],
+    ['Documentation architecture', 'documentation-architecture.md'],
+  ];
+  const requiredLinks = [
+    ...runtimeReferences.map(([label, file]) => [
+      agents,
+      `[${label}](.agents/skills/agent-doc-rules/references/${file})`,
+    ]),
+    [agents, '[README.md](README.md)'],
+    [agents, '[docs/style.md](docs/style.md)'],
+    [readme, '[README.md](README.md)'],
+    [readme, '[AGENTS.md](AGENTS.md)'],
+    [readme, '[docs/style.md](docs/style.md)'],
+  ];
+
+  for (const [content, link] of requiredLinks) {
+    if (!content.includes(link)) {
+      errors.push(`compliant-noop fixture must keep canonical Markdown link ${link}.`);
+    }
+  }
+
+  for (const [, file] of runtimeReferences) {
+    await assertFile(join(mainSkillDir, 'references', file));
+
+    const placeholder = await readFile(
+      join(fixtureDir, '.agents/skills/agent-doc-rules/references', file),
+      'utf8',
+    );
+
+    if (!placeholder.includes('The E2E harness replaces this placeholder')) {
+      errors.push(`compliant-noop fixture must explain runtime link target ${file}.`);
+    }
   }
 }
 

@@ -8,7 +8,7 @@ dependency-free and can run in Node.js or a browser bundle. See the
 ## Install
 
 ```bash
-pnpm add @buresmi7/agent-e2e-report@0.1.0
+pnpm add @buresmi7/agent-e2e-report@0.1.1
 ```
 
 ## API
