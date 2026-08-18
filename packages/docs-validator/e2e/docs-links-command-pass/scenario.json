@@ -1,0 +1,13 @@
+{
+  "name": "docs-links-command-pass",
+  "command": "agent-doc-rules-docs",
+  "args": ["links"],
+  "expect": {
+    "exitCode": 0,
+    "stdoutIncludes": ["Documentation link check passed."],
+    "stderrExcludes": [
+      "Cannot read properties of null",
+      "listen EPERM"
+    ]
+  }
+}
