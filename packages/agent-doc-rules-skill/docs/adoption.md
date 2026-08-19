@@ -14,7 +14,7 @@ The goal is a small setup:
 Install the published npm package from the repository root:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@1.0.1
+npx @buresmi7/agent-doc-rules-skill@1.0.2
 ```
 
 The npm installer stages and then creates or updates these owned directories:
@@ -82,7 +82,7 @@ Install the deterministic validator when the project wants Markdown, wording,
 security, local link checks, or duplicate review:
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.1
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.2
 ```
 
 Add scripts like these:
@@ -162,7 +162,7 @@ Use the same install command with a reviewed package version or tag when the
 project wants to update both skills. This package version uses:
 
 ```bash
-npx @buresmi7/agent-doc-rules-skill@1.0.1 --force
+npx @buresmi7/agent-doc-rules-skill@1.0.2 --force
 ```
 
 Review the generated diff before committing. If the project uses
