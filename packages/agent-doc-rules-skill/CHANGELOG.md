@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2
+
+### Patch Changes
+
+- 5175d75: Replace local-server link crawling with a no-listener Remark pipeline. Preserve
+  local, fragment, and raw HTML checks, validate HTTP(S) links through direct
+  requests with a bounded timeout, add undefined reference validation, and
+  describe link skips independently of the underlying checker. Proxy environment
+  variables are not applied automatically.
+
 ## 1.0.1
 
 ### Patch Changes

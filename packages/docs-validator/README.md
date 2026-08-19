@@ -6,7 +6,7 @@ checks for repositories that use the `agent-doc-rules` skills.
 ## Install
 
 ```bash
-pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.1
+pnpm add -D @buresmi7/agent-doc-rules-docs-validator@1.0.2
 ```
 
 ## First Check
