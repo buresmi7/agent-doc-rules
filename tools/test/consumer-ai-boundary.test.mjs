@@ -18,14 +18,21 @@ const consumerPackageDirectories = [
 const runtimeDependencyAllowlist = {
   'packages/agent-doc-rules-skill': [],
   'packages/docs-validator': [
+    'dead-or-alive',
     'fast-glob',
-    'linkinator',
+    'github-slugger',
+    'htmlparser2',
     'markdownlint-cli2',
     'mdast-util-to-string',
+    'remark-frontmatter',
+    'remark-gfm',
+    'remark-lint-no-undefined-references',
     'remark-parse',
     'sentence-splitter',
+    'srcset',
     'unified',
     'unist-util-visit',
+    'vfile',
     'write-good',
   ],
 };

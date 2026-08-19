@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import fastGlob from 'fast-glob';
 import writeGood from 'write-good';
+import { runRemarkLinkEngine } from './link-checker.mjs';
 import { findSecurityIssues, normalizeSecurityAllow } from './security.mjs';
 
 const require = createRequire(import.meta.url);
@@ -22,20 +23,6 @@ export function buildMarkdownlintArgs({ include, exclude }) {
     ...include,
     ...expandExcludePatterns(exclude).map((pattern) => `!${pattern}`),
   ];
-}
-
-export function buildLinkinatorArgs({ files, skip = [], checkFragments = true }) {
-  const args = ['--markdown', '--directory-listing'];
-
-  if (checkFragments) {
-    args.push('--check-fragments');
-  }
-
-  for (const pattern of skip) {
-    args.push('--skip', pattern);
-  }
-
-  return [...args, ...files];
 }
 
 export async function resolveMarkdownFiles({ root, include, exclude }) {
@@ -58,22 +45,31 @@ export async function runMarkdown({ root, include, exclude }, { runner = runNode
   return runner({ bin, args, cwd: root });
 }
 
-export async function runLinks(options, { runner = runNodeBin } = {}) {
+export async function runLinks(options, {
+  linkEngine = runRemarkLinkEngine,
+  logger = console,
+  streamError,
+} = {}) {
   const files = await resolveMarkdownFiles(options);
 
   if (files.length === 0) {
-    console.log('No Markdown files found for link validation.');
+    logger.log('No Markdown files found for link validation.');
     return 0;
   }
 
-  const bin = resolvePackageBin('linkinator', 'linkinator');
-  const args = buildLinkinatorArgs({
+  const code = await linkEngine({
+    root: options.root,
     files,
     skip: options.skip,
     checkFragments: options.checkFragments,
+    streamError,
   });
 
-  return runner({ bin, args, cwd: options.root });
+  if (code === 0) {
+    logger.log('Documentation link check passed.');
+  }
+
+  return code;
 }
 
 export async function runWording(options, { logger = console } = {}) {

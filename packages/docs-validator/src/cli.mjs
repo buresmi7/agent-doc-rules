@@ -202,10 +202,10 @@ Options:
   --min-chars <number>  Minimum characters in a prose unit.
   --max-candidates <n>  Maximum candidates in one page.
   --cursor <id>         Continue after a previous page's nextCursor.
-  --skip <regex>        Linkinator skip pattern. Repeatable.
+  --skip <regex>        Link target skip pattern. Repeatable.
   --forbid <term>       Project-specific term that should fail. Repeatable.
   --allow <regex>       Wording or security allow pattern for matching lines. Repeatable.
-  --no-fragments        Do not ask Linkinator to check fragments.
+  --no-fragments        Do not validate URL fragments.
   --print               Print the starter config without writing files.
   --force               Overwrite an existing config during init.`;
 }

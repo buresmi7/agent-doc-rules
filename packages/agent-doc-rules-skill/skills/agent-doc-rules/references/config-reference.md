@@ -99,7 +99,7 @@ Default excludes:
 | --- | --- | --- |
 | `docs.links.include` | string array | Optional include override for link validation. |
 | `docs.links.exclude` | string array | Optional exclude override for link validation. |
-| `docs.links.skip` | string array | Linkinator skip regexes. |
+| `docs.links.skip` | string array | Link target skip regexes. |
 | `docs.links.checkFragments` | boolean | Whether to validate URL fragments. Defaults to `true`. |
 
 Use `--skip <regex>` for a one-off pattern. Use `--no-fragments` when generated

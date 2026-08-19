@@ -44,6 +44,13 @@ stops on the first failed phase.
 | `duplicate-candidates` | Collect likely duplicate prose for agent review. |
 | `check` | Run Markdown, wording, security, and link validation. |
 
+Link validation reads Markdown files directly and does not start a local HTTP
+server. It checks local paths, Markdown and HTML fragments, reference-style
+links, GFM links, and link attributes in raw HTML. HTTP(S) targets still
+require direct outbound network access unless they are skipped. Each request
+attempt has a three-second timeout, and the checker does not automatically use
+proxy environment variables.
+
 Run `agent-doc-rules-docs --help` for command options.
 
 ## Configuration

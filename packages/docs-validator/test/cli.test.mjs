@@ -6,7 +6,6 @@ import test from 'node:test';
 import { parseArgs, runCommand } from '../src/cli.mjs';
 import { resolveDocsOptions, resolveDuplicateCandidateOptions } from '../src/config.mjs';
 import {
-  buildLinkinatorArgs,
   buildMarkdownlintArgs,
   findWriteGoodIssues,
   findWordingIssues,
@@ -44,48 +43,6 @@ test('markdown command builds markdownlint include and exclude args', () => {
       exclude: ['node_modules/**'],
     }),
     ['*.md', 'docs/**/*.md', '!node_modules/**', '!**/node_modules/**'],
-  );
-});
-
-test('link command includes markdown and fragment flags', () => {
-  assert.deepEqual(
-    buildLinkinatorArgs({
-      files: ['README.md'],
-      skip: [],
-      checkFragments: true,
-    }),
-    ['--markdown', '--directory-listing', '--check-fragments', 'README.md'],
-  );
-});
-
-test('link command maps repeated skip flags', () => {
-  assert.deepEqual(
-    buildLinkinatorArgs({
-      files: ['README.md'],
-      skip: ['^https://', '^mailto:'],
-      checkFragments: true,
-    }),
-    [
-      '--markdown',
-      '--directory-listing',
-      '--check-fragments',
-      '--skip',
-      '^https://',
-      '--skip',
-      '^mailto:',
-      'README.md',
-    ],
-  );
-});
-
-test('link command can omit fragment checking', () => {
-  assert.deepEqual(
-    buildLinkinatorArgs({
-      files: ['README.md'],
-      skip: [],
-      checkFragments: false,
-    }),
-    ['--markdown', '--directory-listing', 'README.md'],
   );
 });
 
